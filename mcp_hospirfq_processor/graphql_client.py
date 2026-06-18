@@ -35,11 +35,22 @@ class GraphQLModule:
         class_name: str | None = None,
         endpoint: str | None = None,
         x_api_key: str | None = None,
+        part_id: str | None = None,
     ):
         self.endpoint_id = endpoint_id
+        self.part_id = part_id
         self._module_name = module_name
         self._class_name = class_name
-        self._endpoint = endpoint.format(endpoint_id=endpoint_id) if endpoint else None
+        # Endpoint templates may reference both ``{endpoint_id}`` (AWS API
+        # Gateway form) and ``{part_id}`` (local silvaengine_gateway route form,
+        # e.g. ``http://localhost:8765/{endpoint_id}/{part_id}/ai_rfq_graphql``).
+        # ``str.format`` ignores unused keyword arguments, so passing both is
+        # safe for either template.
+        self._endpoint = (
+            endpoint.format(endpoint_id=endpoint_id, part_id=part_id)
+            if endpoint
+            else None
+        )
         self._x_api_key = x_api_key
         self._schema = None
 
@@ -84,6 +95,15 @@ class GraphQLClient:
         self._endpoint_id = None
         self._part_id = None
         self._graphql_modules = {}
+        # Gateway (silvaengine_gateway) JWT Bearer auth configuration. When a
+        # ``gateway_base_url`` is configured the client logs in to the gateway
+        # to obtain a JWT and sends ``Authorization: Bearer <token>`` instead of
+        # the AWS API Gateway ``x-api-key`` header.
+        self._gateway_base_url = setting.get("gateway_base_url")
+        self._token_username = setting.get("token_username")
+        self._token_password = setting.get("token_password")
+        # Optional pre-issued token (skips the /auth/token login round-trip).
+        self._gateway_token = setting.get("gateway_token")
 
     @property
     def endpoint_id(self) -> str | None:
@@ -110,6 +130,7 @@ class GraphQLClient:
         if not self._graphql_modules.get(module_name):
             self._graphql_modules[module_name] = GraphQLModule(
                 endpoint_id=self.endpoint_id,
+                part_id=self.part_id,
                 module_name=module_name,
                 class_name=self.setting.get("graphql_modules", {})
                 .get(module_name, {})
@@ -122,6 +143,32 @@ class GraphQLClient:
                 .get("x_api_key"),
             )
         return self._graphql_modules.get(module_name)
+
+    def get_gateway_token(self) -> str | None:
+        """Obtain a JWT Bearer token for the silvaengine_gateway.
+
+        Returns ``None`` when no gateway auth is configured (in which case the
+        client falls back to AWS API Gateway ``x-api-key`` auth). A successfully
+        issued token is cached on the instance and reused on subsequent calls.
+        """
+        if not self._gateway_base_url:
+            return None
+        if self._gateway_token:
+            return self._gateway_token
+        if not (self._token_username and self._token_password):
+            return None
+
+        resp = httpx.post(
+            f"{self._gateway_base_url.rstrip('/')}/auth/token",
+            data={
+                "username": self._token_username,
+                "password": self._token_password,
+            },
+            timeout=15,
+        )
+        resp.raise_for_status()
+        self._gateway_token = resp.json()["access_token"]
+        return self._gateway_token
 
     def execute_query(
         self,
@@ -142,13 +189,24 @@ class GraphQLClient:
 
             payload = Serializer.json_dumps({"query": query, "variables": variables})
 
-            headers = {
-                "x-api-key": graphql_module.x_api_key,
-                "Part-Id": self.part_id,
-                "Content-Type": "application/json",
-            }
+            # Prefer gateway JWT Bearer auth when configured; otherwise fall
+            # back to AWS API Gateway x-api-key auth.
+            token = self.get_gateway_token()
+            if token:
+                headers = {
+                    "Authorization": f"Bearer {token}",
+                    "Part-Id": self.part_id,
+                    "Content-Type": "application/json",
+                }
+            else:
+                headers = {
+                    "x-api-key": graphql_module.x_api_key,
+                    "Part-Id": self.part_id,
+                    "Content-Type": "application/json",
+                }
 
-            with httpx.Client(http2=True) as client:
+            timeout = httpx.Timeout(60.0, connect=15.0)
+            with httpx.Client(http2=True, timeout=timeout) as client:
                 response = client.post(
                     graphql_module.endpoint,
                     headers=headers,

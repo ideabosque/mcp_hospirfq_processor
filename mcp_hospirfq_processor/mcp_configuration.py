@@ -1484,7 +1484,40 @@ MCP_CONFIGURATION = {
             "package_name": "mcp_hospirfq_processor",
             "module_name": "mcp_hospirfq_processor",
             "class_name": "MCPHospiRFQProcessor",
-            "setting": {},
+            # Default settings consumed by MCPHospiRFQProcessor / GraphQLClient.
+            # Override per-deployment (e.g. via environment-specific config).
+            "setting": {
+                # GraphQL backend modules. The endpoint template supports both
+                # the AWS API Gateway form ("...{endpoint_id}...") and the local
+                # silvaengine_gateway route form
+                # ("http://localhost:8765/{endpoint_id}/{part_id}/ai_rfq_graphql").
+                # {endpoint_id} and {part_id} are interpolated at runtime.
+                "graphql_modules": {
+                    "ai_rfq_engine": {
+                        "class_name": "AIRFQEngine",
+                        "endpoint": "http://localhost:8765/{endpoint_id}/{part_id}/ai_rfq_graphql",
+                        # Used only for the AWS API Gateway (x-api-key) auth path;
+                        # ignored when gateway_base_url is configured below.
+                        "x_api_key": "placeholder",
+                    }
+                },
+                # silvaengine_gateway JWT Bearer auth. When gateway_base_url is
+                # set, the client logs in at {gateway_base_url}/auth/token with
+                # token_username/token_password and sends
+                # "Authorization: Bearer <token>" instead of x-api-key.
+                "gateway_base_url": "http://localhost:8765",
+                "token_username": "admin",
+                "token_password": "admin123",
+                # Optional pre-issued token (skips the /auth/token login).
+                "gateway_token": None,
+                # Map of provider corp external ID -> sales rep email.
+                "sales_rep_emails": {},
+                # Default window (days from now) for filtering provider item
+                # batches by expiration when no explicit filter is supplied.
+                "default_batch_expiration_filter_days": 90,
+                # Day of month used when scheduling installment due dates.
+                "installment_scheduled_day": 15,
+            },
         }
     ],
 }
