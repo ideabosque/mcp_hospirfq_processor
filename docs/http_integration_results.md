@@ -1,8 +1,8 @@
 # MCP HospiRFQ Processor HTTP Integration Results (MCPHttpClient)
 
-- Generated at: `2026-06-18T16:59:39.708271+00:00`
+- Generated at: `2026-06-18T21:22:27.619523+00:00`
 - Gateway: `http://localhost:8765`
-- MCP REST URL: `http://localhost:8765/gpt/nestaging/mcp`
+- MCP REST URL: `http://localhost:8765/gpt/mcp`
 - Endpoint: `gpt`
 - Partition: `nestaging`
 - Transport: MCPHttpClient → JSON-RPC → gateway `/mcp`
@@ -14,7 +14,7 @@
 
 ## Executive Summary
 
-End-to-end HTTP integration testing was executed through the `mcp_http_client.MCPHttpClient` against the `silvaengine_gateway` REST/JSON-RPC MCP endpoint (`/{endpoint_id}/{part_id}/mcp`). Each tool was invoked via JSON-RPC `tools/call`, exercising the full agent → gateway → `MCPHospiRFQProcessor` stack. The gateway handles all backend dispatch internally. The run completed with 49 passing function calls, 0 error responses, and 0 failures.
+End-to-end HTTP integration testing was executed through the `mcp_http_client.MCPHttpClient` against the `silvaengine_gateway` REST/JSON-RPC MCP endpoint (`/{endpoint_id}/mcp`, with `Part-Id` sent as a request header). Each tool was invoked via JSON-RPC `tools/call`, exercising the full agent → gateway → `MCPHospiRFQProcessor` stack. The gateway handles all backend dispatch internally. The run completed with 49 passing function calls, 0 error responses, and 0 failures.
 
 ## Scope
 
@@ -27,7 +27,7 @@ End-to-end HTTP integration testing was executed through the `mcp_http_client.MC
 
 - Method: `search_items`
 - Status: `pass`
-- Elapsed: `7380.26 ms`
+- Elapsed: `6711.57 ms`
 
 Arguments:
 
@@ -130,7 +130,7 @@ Output:
 
 - Method: `get_item`
 - Status: `pass`
-- Elapsed: `7448.55 ms`
+- Elapsed: `7389.84 ms`
 
 Arguments:
 
@@ -164,7 +164,7 @@ Output:
 
 - Method: `get_provider_items`
 - Status: `pass`
-- Elapsed: `7489.46 ms`
+- Elapsed: `7480.94 ms`
 
 Arguments:
 
@@ -227,7 +227,7 @@ Output:
 
 - Method: `submit_rfq_request`
 - Status: `pass`
-- Elapsed: `7786.22 ms`
+- Elapsed: `7919.17 ms`
 
 Arguments:
 
@@ -258,7 +258,7 @@ Output:
   "partition_key": "gpt#nestaging",
   "endpoint_id": "gpt",
   "part_id": "nestaging",
-  "request_uuid": "92318534130092490880",
+  "request_uuid": "93486578053808144512",
   "email": "jessicacooper@example.com",
   "request_title": "HTTP integration test: Flight ATL->ORD Premium Economy",
   "request_description": "E2E test request via MCPHttpClient through gateway /mcp",
@@ -278,9 +278,9 @@ Output:
   "bundle_uuid": null,
   "status": "initial",
   "expired_at": "2026-12-31T23:59:59",
-  "created_at": "2026-06-18T16:49:40.173842",
+  "created_at": "2026-06-18T21:12:29.737965",
   "updated_by": "MCP",
-  "updated_at": "2026-06-18T16:49:40.173842",
+  "updated_at": "2026-06-18T21:12:29.737965",
   "quotes": [],
   "files": [],
   "bundle": null
@@ -291,7 +291,7 @@ Output:
 
 - Method: `get_rfq_request`
 - Status: `pass`
-- Elapsed: `7912.6 ms`
+- Elapsed: `7503.35 ms`
 
 Arguments:
 
@@ -416,7 +416,7 @@ Output:
       "file_name": "http_integration_test_spec.pdf",
       "partition_key": "gpt#nestaging",
       "request_uuid": "96306650268729098368",
-      "updated_at": "2026-06-18 15:33:02.177621",
+      "updated_at": "2026-06-18 16:57:35.951735",
       "updated_by": "MCP"
     },
     {
@@ -425,7 +425,7 @@ Output:
       "file_name": "integration_test_spec.pdf",
       "partition_key": "gpt#nestaging",
       "request_uuid": "96306650268729098368",
-      "updated_at": "2026-06-18 04:40:22.620940",
+      "updated_at": "2026-06-18 20:38:19.588731",
       "updated_by": "MCP"
     }
   ],
@@ -437,7 +437,7 @@ Output:
 
 - Method: `search_rfq_requests`
 - Status: `pass`
-- Elapsed: `8314.11 ms`
+- Elapsed: `8328.53 ms`
 
 Arguments:
 
@@ -454,7 +454,7 @@ Output:
 {
   "page_size": 5,
   "page_number": 1,
-  "total": 36,
+  "total": 45,
   "request_list": [
     {
       "partition_key": "gpt#nestaging",
@@ -798,13 +798,13 @@ Output:
 
 - Method: `update_rfq_request`
 - Status: `pass`
-- Elapsed: `11261.79 ms`
+- Elapsed: `11192.07 ms`
 
 Arguments:
 
 ```json
 {
-  "request_uuid": "92318534130092490880",
+  "request_uuid": "93486578053808144512",
   "request_title": "HTTP integration test: Flight ATL->ORD Premium Economy (updated)",
   "notes": "Updated via run_http_integration.py"
 }
@@ -817,7 +817,7 @@ Output:
   "partition_key": "gpt#nestaging",
   "endpoint_id": "gpt",
   "part_id": "nestaging",
-  "request_uuid": "92318534130092490880",
+  "request_uuid": "93486578053808144512",
   "email": "jessicacooper@example.com",
   "request_title": "HTTP integration test: Flight ATL->ORD Premium Economy (updated)",
   "request_description": "E2E test request via MCPHttpClient through gateway /mcp",
@@ -837,9 +837,9 @@ Output:
   "bundle_uuid": null,
   "status": "initial",
   "expired_at": "2026-12-31T23:59:59",
-  "created_at": "2026-06-18T16:49:40.173842",
+  "created_at": "2026-06-18T21:12:29.737965",
   "updated_by": "MCP",
-  "updated_at": "2026-06-18T16:50:07.650926",
+  "updated_at": "2026-06-18T21:12:56.827054",
   "quotes": [],
   "files": [],
   "bundle": null
@@ -850,13 +850,13 @@ Output:
 
 - Method: `add_item_to_rfq_request`
 - Status: `pass`
-- Elapsed: `11232.04 ms`
+- Elapsed: `11265.35 ms`
 
 Arguments:
 
 ```json
 {
-  "request_uuid": "92318534130092490880",
+  "request_uuid": "93486578053808144512",
   "item": {
     "item_uuid": "52065619693805781120",
     "item_name": "Flight ATL->ORD Economy",
@@ -872,7 +872,7 @@ Output:
   "partition_key": "gpt#nestaging",
   "endpoint_id": "gpt",
   "part_id": "nestaging",
-  "request_uuid": "92318534130092490880",
+  "request_uuid": "93486578053808144512",
   "email": "jessicacooper@example.com",
   "request_title": "HTTP integration test: Flight ATL->ORD Premium Economy (updated)",
   "request_description": "E2E test request via MCPHttpClient through gateway /mcp",
@@ -898,9 +898,9 @@ Output:
   "bundle_uuid": null,
   "status": "in_progress",
   "expired_at": "2026-12-31T23:59:59",
-  "created_at": "2026-06-18T16:49:40.173842",
+  "created_at": "2026-06-18T21:12:29.737965",
   "updated_by": "MCP",
-  "updated_at": "2026-06-18T16:50:18.893408",
+  "updated_at": "2026-06-18T21:13:08.065915",
   "quotes": [],
   "files": [],
   "bundle": null
@@ -911,13 +911,13 @@ Output:
 
 - Method: `remove_item_from_rfq_request`
 - Status: `pass`
-- Elapsed: `11262.45 ms`
+- Elapsed: `11239.21 ms`
 
 Arguments:
 
 ```json
 {
-  "request_uuid": "92318534130092490880",
+  "request_uuid": "93486578053808144512",
   "item_uuid": "52065619693805781120"
 }
 ```
@@ -929,7 +929,7 @@ Output:
   "partition_key": "gpt#nestaging",
   "endpoint_id": "gpt",
   "part_id": "nestaging",
-  "request_uuid": "92318534130092490880",
+  "request_uuid": "93486578053808144512",
   "email": "jessicacooper@example.com",
   "request_title": "HTTP integration test: Flight ATL->ORD Premium Economy (updated)",
   "request_description": "E2E test request via MCPHttpClient through gateway /mcp",
@@ -949,9 +949,9 @@ Output:
   "bundle_uuid": null,
   "status": "in_progress",
   "expired_at": "2026-12-31T23:59:59",
-  "created_at": "2026-06-18T16:49:40.173842",
+  "created_at": "2026-06-18T21:12:29.737965",
   "updated_by": "MCP",
-  "updated_at": "2026-06-18T16:50:30.161342",
+  "updated_at": "2026-06-18T21:13:19.256577",
   "quotes": [],
   "files": [],
   "bundle": null
@@ -962,13 +962,13 @@ Output:
 
 - Method: `assign_provider_item_to_request_item`
 - Status: `pass`
-- Elapsed: `14717.72 ms`
+- Elapsed: `14690.45 ms`
 
 Arguments:
 
 ```json
 {
-  "request_uuid": "92318534130092490880",
+  "request_uuid": "93486578053808144512",
   "item_uuid": "06041993713794695296",
   "provider_item_uuid": "39876487618607726720",
   "provider_corp_external_id": "AIRLINE-AF",
@@ -984,7 +984,7 @@ Output:
   "partition_key": "gpt#nestaging",
   "endpoint_id": "gpt",
   "part_id": "nestaging",
-  "request_uuid": "92318534130092490880",
+  "request_uuid": "93486578053808144512",
   "email": "jessicacooper@example.com",
   "request_title": "HTTP integration test: Flight ATL->ORD Premium Economy (updated)",
   "request_description": "E2E test request via MCPHttpClient through gateway /mcp",
@@ -1012,9 +1012,9 @@ Output:
   "bundle_uuid": null,
   "status": "in_progress",
   "expired_at": "2026-12-31T23:59:59",
-  "created_at": "2026-06-18T16:49:40.173842",
+  "created_at": "2026-06-18T21:12:29.737965",
   "updated_by": "MCP",
-  "updated_at": "2026-06-18T16:50:44.874829",
+  "updated_at": "2026-06-18T21:13:34.000671",
   "quotes": [],
   "files": [],
   "bundle": null
@@ -1025,13 +1025,13 @@ Output:
 
 - Method: `remove_provider_item_from_request_item`
 - Status: `pass`
-- Elapsed: `11242.31 ms`
+- Elapsed: `11249.0 ms`
 
 Arguments:
 
 ```json
 {
-  "request_uuid": "92318534130092490880",
+  "request_uuid": "93486578053808144512",
   "item_uuid": "06041993713794695296",
   "provider_item_uuid": "39876487618607726720"
 }
@@ -1044,7 +1044,7 @@ Output:
   "partition_key": "gpt#nestaging",
   "endpoint_id": "gpt",
   "part_id": "nestaging",
-  "request_uuid": "92318534130092490880",
+  "request_uuid": "93486578053808144512",
   "email": "jessicacooper@example.com",
   "request_title": "HTTP integration test: Flight ATL->ORD Premium Economy (updated)",
   "request_description": "E2E test request via MCPHttpClient through gateway /mcp",
@@ -1065,9 +1065,9 @@ Output:
   "bundle_uuid": null,
   "status": "in_progress",
   "expired_at": "2026-12-31T23:59:59",
-  "created_at": "2026-06-18T16:49:40.173842",
+  "created_at": "2026-06-18T21:12:29.737965",
   "updated_by": "MCP",
-  "updated_at": "2026-06-18T16:50:56.132849",
+  "updated_at": "2026-06-18T21:13:45.213594",
   "quotes": [],
   "files": [],
   "bundle": null
@@ -1078,13 +1078,13 @@ Output:
 
 - Method: `assign_provider_item_to_request_item`
 - Status: `pass`
-- Elapsed: `14643.11 ms`
+- Elapsed: `14697.3 ms`
 
 Arguments:
 
 ```json
 {
-  "request_uuid": "92318534130092490880",
+  "request_uuid": "93486578053808144512",
   "item_uuid": "06041993713794695296",
   "provider_item_uuid": "39876487618607726720",
   "provider_corp_external_id": "AIRLINE-AF",
@@ -1100,7 +1100,7 @@ Output:
   "partition_key": "gpt#nestaging",
   "endpoint_id": "gpt",
   "part_id": "nestaging",
-  "request_uuid": "92318534130092490880",
+  "request_uuid": "93486578053808144512",
   "email": "jessicacooper@example.com",
   "request_title": "HTTP integration test: Flight ATL->ORD Premium Economy (updated)",
   "request_description": "E2E test request via MCPHttpClient through gateway /mcp",
@@ -1128,9 +1128,9 @@ Output:
   "bundle_uuid": null,
   "status": "in_progress",
   "expired_at": "2026-12-31T23:59:59",
-  "created_at": "2026-06-18T16:49:40.173842",
+  "created_at": "2026-06-18T21:12:29.737965",
   "updated_by": "MCP",
-  "updated_at": "2026-06-18T16:51:10.768380",
+  "updated_at": "2026-06-18T21:13:59.937015",
   "quotes": [],
   "files": [],
   "bundle": null
@@ -1141,13 +1141,13 @@ Output:
 
 - Method: `confirm_request_and_create_quotes`
 - Status: `pass`
-- Elapsed: `42105.86 ms`
+- Elapsed: `42967.06 ms`
 
 Arguments:
 
 ```json
 {
-  "request_uuid": "92318534130092490880",
+  "request_uuid": "93486578053808144512",
   "provider_corp_external_ids": [
     "AIRLINE-AF"
   ],
@@ -1166,7 +1166,7 @@ Output:
     "partition_key": "gpt#nestaging",
     "endpoint_id": "gpt",
     "part_id": "nestaging",
-    "request_uuid": "92318534130092490880",
+    "request_uuid": "93486578053808144512",
     "email": "jessicacooper@example.com",
     "request_title": "HTTP integration test: Flight ATL->ORD Premium Economy (updated)",
     "request_description": "E2E test request via MCPHttpClient through gateway /mcp",
@@ -1194,17 +1194,17 @@ Output:
     "bundle_uuid": null,
     "status": "confirmed",
     "expired_at": "2026-12-31T23:59:59",
-    "created_at": "2026-06-18T16:49:40.173842",
+    "created_at": "2026-06-18T21:12:29.737965",
     "updated_by": "MCP",
-    "updated_at": "2026-06-18T16:51:25.251407",
+    "updated_at": "2026-06-18T21:14:14.737548",
     "quotes": [],
     "files": [],
     "bundle": null
   },
   "created_quotes": [
     {
-      "request_uuid": "92318534130092490880",
-      "quote_uuid": "90196658928596566144",
+      "request_uuid": "93486578053808144512",
+      "quote_uuid": "82681485742934343808",
       "partition_key": "gpt#nestaging",
       "provider_corp_external_id": "AIRLINE-AF",
       "sales_rep_email": null,
@@ -1225,7 +1225,7 @@ Output:
         "partition_key": "gpt#nestaging",
         "endpoint_id": "gpt",
         "part_id": "nestaging",
-        "request_uuid": "92318534130092490880",
+        "request_uuid": "93486578053808144512",
         "email": "jessicacooper@example.com",
         "request_title": "HTTP integration test: Flight ATL->ORD Premium Economy (updated)",
         "request_description": "E2E test request via MCPHttpClient through gateway /mcp",
@@ -1253,9 +1253,9 @@ Output:
         "bundle_uuid": null,
         "status": "confirmed",
         "expired_at": "2026-12-31T23:59:59",
-        "created_at": "2026-06-18T16:49:40.173842",
+        "created_at": "2026-06-18T21:12:29.737965",
         "updated_by": "MCP",
-        "updated_at": "2026-06-18T16:51:25.251407",
+        "updated_at": "2026-06-18T21:14:14.737548",
         "quotes": [
           {
             "final_total_quote_amount": "900",
@@ -1265,11 +1265,11 @@ Output:
             "status": "in_progress",
             "total_quote_amount": "900",
             "total_quote_discount": "0",
-            "created_at": "2026-06-18 16:51:32.388073",
+            "created_at": "2026-06-18 21:14:22.358281",
             "partition_key": "gpt#nestaging",
-            "quote_uuid": "90196658928596566144",
-            "request_uuid": "92318534130092490880",
-            "updated_at": "2026-06-18 16:51:48.827715",
+            "quote_uuid": "82681485742934343808",
+            "request_uuid": "93486578053808144512",
+            "updated_at": "2026-06-18 21:14:38.844499",
             "updated_by": "MCP"
           }
         ],
@@ -1279,10 +1279,10 @@ Output:
       "quote_items": [
         {
           "batch_no": "AF5319-20260907",
-          "created_at": "2026-06-18 16:51:39.992813",
+          "created_at": "2026-06-18 21:14:29.945258",
           "final_subtotal": "900",
-          "hold_expires_at": "2026-06-18 17:06:40.362457",
-          "hold_token": "e57ea12368767de475e88d9eb3c2a07d",
+          "hold_expires_at": "2026-06-18 21:29:30.294305",
+          "hold_token": "d8c7dea7dd502a81761d466719a2acfc",
           "item_uuid": "06041993713794695296",
           "partition_key": "gpt#nestaging",
           "pax_breakdown": {
@@ -1291,8 +1291,8 @@ Output:
           "price_per_uom": "450",
           "provider_item_uuid": "39876487618607726720",
           "qty": "2",
-          "quote_item_uuid": "55051226062314815616",
-          "quote_uuid": "90196658928596566144",
+          "quote_item_uuid": "13595662195546407040",
+          "quote_uuid": "82681485742934343808",
           "request_data": {
             "cancellation_policy_snapshot": {
               "tiers": {
@@ -1316,14 +1316,14 @@ Output:
               "label": "Premium Economy Fare Cancellation",
               "content_hash": "b161d765b3089e5e",
               "policy_uuid": "14167382355785826432",
-              "snapshotted_at": "2026-06-18 16:51:40.631461"
+              "snapshotted_at": "2026-06-18 21:14:30.566505"
             }
           },
-          "request_uuid": "92318534130092490880",
+          "request_uuid": "93486578053808144512",
           "subtotal": "900",
           "subtotal_discount": "0",
           "subtotal_native": "900",
-          "updated_at": "2026-06-18 16:51:39.992813",
+          "updated_at": "2026-06-18 21:14:29.945258",
           "updated_by": "MCP"
         }
       ],
@@ -1514,14 +1514,14 @@ Output:
 
 - Method: `get_quote`
 - Status: `pass`
-- Elapsed: `8324.03 ms`
+- Elapsed: `7935.83 ms`
 
 Arguments:
 
 ```json
 {
-  "quote_uuid": "90196658928596566144",
-  "request_uuid": "92318534130092490880"
+  "quote_uuid": "82681485742934343808",
+  "request_uuid": "93486578053808144512"
 }
 ```
 
@@ -1529,8 +1529,8 @@ Output:
 
 ```json
 {
-  "request_uuid": "92318534130092490880",
-  "quote_uuid": "90196658928596566144",
+  "request_uuid": "93486578053808144512",
+  "quote_uuid": "82681485742934343808",
   "partition_key": "gpt#nestaging",
   "provider_corp_external_id": "AIRLINE-AF",
   "sales_rep_email": null,
@@ -1551,7 +1551,7 @@ Output:
     "partition_key": "gpt#nestaging",
     "endpoint_id": "gpt",
     "part_id": "nestaging",
-    "request_uuid": "92318534130092490880",
+    "request_uuid": "93486578053808144512",
     "email": "jessicacooper@example.com",
     "request_title": "HTTP integration test: Flight ATL->ORD Premium Economy (updated)",
     "request_description": "E2E test request via MCPHttpClient through gateway /mcp",
@@ -1579,9 +1579,9 @@ Output:
     "bundle_uuid": null,
     "status": "confirmed",
     "expired_at": "2026-12-31T23:59:59",
-    "created_at": "2026-06-18T16:49:40.173842",
+    "created_at": "2026-06-18T21:12:29.737965",
     "updated_by": "MCP",
-    "updated_at": "2026-06-18T16:51:25.251407",
+    "updated_at": "2026-06-18T21:14:14.737548",
     "quotes": [
       {
         "final_total_quote_amount": "900",
@@ -1591,11 +1591,11 @@ Output:
         "status": "in_progress",
         "total_quote_amount": "900",
         "total_quote_discount": "0",
-        "created_at": "2026-06-18 16:51:32.388073",
+        "created_at": "2026-06-18 21:14:22.358281",
         "partition_key": "gpt#nestaging",
-        "quote_uuid": "90196658928596566144",
-        "request_uuid": "92318534130092490880",
-        "updated_at": "2026-06-18 16:51:48.827715",
+        "quote_uuid": "82681485742934343808",
+        "request_uuid": "93486578053808144512",
+        "updated_at": "2026-06-18 21:14:38.844499",
         "updated_by": "MCP"
       }
     ],
@@ -1605,10 +1605,10 @@ Output:
   "quote_items": [
     {
       "batch_no": "AF5319-20260907",
-      "created_at": "2026-06-18 16:51:39.992813",
+      "created_at": "2026-06-18 21:14:29.945258",
       "final_subtotal": "900",
-      "hold_expires_at": "2026-06-18 17:06:40.362457",
-      "hold_token": "e57ea12368767de475e88d9eb3c2a07d",
+      "hold_expires_at": "2026-06-18 21:29:30.294305",
+      "hold_token": "d8c7dea7dd502a81761d466719a2acfc",
       "item_uuid": "06041993713794695296",
       "partition_key": "gpt#nestaging",
       "pax_breakdown": {
@@ -1617,8 +1617,8 @@ Output:
       "price_per_uom": "450",
       "provider_item_uuid": "39876487618607726720",
       "qty": "2",
-      "quote_item_uuid": "55051226062314815616",
-      "quote_uuid": "90196658928596566144",
+      "quote_item_uuid": "13595662195546407040",
+      "quote_uuid": "82681485742934343808",
       "request_data": {
         "cancellation_policy_snapshot": {
           "tiers": {
@@ -1642,14 +1642,14 @@ Output:
           "label": "Premium Economy Fare Cancellation",
           "content_hash": "b161d765b3089e5e",
           "policy_uuid": "14167382355785826432",
-          "snapshotted_at": "2026-06-18 16:51:40.631461"
+          "snapshotted_at": "2026-06-18 21:14:30.566505"
         }
       },
-      "request_uuid": "92318534130092490880",
+      "request_uuid": "93486578053808144512",
       "subtotal": "900",
       "subtotal_discount": "0",
       "subtotal_native": "900",
-      "updated_at": "2026-06-18 16:51:39.992813",
+      "updated_at": "2026-06-18 21:14:29.945258",
       "updated_by": "MCP"
     }
   ],
@@ -1841,8 +1841,8 @@ Output:
     }
   ],
   "updated_by": "MCP",
-  "created_at": "2026-06-18T16:51:32.388073",
-  "updated_at": "2026-06-18T16:51:48.827715"
+  "created_at": "2026-06-18T21:14:22.358281",
+  "updated_at": "2026-06-18T21:14:38.844499"
 }
 ```
 
@@ -1850,13 +1850,13 @@ Output:
 
 - Method: `search_quotes`
 - Status: `pass`
-- Elapsed: `8019.6 ms`
+- Elapsed: `7945.19 ms`
 
 Arguments:
 
 ```json
 {
-  "request_uuid": "92318534130092490880",
+  "request_uuid": "93486578053808144512",
   "limit": 10,
   "page_number": 1
 }
@@ -1871,8 +1871,8 @@ Output:
   "total": 1,
   "quote_list": [
     {
-      "request_uuid": "92318534130092490880",
-      "quote_uuid": "90196658928596566144",
+      "request_uuid": "93486578053808144512",
+      "quote_uuid": "82681485742934343808",
       "partition_key": "gpt#nestaging",
       "provider_corp_external_id": "AIRLINE-AF",
       "sales_rep_email": null,
@@ -1893,7 +1893,7 @@ Output:
         "partition_key": "gpt#nestaging",
         "endpoint_id": "gpt",
         "part_id": "nestaging",
-        "request_uuid": "92318534130092490880",
+        "request_uuid": "93486578053808144512",
         "email": "jessicacooper@example.com",
         "request_title": "HTTP integration test: Flight ATL->ORD Premium Economy (updated)",
         "request_description": "E2E test request via MCPHttpClient through gateway /mcp",
@@ -1921,9 +1921,9 @@ Output:
         "bundle_uuid": null,
         "status": "confirmed",
         "expired_at": "2026-12-31T23:59:59",
-        "created_at": "2026-06-18T16:49:40.173842",
+        "created_at": "2026-06-18T21:12:29.737965",
         "updated_by": "MCP",
-        "updated_at": "2026-06-18T16:51:25.251407",
+        "updated_at": "2026-06-18T21:14:14.737548",
         "quotes": [
           {
             "final_total_quote_amount": "900",
@@ -1933,11 +1933,11 @@ Output:
             "status": "in_progress",
             "total_quote_amount": "900",
             "total_quote_discount": "0",
-            "created_at": "2026-06-18 16:51:32.388073",
+            "created_at": "2026-06-18 21:14:22.358281",
             "partition_key": "gpt#nestaging",
-            "quote_uuid": "90196658928596566144",
-            "request_uuid": "92318534130092490880",
-            "updated_at": "2026-06-18 16:51:48.827715",
+            "quote_uuid": "82681485742934343808",
+            "request_uuid": "93486578053808144512",
+            "updated_at": "2026-06-18 21:14:38.844499",
             "updated_by": "MCP"
           }
         ],
@@ -1947,10 +1947,10 @@ Output:
       "quote_items": [
         {
           "batch_no": "AF5319-20260907",
-          "created_at": "2026-06-18 16:51:39.992813",
+          "created_at": "2026-06-18 21:14:29.945258",
           "final_subtotal": "900",
-          "hold_expires_at": "2026-06-18 17:06:40.362457",
-          "hold_token": "e57ea12368767de475e88d9eb3c2a07d",
+          "hold_expires_at": "2026-06-18 21:29:30.294305",
+          "hold_token": "d8c7dea7dd502a81761d466719a2acfc",
           "item_uuid": "06041993713794695296",
           "partition_key": "gpt#nestaging",
           "pax_breakdown": {
@@ -1959,8 +1959,8 @@ Output:
           "price_per_uom": "450",
           "provider_item_uuid": "39876487618607726720",
           "qty": "2",
-          "quote_item_uuid": "55051226062314815616",
-          "quote_uuid": "90196658928596566144",
+          "quote_item_uuid": "13595662195546407040",
+          "quote_uuid": "82681485742934343808",
           "request_data": {
             "cancellation_policy_snapshot": {
               "tiers": {
@@ -1984,14 +1984,14 @@ Output:
               "label": "Premium Economy Fare Cancellation",
               "content_hash": "b161d765b3089e5e",
               "policy_uuid": "14167382355785826432",
-              "snapshotted_at": "2026-06-18 16:51:40.631461"
+              "snapshotted_at": "2026-06-18 21:14:30.566505"
             }
           },
-          "request_uuid": "92318534130092490880",
+          "request_uuid": "93486578053808144512",
           "subtotal": "900",
           "subtotal_discount": "0",
           "subtotal_native": "900",
-          "updated_at": "2026-06-18 16:51:39.992813",
+          "updated_at": "2026-06-18 21:14:29.945258",
           "updated_by": "MCP"
         }
       ],
@@ -2183,8 +2183,8 @@ Output:
         }
       ],
       "updated_by": "MCP",
-      "created_at": "2026-06-18T16:51:32.388073",
-      "updated_at": "2026-06-18T16:51:48.827715"
+      "created_at": "2026-06-18T21:14:22.358281",
+      "updated_at": "2026-06-18T21:14:38.844499"
     }
   ]
 }
@@ -2194,14 +2194,14 @@ Output:
 
 - Method: `update_quote`
 - Status: `pass`
-- Elapsed: `12047.28 ms`
+- Elapsed: `12063.77 ms`
 
 Arguments:
 
 ```json
 {
-  "request_uuid": "92318534130092490880",
-  "quote_uuid": "90196658928596566144",
+  "request_uuid": "93486578053808144512",
+  "quote_uuid": "82681485742934343808",
   "notes": "Updated via HTTP integration test",
   "shipping_method": "ticket_delivery",
   "shipping_amount": 25.0
@@ -2212,8 +2212,8 @@ Output:
 
 ```json
 {
-  "request_uuid": "92318534130092490880",
-  "quote_uuid": "90196658928596566144",
+  "request_uuid": "93486578053808144512",
+  "quote_uuid": "82681485742934343808",
   "partition_key": "gpt#nestaging",
   "provider_corp_external_id": "AIRLINE-AF",
   "sales_rep_email": null,
@@ -2234,7 +2234,7 @@ Output:
     "partition_key": "gpt#nestaging",
     "endpoint_id": "gpt",
     "part_id": "nestaging",
-    "request_uuid": "92318534130092490880",
+    "request_uuid": "93486578053808144512",
     "email": "jessicacooper@example.com",
     "request_title": "HTTP integration test: Flight ATL->ORD Premium Economy (updated)",
     "request_description": "E2E test request via MCPHttpClient through gateway /mcp",
@@ -2262,9 +2262,9 @@ Output:
     "bundle_uuid": null,
     "status": "confirmed",
     "expired_at": "2026-12-31T23:59:59",
-    "created_at": "2026-06-18T16:49:40.173842",
+    "created_at": "2026-06-18T21:12:29.737965",
     "updated_by": "MCP",
-    "updated_at": "2026-06-18T16:51:25.251407",
+    "updated_at": "2026-06-18T21:14:14.737548",
     "quotes": [
       {
         "final_total_quote_amount": "925",
@@ -2274,13 +2274,13 @@ Output:
         "status": "in_progress",
         "total_quote_amount": "900",
         "total_quote_discount": "0",
-        "created_at": "2026-06-18 16:51:32.388073",
+        "created_at": "2026-06-18 21:14:22.358281",
         "notes": "Updated via HTTP integration test",
         "partition_key": "gpt#nestaging",
-        "quote_uuid": "90196658928596566144",
-        "request_uuid": "92318534130092490880",
+        "quote_uuid": "82681485742934343808",
+        "request_uuid": "93486578053808144512",
         "shipping_method": "ticket_delivery",
-        "updated_at": "2026-06-18 16:52:21.048456",
+        "updated_at": "2026-06-18 21:15:10.674072",
         "updated_by": "MCP"
       }
     ],
@@ -2290,10 +2290,10 @@ Output:
   "quote_items": [
     {
       "batch_no": "AF5319-20260907",
-      "created_at": "2026-06-18 16:51:39.992813",
+      "created_at": "2026-06-18 21:14:29.945258",
       "final_subtotal": "900",
-      "hold_expires_at": "2026-06-18 17:06:40.362457",
-      "hold_token": "e57ea12368767de475e88d9eb3c2a07d",
+      "hold_expires_at": "2026-06-18 21:29:30.294305",
+      "hold_token": "d8c7dea7dd502a81761d466719a2acfc",
       "item_uuid": "06041993713794695296",
       "partition_key": "gpt#nestaging",
       "pax_breakdown": {
@@ -2302,8 +2302,8 @@ Output:
       "price_per_uom": "450",
       "provider_item_uuid": "39876487618607726720",
       "qty": "2",
-      "quote_item_uuid": "55051226062314815616",
-      "quote_uuid": "90196658928596566144",
+      "quote_item_uuid": "13595662195546407040",
+      "quote_uuid": "82681485742934343808",
       "request_data": {
         "cancellation_policy_snapshot": {
           "tiers": {
@@ -2327,14 +2327,14 @@ Output:
           "label": "Premium Economy Fare Cancellation",
           "content_hash": "b161d765b3089e5e",
           "policy_uuid": "14167382355785826432",
-          "snapshotted_at": "2026-06-18 16:51:40.631461"
+          "snapshotted_at": "2026-06-18 21:14:30.566505"
         }
       },
-      "request_uuid": "92318534130092490880",
+      "request_uuid": "93486578053808144512",
       "subtotal": "900",
       "subtotal_discount": "0",
       "subtotal_native": "900",
-      "updated_at": "2026-06-18 16:51:39.992813",
+      "updated_at": "2026-06-18 21:14:29.945258",
       "updated_by": "MCP"
     }
   ],
@@ -2526,8 +2526,8 @@ Output:
     }
   ],
   "updated_by": "MCP",
-  "created_at": "2026-06-18T16:51:32.388073",
-  "updated_at": "2026-06-18T16:52:21.048456"
+  "created_at": "2026-06-18T21:14:22.358281",
+  "updated_at": "2026-06-18T21:15:10.674072"
 }
 ```
 
@@ -2535,15 +2535,15 @@ Output:
 
 - Method: `update_quote_item`
 - Status: `pass`
-- Elapsed: `12662.17 ms`
+- Elapsed: `12297.93 ms`
 
 Arguments:
 
 ```json
 {
-  "quote_uuid": "90196658928596566144",
-  "quote_item_uuid": "55051226062314815616",
-  "request_uuid": "92318534130092490880",
+  "quote_uuid": "82681485742934343808",
+  "quote_item_uuid": "13595662195546407040",
+  "request_uuid": "93486578053808144512",
   "discount_amount": 50.0,
   "notes": "HTTP integration test discount"
 }
@@ -2553,13 +2553,13 @@ Output:
 
 ```json
 {
-  "quote_uuid": "90196658928596566144",
-  "quote_item_uuid": "55051226062314815616",
+  "quote_uuid": "82681485742934343808",
+  "quote_item_uuid": "13595662195546407040",
   "provider_item_uuid": "39876487618607726720",
   "item_uuid": "06041993713794695296",
   "partition_key": "gpt#nestaging",
   "batch_no": "AF5319-20260907",
-  "request_uuid": "92318534130092490880",
+  "request_uuid": "93486578053808144512",
   "qty": 2.0,
   "pax_breakdown": {
     "adult": "2"
@@ -2574,13 +2574,13 @@ Output:
   "currency": null,
   "subtotal_native": 900.0,
   "notes": "HTTP integration test discount",
-  "hold_token": "e57ea12368767de475e88d9eb3c2a07d",
-  "hold_expires_at": "2026-06-18T17:06:40.362457",
+  "hold_token": "d8c7dea7dd502a81761d466719a2acfc",
+  "hold_expires_at": "2026-06-18T21:29:30.294305",
   "guardrail_price_per_uom": 287.71,
   "slow_move_item": false,
   "quote": {
-    "request_uuid": "92318534130092490880",
-    "quote_uuid": "90196658928596566144",
+    "request_uuid": "93486578053808144512",
+    "quote_uuid": "82681485742934343808",
     "partition_key": "gpt#nestaging",
     "provider_corp_external_id": "AIRLINE-AF",
     "sales_rep_email": null,
@@ -2601,7 +2601,7 @@ Output:
       "partition_key": "gpt#nestaging",
       "endpoint_id": "gpt",
       "part_id": "nestaging",
-      "request_uuid": "92318534130092490880",
+      "request_uuid": "93486578053808144512",
       "email": "jessicacooper@example.com",
       "request_title": "HTTP integration test: Flight ATL->ORD Premium Economy (updated)",
       "request_description": "E2E test request via MCPHttpClient through gateway /mcp",
@@ -2629,9 +2629,9 @@ Output:
       "bundle_uuid": null,
       "status": "confirmed",
       "expired_at": "2026-12-31T23:59:59",
-      "created_at": "2026-06-18T16:49:40.173842",
+      "created_at": "2026-06-18T21:12:29.737965",
       "updated_by": "MCP",
-      "updated_at": "2026-06-18T16:51:25.251407",
+      "updated_at": "2026-06-18T21:14:14.737548",
       "quotes": [
         {
           "final_total_quote_amount": "875",
@@ -2641,13 +2641,13 @@ Output:
           "status": "in_progress",
           "total_quote_amount": "900",
           "total_quote_discount": "50",
-          "created_at": "2026-06-18 16:51:32.388073",
+          "created_at": "2026-06-18 21:14:22.358281",
           "notes": "Updated via HTTP integration test",
           "partition_key": "gpt#nestaging",
-          "quote_uuid": "90196658928596566144",
-          "request_uuid": "92318534130092490880",
+          "quote_uuid": "82681485742934343808",
+          "request_uuid": "93486578053808144512",
           "shipping_method": "ticket_delivery",
-          "updated_at": "2026-06-18 16:52:33.398707",
+          "updated_at": "2026-06-18 21:15:22.666336",
           "updated_by": "MCP"
         }
       ],
@@ -2657,10 +2657,10 @@ Output:
     "quote_items": [
       {
         "batch_no": "AF5319-20260907",
-        "created_at": "2026-06-18 16:51:39.992813",
+        "created_at": "2026-06-18 21:14:29.945258",
         "final_subtotal": "850",
-        "hold_expires_at": "2026-06-18 17:06:40.362457",
-        "hold_token": "e57ea12368767de475e88d9eb3c2a07d",
+        "hold_expires_at": "2026-06-18 21:29:30.294305",
+        "hold_token": "d8c7dea7dd502a81761d466719a2acfc",
         "item_uuid": "06041993713794695296",
         "notes": "HTTP integration test discount",
         "partition_key": "gpt#nestaging",
@@ -2670,8 +2670,8 @@ Output:
         "price_per_uom": "450",
         "provider_item_uuid": "39876487618607726720",
         "qty": "2",
-        "quote_item_uuid": "55051226062314815616",
-        "quote_uuid": "90196658928596566144",
+        "quote_item_uuid": "13595662195546407040",
+        "quote_uuid": "82681485742934343808",
         "request_data": {
           "cancellation_policy_snapshot": {
             "tiers": {
@@ -2695,14 +2695,14 @@ Output:
             "label": "Premium Economy Fare Cancellation",
             "content_hash": "b161d765b3089e5e",
             "policy_uuid": "14167382355785826432",
-            "snapshotted_at": "2026-06-18 16:51:40.631461"
+            "snapshotted_at": "2026-06-18 21:14:30.566505"
           }
         },
-        "request_uuid": "92318534130092490880",
+        "request_uuid": "93486578053808144512",
         "subtotal": "900",
         "subtotal_discount": "50",
         "subtotal_native": "900",
-        "updated_at": "2026-06-18 16:52:33.180830",
+        "updated_at": "2026-06-18 21:15:22.455458",
         "updated_by": "MCP"
       }
     ],
@@ -2894,8 +2894,8 @@ Output:
       }
     ],
     "updated_by": "MCP",
-    "created_at": "2026-06-18T16:51:32.388073",
-    "updated_at": "2026-06-18T16:52:33.398707"
+    "created_at": "2026-06-18T21:14:22.358281",
+    "updated_at": "2026-06-18T21:15:22.666336"
   },
   "item": {
     "partition_key": "gpt#nestaging",
@@ -2918,7 +2918,7 @@ Output:
 
 - Method: `get_item_price_tiers`
 - Status: `pass`
-- Elapsed: `7346.51 ms`
+- Elapsed: `7447.05 ms`
 
 Arguments:
 
@@ -2981,7 +2981,7 @@ Output:
 
 - Method: `get_discount_prompts`
 - Status: `pass`
-- Elapsed: `7592.44 ms`
+- Elapsed: `7566.49 ms`
 
 Arguments:
 
@@ -3170,7 +3170,7 @@ Output:
 
 - Method: `calculate_quote_pricing`
 - Status: `pass`
-- Elapsed: `7514.5 ms`
+- Elapsed: `7789.28 ms`
 
 Arguments:
 
@@ -3194,14 +3194,14 @@ Output:
 
 - Method: `confirm_quote_and_create_installments`
 - Status: `pass`
-- Elapsed: `34804.68 ms`
+- Elapsed: `34863.8 ms`
 
 Arguments:
 
 ```json
 {
-  "request_uuid": "92318534130092490880",
-  "quote_uuid": "90196658928596566144",
+  "request_uuid": "93486578053808144512",
+  "quote_uuid": "82681485742934343808",
   "create_single_installment": true,
   "payment_method": "bank_transfer"
 }
@@ -3212,8 +3212,8 @@ Output:
 ```json
 {
   "quote": {
-    "request_uuid": "92318534130092490880",
-    "quote_uuid": "90196658928596566144",
+    "request_uuid": "93486578053808144512",
+    "quote_uuid": "82681485742934343808",
     "partition_key": "gpt#nestaging",
     "provider_corp_external_id": "AIRLINE-AF",
     "sales_rep_email": null,
@@ -3234,7 +3234,7 @@ Output:
       "partition_key": "gpt#nestaging",
       "endpoint_id": "gpt",
       "part_id": "nestaging",
-      "request_uuid": "92318534130092490880",
+      "request_uuid": "93486578053808144512",
       "email": "jessicacooper@example.com",
       "request_title": "HTTP integration test: Flight ATL->ORD Premium Economy (updated)",
       "request_description": "E2E test request via MCPHttpClient through gateway /mcp",
@@ -3262,9 +3262,9 @@ Output:
       "bundle_uuid": null,
       "status": "confirmed",
       "expired_at": "2026-12-31T23:59:59",
-      "created_at": "2026-06-18T16:49:40.173842",
+      "created_at": "2026-06-18T21:12:29.737965",
       "updated_by": "MCP",
-      "updated_at": "2026-06-18T16:51:25.251407",
+      "updated_at": "2026-06-18T21:14:14.737548",
       "quotes": [
         {
           "final_total_quote_amount": "875",
@@ -3274,13 +3274,13 @@ Output:
           "status": "confirmed",
           "total_quote_amount": "900",
           "total_quote_discount": "50",
-          "created_at": "2026-06-18 16:51:32.388073",
+          "created_at": "2026-06-18 21:14:22.358281",
           "notes": "Updated via HTTP integration test",
           "partition_key": "gpt#nestaging",
-          "quote_uuid": "90196658928596566144",
-          "request_uuid": "92318534130092490880",
+          "quote_uuid": "82681485742934343808",
+          "request_uuid": "93486578053808144512",
           "shipping_method": "ticket_delivery",
-          "updated_at": "2026-06-18 16:53:11.916777",
+          "updated_at": "2026-06-18 21:16:01.937210",
           "updated_by": "MCP"
         }
       ],
@@ -3290,10 +3290,10 @@ Output:
     "quote_items": [
       {
         "batch_no": "AF5319-20260907",
-        "created_at": "2026-06-18 16:51:39.992813",
+        "created_at": "2026-06-18 21:14:29.945258",
         "final_subtotal": "850",
-        "hold_expires_at": "2026-06-18 17:06:40.362457",
-        "hold_token": "e57ea12368767de475e88d9eb3c2a07d",
+        "hold_expires_at": "2026-06-18 21:29:30.294305",
+        "hold_token": "d8c7dea7dd502a81761d466719a2acfc",
         "item_uuid": "06041993713794695296",
         "notes": "HTTP integration test discount",
         "partition_key": "gpt#nestaging",
@@ -3303,8 +3303,8 @@ Output:
         "price_per_uom": "450",
         "provider_item_uuid": "39876487618607726720",
         "qty": "2",
-        "quote_item_uuid": "55051226062314815616",
-        "quote_uuid": "90196658928596566144",
+        "quote_item_uuid": "13595662195546407040",
+        "quote_uuid": "82681485742934343808",
         "request_data": {
           "cancellation_policy_snapshot": {
             "tiers": {
@@ -3328,14 +3328,14 @@ Output:
             "label": "Premium Economy Fare Cancellation",
             "content_hash": "b161d765b3089e5e",
             "policy_uuid": "14167382355785826432",
-            "snapshotted_at": "2026-06-18 16:51:40.631461"
+            "snapshotted_at": "2026-06-18 21:14:30.566505"
           }
         },
-        "request_uuid": "92318534130092490880",
+        "request_uuid": "93486578053808144512",
         "subtotal": "900",
         "subtotal_discount": "50",
         "subtotal_native": "900",
-        "updated_at": "2026-06-18 16:52:33.180830",
+        "updated_at": "2026-06-18 21:15:22.455458",
         "updated_by": "MCP"
       }
     ],
@@ -3345,14 +3345,14 @@ Output:
         "installment_ratio": "100",
         "priority": "0",
         "status": "pending",
-        "created_at": "2026-06-18 16:53:26.792351",
-        "installment_uuid": "78280552242331271296",
+        "created_at": "2026-06-18 21:16:16.554322",
+        "installment_uuid": "23391865408930726016",
         "partition_key": "gpt#nestaging",
         "payment_method": "bank_transfer",
-        "quote_uuid": "90196658928596566144",
-        "request_uuid": "92318534130092490880",
-        "scheduled_date": "2026-06-18 16:53:23",
-        "updated_at": "2026-06-18 16:53:26.792351",
+        "quote_uuid": "82681485742934343808",
+        "request_uuid": "93486578053808144512",
+        "scheduled_date": "2026-06-18 21:16:13",
+        "updated_at": "2026-06-18 21:16:16.554322",
         "updated_by": "MCP"
       }
     ],
@@ -3543,28 +3543,28 @@ Output:
       }
     ],
     "updated_by": "MCP",
-    "created_at": "2026-06-18T16:51:32.388073",
-    "updated_at": "2026-06-18T16:53:11.916777"
+    "created_at": "2026-06-18T21:14:22.358281",
+    "updated_at": "2026-06-18T21:16:01.937210"
   },
   "installments": [
     {
-      "quote_uuid": "90196658928596566144",
-      "installment_uuid": "78280552242331271296",
-      "request_uuid": "92318534130092490880",
+      "quote_uuid": "82681485742934343808",
+      "installment_uuid": "23391865408930726016",
+      "request_uuid": "93486578053808144512",
       "priority": 0,
       "partition_key": "gpt#nestaging",
       "installment_amount": 875.0,
       "installment_ratio": 100.0,
       "salesorder_no": null,
-      "scheduled_date": "2026-06-18T16:53:23",
+      "scheduled_date": "2026-06-18T21:16:13",
       "payment_method": "bank_transfer",
       "status": "pending",
       "updated_by": "MCP",
-      "created_at": "2026-06-18T16:53:26.792351",
-      "updated_at": "2026-06-18T16:53:26.792351",
+      "created_at": "2026-06-18T21:16:16.554322",
+      "updated_at": "2026-06-18T21:16:16.554322",
       "quote": {
-        "request_uuid": "92318534130092490880",
-        "quote_uuid": "90196658928596566144",
+        "request_uuid": "93486578053808144512",
+        "quote_uuid": "82681485742934343808",
         "partition_key": "gpt#nestaging",
         "provider_corp_external_
 ... (truncated)
@@ -3574,13 +3574,13 @@ Output:
 
 - Method: `get_installments`
 - Status: `pass`
-- Elapsed: `8005.05 ms`
+- Elapsed: `8038.1 ms`
 
 Arguments:
 
 ```json
 {
-  "quote_uuid": "90196658928596566144",
+  "quote_uuid": "82681485742934343808",
   "limit": 10,
   "page_number": 1
 }
@@ -3595,23 +3595,23 @@ Output:
   "total": 1,
   "installment_list": [
     {
-      "quote_uuid": "90196658928596566144",
-      "installment_uuid": "78280552242331271296",
-      "request_uuid": "92318534130092490880",
+      "quote_uuid": "82681485742934343808",
+      "installment_uuid": "23391865408930726016",
+      "request_uuid": "93486578053808144512",
       "priority": 0,
       "partition_key": "gpt#nestaging",
       "installment_amount": 875.0,
       "installment_ratio": 100.0,
       "salesorder_no": null,
-      "scheduled_date": "2026-06-18T16:53:23",
+      "scheduled_date": "2026-06-18T21:16:13",
       "payment_method": "bank_transfer",
       "status": "pending",
       "updated_by": "MCP",
-      "created_at": "2026-06-18T16:53:26.792351",
-      "updated_at": "2026-06-18T16:53:26.792351",
+      "created_at": "2026-06-18T21:16:16.554322",
+      "updated_at": "2026-06-18T21:16:16.554322",
       "quote": {
-        "request_uuid": "92318534130092490880",
-        "quote_uuid": "90196658928596566144",
+        "request_uuid": "93486578053808144512",
+        "quote_uuid": "82681485742934343808",
         "partition_key": "gpt#nestaging",
         "provider_corp_external_id": "AIRLINE-AF",
         "sales_rep_email": null,
@@ -3632,7 +3632,7 @@ Output:
           "partition_key": "gpt#nestaging",
           "endpoint_id": "gpt",
           "part_id": "nestaging",
-          "request_uuid": "92318534130092490880",
+          "request_uuid": "93486578053808144512",
           "email": "jessicacooper@example.com",
           "request_title": "HTTP integration test: Flight ATL->ORD Premium Economy (updated)",
           "request_description": "E2E test request via MCPHttpClient through gateway /mcp",
@@ -3660,9 +3660,9 @@ Output:
           "bundle_uuid": null,
           "status": "confirmed",
           "expired_at": "2026-12-31T23:59:59",
-          "created_at": "2026-06-18T16:49:40.173842",
+          "created_at": "2026-06-18T21:12:29.737965",
           "updated_by": "MCP",
-          "updated_at": "2026-06-18T16:51:25.251407",
+          "updated_at": "2026-06-18T21:14:14.737548",
           "quotes": [
             {
               "final_total_quote_amount": "875",
@@ -3672,13 +3672,13 @@ Output:
               "status": "confirmed",
               "total_quote_amount": "900",
               "total_quote_discount": "50",
-              "created_at": "2026-06-18 16:51:32.388073",
+              "created_at": "2026-06-18 21:14:22.358281",
               "notes": "Updated via HTTP integration test",
               "partition_key": "gpt#nestaging",
-              "quote_uuid": "90196658928596566144",
-              "request_uuid": "92318534130092490880",
+              "quote_uuid": "82681485742934343808",
+              "request_uuid": "93486578053808144512",
               "shipping_method": "ticket_delivery",
-              "updated_at": "2026-06-18 16:53:11.916777",
+              "updated_at": "2026-06-18 21:16:01.937210",
               "updated_by": "MCP"
             }
           ],
@@ -3688,10 +3688,10 @@ Output:
         "quote_items": [
           {
             "batch_no": "AF5319-20260907",
-            "created_at": "2026-06-18 16:51:39.992813",
+            "created_at": "2026-06-18 21:14:29.945258",
             "final_subtotal": "850",
-            "hold_expires_at": "2026-06-18 17:06:40.362457",
-            "hold_token": "e57ea12368767de475e88d9eb3c2a07d",
+            "hold_expires_at": "2026-06-18 21:29:30.294305",
+            "hold_token": "d8c7dea7dd502a81761d466719a2acfc",
             "item_uuid": "06041993713794695296",
             "notes": "HTTP integration test discount",
             "partition_key": "gpt#nestaging",
@@ -3701,8 +3701,8 @@ Output:
             "price_per_uom": "450",
             "provider_item_uuid": "39876487618607726720",
             "qty": "2",
-            "quote_item_uuid": "55051226062314815616",
-            "quote_uuid": "90196658928596566144",
+            "quote_item_uuid": "13595662195546407040",
+            "quote_uuid": "82681485742934343808",
             "request_data": {
               "cancellation_policy_snapshot": {
                 "tiers": {
@@ -3726,14 +3726,14 @@ Output:
                 "label": "Premium Economy Fare Cancellation",
                 "content_hash": "b161d765b3089e5e",
                 "policy_uuid": "14167382355785826432",
-                "snapshotted_at": "2026-06-18 16:51:40.631461"
+                "snapshotted_at": "2026-06-18 21:14:30.566505"
               }
             },
-            "request_uuid": "92318534130092490880",
+            "request_uuid": "93486578053808144512",
             "subtotal": "900",
             "subtotal_discount": "50",
             "subtotal_native": "900",
-            "updated_at": "2026-06-18 16:52:33.180830",
+            "updated_at": "2026-06-18 21:15:22.455458",
             "updated_by": "MCP"
           }
         ],
@@ -3743,14 +3743,14 @@ Output:
             "installment_ratio": "100",
             "priority": "0",
             "status": "pending",
-            "created_at": "2026-06-18 16:53:26.792351",
-            "installment_uuid": "78280552242331271296",
+            "created_at": "2026-06-18 21:16:16.554322",
+            "installment_uuid": "23391865408930726016",
             "partition_key": "gpt#nestaging",
             "payment_method": "bank_transfer",
-            "quote_uuid": "90196658928596566144",
-            "request_uuid": "92318534130092490880",
-            "scheduled_date": "2026-06-18 16:53:23",
-            "updated_at": "2026-06-18 16:53:26.792351",
+            "quote_uuid": "82681485742934343808",
+            "request_uuid": "93486578053808144512",
+            "scheduled_date": "2026-06-18 21:16:13",
+            "updated_at": "2026-06-18 21:16:16.554322",
             "updated_by": "MCP"
           }
         ],
@@ -3918,7 +3918,7 @@ Output:
 
 - Method: `submit_rfq_request`
 - Status: `pass`
-- Elapsed: `7819.56 ms`
+- Elapsed: `8171.01 ms`
 
 Arguments:
 
@@ -3949,7 +3949,7 @@ Output:
   "partition_key": "gpt#nestaging",
   "endpoint_id": "gpt",
   "part_id": "nestaging",
-  "request_uuid": "80943086792617246848",
+  "request_uuid": "24848770540565971072",
   "email": "jessicacooper@example.com",
   "request_title": "HTTP installment setup (create_installment): Flight ATL->ORD Premium Economy",
   "request_description": "Setup request for standalone installment tool validation",
@@ -3969,9 +3969,9 @@ Output:
   "bundle_uuid": null,
   "status": "initial",
   "expired_at": "2026-12-31T23:59:59",
-  "created_at": "2026-06-18T16:53:47.029735",
+  "created_at": "2026-06-18T21:16:37.042286",
   "updated_by": "MCP",
-  "updated_at": "2026-06-18T16:53:47.029735",
+  "updated_at": "2026-06-18T21:16:37.042286",
   "quotes": [],
   "files": [],
   "bundle": null
@@ -3982,13 +3982,13 @@ Output:
 
 - Method: `assign_provider_item_to_request_item`
 - Status: `pass`
-- Elapsed: `14775.31 ms`
+- Elapsed: `14727.56 ms`
 
 Arguments:
 
 ```json
 {
-  "request_uuid": "80943086792617246848",
+  "request_uuid": "24848770540565971072",
   "item_uuid": "06041993713794695296",
   "provider_item_uuid": "39876487618607726720",
   "provider_corp_external_id": "AIRLINE-AF",
@@ -4004,7 +4004,7 @@ Output:
   "partition_key": "gpt#nestaging",
   "endpoint_id": "gpt",
   "part_id": "nestaging",
-  "request_uuid": "80943086792617246848",
+  "request_uuid": "24848770540565971072",
   "email": "jessicacooper@example.com",
   "request_title": "HTTP installment setup (create_installment): Flight ATL->ORD Premium Economy",
   "request_description": "Setup request for standalone installment tool validation",
@@ -4032,9 +4032,9 @@ Output:
   "bundle_uuid": null,
   "status": "initial",
   "expired_at": "2026-12-31T23:59:59",
-  "created_at": "2026-06-18T16:53:47.029735",
+  "created_at": "2026-06-18T21:16:37.042286",
   "updated_by": "MCP",
-  "updated_at": "2026-06-18T16:54:01.792334",
+  "updated_at": "2026-06-18T21:16:51.758078",
   "quotes": [],
   "files": [],
   "bundle": null
@@ -4045,13 +4045,13 @@ Output:
 
 - Method: `confirm_request_and_create_quotes`
 - Status: `pass`
-- Elapsed: `42457.23 ms`
+- Elapsed: `42409.95 ms`
 
 Arguments:
 
 ```json
 {
-  "request_uuid": "80943086792617246848",
+  "request_uuid": "24848770540565971072",
   "provider_corp_external_ids": [
     "AIRLINE-AF"
   ],
@@ -4070,7 +4070,7 @@ Output:
     "partition_key": "gpt#nestaging",
     "endpoint_id": "gpt",
     "part_id": "nestaging",
-    "request_uuid": "80943086792617246848",
+    "request_uuid": "24848770540565971072",
     "email": "jessicacooper@example.com",
     "request_title": "HTTP installment setup (create_installment): Flight ATL->ORD Premium Economy",
     "request_description": "Setup request for standalone installment tool validation",
@@ -4098,17 +4098,17 @@ Output:
     "bundle_uuid": null,
     "status": "confirmed",
     "expired_at": "2026-12-31T23:59:59",
-    "created_at": "2026-06-18T16:53:47.029735",
+    "created_at": "2026-06-18T21:16:37.042286",
     "updated_by": "MCP",
-    "updated_at": "2026-06-18T16:54:16.845015",
+    "updated_at": "2026-06-18T21:17:06.403493",
     "quotes": [],
     "files": [],
     "bundle": null
   },
   "created_quotes": [
     {
-      "request_uuid": "80943086792617246848",
-      "quote_uuid": "17085938257088233600",
+      "request_uuid": "24848770540565971072",
+      "quote_uuid": "46408735338345283712",
       "partition_key": "gpt#nestaging",
       "provider_corp_external_id": "AIRLINE-AF",
       "sales_rep_email": null,
@@ -4129,7 +4129,7 @@ Output:
         "partition_key": "gpt#nestaging",
         "endpoint_id": "gpt",
         "part_id": "nestaging",
-        "request_uuid": "80943086792617246848",
+        "request_uuid": "24848770540565971072",
         "email": "jessicacooper@example.com",
         "request_title": "HTTP installment setup (create_installment): Flight ATL->ORD Premium Economy",
         "request_description": "Setup request for standalone installment tool validation",
@@ -4157,9 +4157,9 @@ Output:
         "bundle_uuid": null,
         "status": "confirmed",
         "expired_at": "2026-12-31T23:59:59",
-        "created_at": "2026-06-18T16:53:47.029735",
+        "created_at": "2026-06-18T21:16:37.042286",
         "updated_by": "MCP",
-        "updated_at": "2026-06-18T16:54:16.845015",
+        "updated_at": "2026-06-18T21:17:06.403493",
         "quotes": [
           {
             "final_total_quote_amount": "450",
@@ -4169,11 +4169,11 @@ Output:
             "status": "in_progress",
             "total_quote_amount": "450",
             "total_quote_discount": "0",
-            "created_at": "2026-06-18 16:54:23.953008",
+            "created_at": "2026-06-18 21:17:13.525580",
             "partition_key": "gpt#nestaging",
-            "quote_uuid": "17085938257088233600",
-            "request_uuid": "80943086792617246848",
-            "updated_at": "2026-06-18 16:54:40.208093",
+            "quote_uuid": "46408735338345283712",
+            "request_uuid": "24848770540565971072",
+            "updated_at": "2026-06-18 21:17:30.146065",
             "updated_by": "MCP"
           }
         ],
@@ -4183,10 +4183,10 @@ Output:
       "quote_items": [
         {
           "batch_no": "AF5319-20260907",
-          "created_at": "2026-06-18 16:54:31.416021",
+          "created_at": "2026-06-18 21:17:21.393377",
           "final_subtotal": "450",
-          "hold_expires_at": "2026-06-18 17:09:31.750517",
-          "hold_token": "c49fc8a19247a90b6ac558ed7fe4132e",
+          "hold_expires_at": "2026-06-18 21:32:21.742398",
+          "hold_token": "a4e8dee569be801bf44d331751ac6cd9",
           "item_uuid": "06041993713794695296",
           "partition_key": "gpt#nestaging",
           "pax_breakdown": {
@@ -4195,8 +4195,8 @@ Output:
           "price_per_uom": "450",
           "provider_item_uuid": "39876487618607726720",
           "qty": "1",
-          "quote_item_uuid": "76246703758155726976",
-          "quote_uuid": "17085938257088233600",
+          "quote_item_uuid": "11691158645926543488",
+          "quote_uuid": "46408735338345283712",
           "request_data": {
             "cancellation_policy_snapshot": {
               "tiers": {
@@ -4220,14 +4220,14 @@ Output:
               "label": "Premium Economy Fare Cancellation",
               "content_hash": "b161d765b3089e5e",
               "policy_uuid": "14167382355785826432",
-              "snapshotted_at": "2026-06-18 16:54:32.021679"
+              "snapshotted_at": "2026-06-18 21:17:22.008538"
             }
           },
-          "request_uuid": "80943086792617246848",
+          "request_uuid": "24848770540565971072",
           "subtotal": "450",
           "subtotal_discount": "0",
           "subtotal_native": "450",
-          "updated_at": "2026-06-18 16:54:31.416021",
+          "updated_at": "2026-06-18 21:17:21.393377",
           "updated_by": "MCP"
         }
       ],
@@ -4416,14 +4416,14 @@ Output:
 
 - Method: `update_quote`
 - Status: `pass`
-- Elapsed: `11953.18 ms`
+- Elapsed: `11861.81 ms`
 
 Arguments:
 
 ```json
 {
-  "request_uuid": "80943086792617246848",
-  "quote_uuid": "17085938257088233600",
+  "request_uuid": "24848770540565971072",
+  "quote_uuid": "46408735338345283712",
   "status": "confirmed",
   "notes": "Confirmed setup quote for create_installment"
 }
@@ -4433,8 +4433,8 @@ Output:
 
 ```json
 {
-  "request_uuid": "80943086792617246848",
-  "quote_uuid": "17085938257088233600",
+  "request_uuid": "24848770540565971072",
+  "quote_uuid": "46408735338345283712",
   "partition_key": "gpt#nestaging",
   "provider_corp_external_id": "AIRLINE-AF",
   "sales_rep_email": null,
@@ -4455,7 +4455,7 @@ Output:
     "partition_key": "gpt#nestaging",
     "endpoint_id": "gpt",
     "part_id": "nestaging",
-    "request_uuid": "80943086792617246848",
+    "request_uuid": "24848770540565971072",
     "email": "jessicacooper@example.com",
     "request_title": "HTTP installment setup (create_installment): Flight ATL->ORD Premium Economy",
     "request_description": "Setup request for standalone installment tool validation",
@@ -4483,9 +4483,9 @@ Output:
     "bundle_uuid": null,
     "status": "confirmed",
     "expired_at": "2026-12-31T23:59:59",
-    "created_at": "2026-06-18T16:53:47.029735",
+    "created_at": "2026-06-18T21:16:37.042286",
     "updated_by": "MCP",
-    "updated_at": "2026-06-18T16:54:16.845015",
+    "updated_at": "2026-06-18T21:17:06.403493",
     "quotes": [
       {
         "final_total_quote_amount": "450",
@@ -4495,12 +4495,12 @@ Output:
         "status": "confirmed",
         "total_quote_amount": "450",
         "total_quote_discount": "0",
-        "created_at": "2026-06-18 16:54:23.953008",
+        "created_at": "2026-06-18 21:17:13.525580",
         "notes": "Confirmed setup quote for create_installment",
         "partition_key": "gpt#nestaging",
-        "quote_uuid": "17085938257088233600",
-        "request_uuid": "80943086792617246848",
-        "updated_at": "2026-06-18 16:54:55.974493",
+        "quote_uuid": "46408735338345283712",
+        "request_uuid": "24848770540565971072",
+        "updated_at": "2026-06-18 21:17:45.853502",
         "updated_by": "MCP"
       }
     ],
@@ -4510,10 +4510,10 @@ Output:
   "quote_items": [
     {
       "batch_no": "AF5319-20260907",
-      "created_at": "2026-06-18 16:54:31.416021",
+      "created_at": "2026-06-18 21:17:21.393377",
       "final_subtotal": "450",
-      "hold_expires_at": "2026-06-18 17:09:31.750517",
-      "hold_token": "c49fc8a19247a90b6ac558ed7fe4132e",
+      "hold_expires_at": "2026-06-18 21:32:21.742398",
+      "hold_token": "a4e8dee569be801bf44d331751ac6cd9",
       "item_uuid": "06041993713794695296",
       "partition_key": "gpt#nestaging",
       "pax_breakdown": {
@@ -4522,8 +4522,8 @@ Output:
       "price_per_uom": "450",
       "provider_item_uuid": "39876487618607726720",
       "qty": "1",
-      "quote_item_uuid": "76246703758155726976",
-      "quote_uuid": "17085938257088233600",
+      "quote_item_uuid": "11691158645926543488",
+      "quote_uuid": "46408735338345283712",
       "request_data": {
         "cancellation_policy_snapshot": {
           "tiers": {
@@ -4547,14 +4547,14 @@ Output:
           "label": "Premium Economy Fare Cancellation",
           "content_hash": "b161d765b3089e5e",
           "policy_uuid": "14167382355785826432",
-          "snapshotted_at": "2026-06-18 16:54:32.021679"
+          "snapshotted_at": "2026-06-18 21:17:22.008538"
         }
       },
-      "request_uuid": "80943086792617246848",
+      "request_uuid": "24848770540565971072",
       "subtotal": "450",
       "subtotal_discount": "0",
       "subtotal_native": "450",
-      "updated_at": "2026-06-18 16:54:31.416021",
+      "updated_at": "2026-06-18 21:17:21.393377",
       "updated_by": "MCP"
     }
   ],
@@ -4746,8 +4746,8 @@ Output:
     }
   ],
   "updated_by": "MCP",
-  "created_at": "2026-06-18T16:54:23.953008",
-  "updated_at": "2026-06-18T16:54:55.974493"
+  "created_at": "2026-06-18T21:17:13.525580",
+  "updated_at": "2026-06-18T21:17:45.853502"
 }
 ```
 
@@ -4755,14 +4755,14 @@ Output:
 
 - Method: `create_installment`
 - Status: `pass`
-- Elapsed: `15496.44 ms`
+- Elapsed: `15249.38 ms`
 
 Arguments:
 
 ```json
 {
-  "quote_uuid": "17085938257088233600",
-  "request_uuid": "80943086792617246848",
+  "quote_uuid": "46408735338345283712",
+  "request_uuid": "24848770540565971072",
   "installment_amount": 100.0,
   "payment_method": "credit_card"
 }
@@ -4772,23 +4772,23 @@ Output:
 
 ```json
 {
-  "quote_uuid": "17085938257088233600",
-  "installment_uuid": "52969861549697024128",
-  "request_uuid": "80943086792617246848",
+  "quote_uuid": "46408735338345283712",
+  "installment_uuid": "91148067622195576960",
+  "request_uuid": "24848770540565971072",
   "priority": 0,
   "partition_key": "gpt#nestaging",
   "installment_amount": 100.0,
   "installment_ratio": 22.22222222222222,
   "salesorder_no": null,
-  "scheduled_date": "2026-06-18T16:55:07",
+  "scheduled_date": "2026-06-18T21:17:57",
   "payment_method": "credit_card",
   "status": "pending",
   "updated_by": "MCP",
-  "created_at": "2026-06-18T16:55:11.242855",
-  "updated_at": "2026-06-18T16:55:11.242855",
+  "created_at": "2026-06-18T21:18:00.852216",
+  "updated_at": "2026-06-18T21:18:00.852216",
   "quote": {
-    "request_uuid": "80943086792617246848",
-    "quote_uuid": "17085938257088233600",
+    "request_uuid": "24848770540565971072",
+    "quote_uuid": "46408735338345283712",
     "partition_key": "gpt#nestaging",
     "provider_corp_external_id": "AIRLINE-AF",
     "sales_rep_email": null,
@@ -4809,7 +4809,7 @@ Output:
       "partition_key": "gpt#nestaging",
       "endpoint_id": "gpt",
       "part_id": "nestaging",
-      "request_uuid": "80943086792617246848",
+      "request_uuid": "24848770540565971072",
       "email": "jessicacooper@example.com",
       "request_title": "HTTP installment setup (create_installment): Flight ATL->ORD Premium Economy",
       "request_description": "Setup request for standalone installment tool validation",
@@ -4837,9 +4837,9 @@ Output:
       "bundle_uuid": null,
       "status": "confirmed",
       "expired_at": "2026-12-31T23:59:59",
-      "created_at": "2026-06-18T16:53:47.029735",
+      "created_at": "2026-06-18T21:16:37.042286",
       "updated_by": "MCP",
-      "updated_at": "2026-06-18T16:54:16.845015",
+      "updated_at": "2026-06-18T21:17:06.403493",
       "quotes": [
         {
           "final_total_quote_amount": "450",
@@ -4849,12 +4849,12 @@ Output:
           "status": "confirmed",
           "total_quote_amount": "450",
           "total_quote_discount": "0",
-          "created_at": "2026-06-18 16:54:23.953008",
+          "created_at": "2026-06-18 21:17:13.525580",
           "notes": "Confirmed setup quote for create_installment",
           "partition_key": "gpt#nestaging",
-          "quote_uuid": "17085938257088233600",
-          "request_uuid": "80943086792617246848",
-          "updated_at": "2026-06-18 16:54:55.974493",
+          "quote_uuid": "46408735338345283712",
+          "request_uuid": "24848770540565971072",
+          "updated_at": "2026-06-18 21:17:45.853502",
           "updated_by": "MCP"
         }
       ],
@@ -4864,10 +4864,10 @@ Output:
     "quote_items": [
       {
         "batch_no": "AF5319-20260907",
-        "created_at": "2026-06-18 16:54:31.416021",
+        "created_at": "2026-06-18 21:17:21.393377",
         "final_subtotal": "450",
-        "hold_expires_at": "2026-06-18 17:09:31.750517",
-        "hold_token": "c49fc8a19247a90b6ac558ed7fe4132e",
+        "hold_expires_at": "2026-06-18 21:32:21.742398",
+        "hold_token": "a4e8dee569be801bf44d331751ac6cd9",
         "item_uuid": "06041993713794695296",
         "partition_key": "gpt#nestaging",
         "pax_breakdown": {
@@ -4876,8 +4876,8 @@ Output:
         "price_per_uom": "450",
         "provider_item_uuid": "39876487618607726720",
         "qty": "1",
-        "quote_item_uuid": "76246703758155726976",
-        "quote_uuid": "17085938257088233600",
+        "quote_item_uuid": "11691158645926543488",
+        "quote_uuid": "46408735338345283712",
         "request_data": {
           "cancellation_policy_snapshot": {
             "tiers": {
@@ -4901,14 +4901,14 @@ Output:
             "label": "Premium Economy Fare Cancellation",
             "content_hash": "b161d765b3089e5e",
             "policy_uuid": "14167382355785826432",
-            "snapshotted_at": "2026-06-18 16:54:32.021679"
+            "snapshotted_at": "2026-06-18 21:17:22.008538"
           }
         },
-        "request_uuid": "80943086792617246848",
+        "request_uuid": "24848770540565971072",
         "subtotal": "450",
         "subtotal_discount": "0",
         "subtotal_native": "450",
-        "updated_at": "2026-06-18 16:54:31.416021",
+        "updated_at": "2026-06-18 21:17:21.393377",
         "updated_by": "MCP"
       }
     ],
@@ -4918,14 +4918,14 @@ Output:
         "installment_ratio": "22.22222222222222",
         "priority": "0",
         "status": "pending",
-        "created_at": "2026-06-18 16:55:11.242855",
-        "installment_uuid": "52969861549697024128",
+        "created_at": "2026-06-18 21:18:00.852216",
+        "installment_uuid": "91148067622195576960",
         "partition_key": "gpt#nestaging",
         "payment_method": "credit_card",
-        "quote_uuid": "17085938257088233600",
-        "request_uuid": "80943086792617246848",
-        "scheduled_date": "2026-06-18 16:55:07",
-        "updated_at": "2026-06-18 16:55:11.242855",
+        "quote_uuid": "46408735338345283712",
+        "request_uuid": "24848770540565971072",
+        "scheduled_date": "2026-06-18 21:17:57",
+        "updated_at": "2026-06-18 21:18:00.852216",
         "updated_by": "MCP"
       }
     ],
@@ -5116,8 +5116,8 @@ Output:
       }
     ],
     "updated_by": "MCP",
-    "created_at": "2026-06-18T16:54:23.953008",
-    "updated_at": "2026-06-18T16:54:55.974493"
+    "created_at": "2026-06-18T21:17:13.525580",
+    "updated_at": "2026-06-18T21:17:45.853502"
   }
 }
 ```
@@ -5126,7 +5126,7 @@ Output:
 
 - Method: `submit_rfq_request`
 - Status: `pass`
-- Elapsed: `7924.64 ms`
+- Elapsed: `7816.68 ms`
 
 Arguments:
 
@@ -5157,7 +5157,7 @@ Output:
   "partition_key": "gpt#nestaging",
   "endpoint_id": "gpt",
   "part_id": "nestaging",
-  "request_uuid": "37099861459585745024",
+  "request_uuid": "76072955795966279808",
   "email": "jessicacooper@example.com",
   "request_title": "HTTP installment setup (create_installments): Flight ATL->ORD Premium Economy",
   "request_description": "Setup request for standalone installment tool validation",
@@ -5177,9 +5177,9 @@ Output:
   "bundle_uuid": null,
   "status": "initial",
   "expired_at": "2026-12-31T23:59:59",
-  "created_at": "2026-06-18T16:55:19.592238",
+  "created_at": "2026-06-18T21:18:09.104274",
   "updated_by": "MCP",
-  "updated_at": "2026-06-18T16:55:19.592238",
+  "updated_at": "2026-06-18T21:18:09.104274",
   "quotes": [],
   "files": [],
   "bundle": null
@@ -5190,13 +5190,13 @@ Output:
 
 - Method: `assign_provider_item_to_request_item`
 - Status: `pass`
-- Elapsed: `14732.3 ms`
+- Elapsed: `14742.82 ms`
 
 Arguments:
 
 ```json
 {
-  "request_uuid": "37099861459585745024",
+  "request_uuid": "76072955795966279808",
   "item_uuid": "06041993713794695296",
   "provider_item_uuid": "39876487618607726720",
   "provider_corp_external_id": "AIRLINE-AF",
@@ -5212,7 +5212,7 @@ Output:
   "partition_key": "gpt#nestaging",
   "endpoint_id": "gpt",
   "part_id": "nestaging",
-  "request_uuid": "37099861459585745024",
+  "request_uuid": "76072955795966279808",
   "email": "jessicacooper@example.com",
   "request_title": "HTTP installment setup (create_installments): Flight ATL->ORD Premium Economy",
   "request_description": "Setup request for standalone installment tool validation",
@@ -5240,9 +5240,9 @@ Output:
   "bundle_uuid": null,
   "status": "initial",
   "expired_at": "2026-12-31T23:59:59",
-  "created_at": "2026-06-18T16:55:19.592238",
+  "created_at": "2026-06-18T21:18:09.104274",
   "updated_by": "MCP",
-  "updated_at": "2026-06-18T16:55:34.350543",
+  "updated_at": "2026-06-18T21:18:23.832893",
   "quotes": [],
   "files": [],
   "bundle": null
@@ -5253,13 +5253,13 @@ Output:
 
 - Method: `confirm_request_and_create_quotes`
 - Status: `pass`
-- Elapsed: `42264.14 ms`
+- Elapsed: `42520.16 ms`
 
 Arguments:
 
 ```json
 {
-  "request_uuid": "37099861459585745024",
+  "request_uuid": "76072955795966279808",
   "provider_corp_external_ids": [
     "AIRLINE-AF"
   ],
@@ -5278,7 +5278,7 @@ Output:
     "partition_key": "gpt#nestaging",
     "endpoint_id": "gpt",
     "part_id": "nestaging",
-    "request_uuid": "37099861459585745024",
+    "request_uuid": "76072955795966279808",
     "email": "jessicacooper@example.com",
     "request_title": "HTTP installment setup (create_installments): Flight ATL->ORD Premium Economy",
     "request_description": "Setup request for standalone installment tool validation",
@@ -5306,17 +5306,17 @@ Output:
     "bundle_uuid": null,
     "status": "confirmed",
     "expired_at": "2026-12-31T23:59:59",
-    "created_at": "2026-06-18T16:55:19.592238",
+    "created_at": "2026-06-18T21:18:09.104274",
     "updated_by": "MCP",
-    "updated_at": "2026-06-18T16:55:49.105271",
+    "updated_at": "2026-06-18T21:18:38.500885",
     "quotes": [],
     "files": [],
     "bundle": null
   },
   "created_quotes": [
     {
-      "request_uuid": "37099861459585745024",
-      "quote_uuid": "06086118673104257152",
+      "request_uuid": "76072955795966279808",
+      "quote_uuid": "28968787357267411072",
       "partition_key": "gpt#nestaging",
       "provider_corp_external_id": "AIRLINE-AF",
       "sales_rep_email": null,
@@ -5337,7 +5337,7 @@ Output:
         "partition_key": "gpt#nestaging",
         "endpoint_id": "gpt",
         "part_id": "nestaging",
-        "request_uuid": "37099861459585745024",
+        "request_uuid": "76072955795966279808",
         "email": "jessicacooper@example.com",
         "request_title": "HTTP installment setup (create_installments): Flight ATL->ORD Premium Economy",
         "request_description": "Setup request for standalone installment tool validation",
@@ -5365,9 +5365,9 @@ Output:
         "bundle_uuid": null,
         "status": "confirmed",
         "expired_at": "2026-12-31T23:59:59",
-        "created_at": "2026-06-18T16:55:19.592238",
+        "created_at": "2026-06-18T21:18:09.104274",
         "updated_by": "MCP",
-        "updated_at": "2026-06-18T16:55:49.105271",
+        "updated_at": "2026-06-18T21:18:38.500885",
         "quotes": [
           {
             "final_total_quote_amount": "450",
@@ -5377,11 +5377,11 @@ Output:
             "status": "in_progress",
             "total_quote_amount": "450",
             "total_quote_discount": "0",
-            "created_at": "2026-06-18 16:55:56.247784",
+            "created_at": "2026-06-18 21:18:45.599308",
             "partition_key": "gpt#nestaging",
-            "quote_uuid": "06086118673104257152",
-            "request_uuid": "37099861459585745024",
-            "updated_at": "2026-06-18 16:56:12.571263",
+            "quote_uuid": "28968787357267411072",
+            "request_uuid": "76072955795966279808",
+            "updated_at": "2026-06-18 21:19:02.350527",
             "updated_by": "MCP"
           }
         ],
@@ -5391,10 +5391,10 @@ Output:
       "quote_items": [
         {
           "batch_no": "AF5319-20260907",
-          "created_at": "2026-06-18 16:56:03.770426",
+          "created_at": "2026-06-18 21:18:53.501379",
           "final_subtotal": "450",
-          "hold_expires_at": "2026-06-18 17:11:04.112050",
-          "hold_token": "8c20247dec652c47e31ede14f9368147",
+          "hold_expires_at": "2026-06-18 21:33:53.841382",
+          "hold_token": "81eeec02c50bc828036a79f6afe11544",
           "item_uuid": "06041993713794695296",
           "partition_key": "gpt#nestaging",
           "pax_breakdown": {
@@ -5403,8 +5403,8 @@ Output:
           "price_per_uom": "450",
           "provider_item_uuid": "39876487618607726720",
           "qty": "1",
-          "quote_item_uuid": "22401735113777889408",
-          "quote_uuid": "06086118673104257152",
+          "quote_item_uuid": "22634389049036521600",
+          "quote_uuid": "28968787357267411072",
           "request_data": {
             "cancellation_policy_snapshot": {
               "tiers": {
@@ -5428,14 +5428,14 @@ Output:
               "label": "Premium Economy Fare Cancellation",
               "content_hash": "b161d765b3089e5e",
               "policy_uuid": "14167382355785826432",
-              "snapshotted_at": "2026-06-18 16:56:04.365526"
+              "snapshotted_at": "2026-06-18 21:18:54.115983"
             }
           },
-          "request_uuid": "37099861459585745024",
+          "request_uuid": "76072955795966279808",
           "subtotal": "450",
           "subtotal_discount": "0",
           "subtotal_native": "450",
-          "updated_at": "2026-06-18 16:56:03.770426",
+          "updated_at": "2026-06-18 21:18:53.501379",
           "updated_by": "MCP"
         }
       ],
@@ -5623,14 +5623,14 @@ Output:
 
 - Method: `update_quote`
 - Status: `pass`
-- Elapsed: `11856.86 ms`
+- Elapsed: `12033.71 ms`
 
 Arguments:
 
 ```json
 {
-  "request_uuid": "37099861459585745024",
-  "quote_uuid": "06086118673104257152",
+  "request_uuid": "76072955795966279808",
+  "quote_uuid": "28968787357267411072",
   "status": "confirmed",
   "notes": "Confirmed setup quote for create_installments"
 }
@@ -5640,8 +5640,8 @@ Output:
 
 ```json
 {
-  "request_uuid": "37099861459585745024",
-  "quote_uuid": "06086118673104257152",
+  "request_uuid": "76072955795966279808",
+  "quote_uuid": "28968787357267411072",
   "partition_key": "gpt#nestaging",
   "provider_corp_external_id": "AIRLINE-AF",
   "sales_rep_email": null,
@@ -5662,7 +5662,7 @@ Output:
     "partition_key": "gpt#nestaging",
     "endpoint_id": "gpt",
     "part_id": "nestaging",
-    "request_uuid": "37099861459585745024",
+    "request_uuid": "76072955795966279808",
     "email": "jessicacooper@example.com",
     "request_title": "HTTP installment setup (create_installments): Flight ATL->ORD Premium Economy",
     "request_description": "Setup request for standalone installment tool validation",
@@ -5690,9 +5690,9 @@ Output:
     "bundle_uuid": null,
     "status": "confirmed",
     "expired_at": "2026-12-31T23:59:59",
-    "created_at": "2026-06-18T16:55:19.592238",
+    "created_at": "2026-06-18T21:18:09.104274",
     "updated_by": "MCP",
-    "updated_at": "2026-06-18T16:55:49.105271",
+    "updated_at": "2026-06-18T21:18:38.500885",
     "quotes": [
       {
         "final_total_quote_amount": "450",
@@ -5702,12 +5702,12 @@ Output:
         "status": "confirmed",
         "total_quote_amount": "450",
         "total_quote_discount": "0",
-        "created_at": "2026-06-18 16:55:56.247784",
+        "created_at": "2026-06-18 21:18:45.599308",
         "notes": "Confirmed setup quote for create_installments",
         "partition_key": "gpt#nestaging",
-        "quote_uuid": "06086118673104257152",
-        "request_uuid": "37099861459585745024",
-        "updated_at": "2026-06-18 16:56:28.277532",
+        "quote_uuid": "28968787357267411072",
+        "request_uuid": "76072955795966279808",
+        "updated_at": "2026-06-18 21:19:18.157824",
         "updated_by": "MCP"
       }
     ],
@@ -5717,10 +5717,10 @@ Output:
   "quote_items": [
     {
       "batch_no": "AF5319-20260907",
-      "created_at": "2026-06-18 16:56:03.770426",
+      "created_at": "2026-06-18 21:18:53.501379",
       "final_subtotal": "450",
-      "hold_expires_at": "2026-06-18 17:11:04.112050",
-      "hold_token": "8c20247dec652c47e31ede14f9368147",
+      "hold_expires_at": "2026-06-18 21:33:53.841382",
+      "hold_token": "81eeec02c50bc828036a79f6afe11544",
       "item_uuid": "06041993713794695296",
       "partition_key": "gpt#nestaging",
       "pax_breakdown": {
@@ -5729,8 +5729,8 @@ Output:
       "price_per_uom": "450",
       "provider_item_uuid": "39876487618607726720",
       "qty": "1",
-      "quote_item_uuid": "22401735113777889408",
-      "quote_uuid": "06086118673104257152",
+      "quote_item_uuid": "22634389049036521600",
+      "quote_uuid": "28968787357267411072",
       "request_data": {
         "cancellation_policy_snapshot": {
           "tiers": {
@@ -5754,14 +5754,14 @@ Output:
           "label": "Premium Economy Fare Cancellation",
           "content_hash": "b161d765b3089e5e",
           "policy_uuid": "14167382355785826432",
-          "snapshotted_at": "2026-06-18 16:56:04.365526"
+          "snapshotted_at": "2026-06-18 21:18:54.115983"
         }
       },
-      "request_uuid": "37099861459585745024",
+      "request_uuid": "76072955795966279808",
       "subtotal": "450",
       "subtotal_discount": "0",
       "subtotal_native": "450",
-      "updated_at": "2026-06-18 16:56:03.770426",
+      "updated_at": "2026-06-18 21:18:53.501379",
       "updated_by": "MCP"
     }
   ],
@@ -5953,8 +5953,8 @@ Output:
     }
   ],
   "updated_by": "MCP",
-  "created_at": "2026-06-18T16:55:56.247784",
-  "updated_at": "2026-06-18T16:56:28.277532"
+  "created_at": "2026-06-18T21:18:45.599308",
+  "updated_at": "2026-06-18T21:19:18.157824"
 }
 ```
 
@@ -5962,14 +5962,14 @@ Output:
 
 - Method: `create_installments`
 - Status: `pass`
-- Elapsed: `25111.78 ms`
+- Elapsed: `24013.78 ms`
 
 Arguments:
 
 ```json
 {
-  "quote_uuid": "06086118673104257152",
-  "request_uuid": "37099861459585745024",
+  "quote_uuid": "28968787357267411072",
+  "request_uuid": "76072955795966279808",
   "interval_num": 3,
   "total_pay_period": 6,
   "payment_method": "bank_transfer"
@@ -5982,23 +5982,23 @@ Output:
 {
   "installments": [
     {
-      "quote_uuid": "06086118673104257152",
-      "installment_uuid": "22130425663423791232",
-      "request_uuid": "37099861459585745024",
+      "quote_uuid": "28968787357267411072",
+      "installment_uuid": "32517421146647314560",
+      "request_uuid": "76072955795966279808",
       "priority": 0,
       "partition_key": "gpt#nestaging",
       "installment_amount": 150.0,
       "installment_ratio": 33.33333333333333,
       "salesorder_no": null,
-      "scheduled_date": "2026-08-15T16:56:40",
+      "scheduled_date": "2026-08-15T21:19:30",
       "payment_method": "bank_transfer",
       "status": "pending",
       "updated_by": "MCP",
-      "created_at": "2026-06-18T16:56:43.856230",
-      "updated_at": "2026-06-18T16:56:43.856230",
+      "created_at": "2026-06-18T21:19:33.668187",
+      "updated_at": "2026-06-18T21:19:33.668187",
       "quote": {
-        "request_uuid": "37099861459585745024",
-        "quote_uuid": "06086118673104257152",
+        "request_uuid": "76072955795966279808",
+        "quote_uuid": "28968787357267411072",
         "partition_key": "gpt#nestaging",
         "provider_corp_external_id": "AIRLINE-AF",
         "sales_rep_email": null,
@@ -6019,7 +6019,7 @@ Output:
           "partition_key": "gpt#nestaging",
           "endpoint_id": "gpt",
           "part_id": "nestaging",
-          "request_uuid": "37099861459585745024",
+          "request_uuid": "76072955795966279808",
           "email": "jessicacooper@example.com",
           "request_title": "HTTP installment setup (create_installments): Flight ATL->ORD Premium Economy",
           "request_description": "Setup request for standalone installment tool validation",
@@ -6047,9 +6047,9 @@ Output:
           "bundle_uuid": null,
           "status": "confirmed",
           "expired_at": "2026-12-31T23:59:59",
-          "created_at": "2026-06-18T16:55:19.592238",
+          "created_at": "2026-06-18T21:18:09.104274",
           "updated_by": "MCP",
-          "updated_at": "2026-06-18T16:55:49.105271",
+          "updated_at": "2026-06-18T21:18:38.500885",
           "quotes": [
             {
               "final_total_quote_amount": "450",
@@ -6059,12 +6059,12 @@ Output:
               "status": "confirmed",
               "total_quote_amount": "450",
               "total_quote_discount": "0",
-              "created_at": "2026-06-18 16:55:56.247784",
+              "created_at": "2026-06-18 21:18:45.599308",
               "notes": "Confirmed setup quote for create_installments",
               "partition_key": "gpt#nestaging",
-              "quote_uuid": "06086118673104257152",
-              "request_uuid": "37099861459585745024",
-              "updated_at": "2026-06-18 16:56:28.277532",
+              "quote_uuid": "28968787357267411072",
+              "request_uuid": "76072955795966279808",
+              "updated_at": "2026-06-18 21:19:18.157824",
               "updated_by": "MCP"
             }
           ],
@@ -6074,10 +6074,10 @@ Output:
         "quote_items": [
           {
             "batch_no": "AF5319-20260907",
-            "created_at": "2026-06-18 16:56:03.770426",
+            "created_at": "2026-06-18 21:18:53.501379",
             "final_subtotal": "450",
-            "hold_expires_at": "2026-06-18 17:11:04.112050",
-            "hold_token": "8c20247dec652c47e31ede14f9368147",
+            "hold_expires_at": "2026-06-18 21:33:53.841382",
+            "hold_token": "81eeec02c50bc828036a79f6afe11544",
             "item_uuid": "06041993713794695296",
             "partition_key": "gpt#nestaging",
             "pax_breakdown": {
@@ -6086,8 +6086,8 @@ Output:
             "price_per_uom": "450",
             "provider_item_uuid": "39876487618607726720",
             "qty": "1",
-            "quote_item_uuid": "22401735113777889408",
-            "quote_uuid": "06086118673104257152",
+            "quote_item_uuid": "22634389049036521600",
+            "quote_uuid": "28968787357267411072",
             "request_data": {
               "cancellation_policy_snapshot": {
                 "tiers": {
@@ -6111,14 +6111,14 @@ Output:
                 "label": "Premium Economy Fare Cancellation",
                 "content_hash": "b161d765b3089e5e",
                 "policy_uuid": "14167382355785826432",
-                "snapshotted_at": "2026-06-18 16:56:04.365526"
+                "snapshotted_at": "2026-06-18 21:18:54.115983"
               }
             },
-            "request_uuid": "37099861459585745024",
+            "request_uuid": "76072955795966279808",
             "subtotal": "450",
             "subtotal_discount": "0",
             "subtotal_native": "450",
-            "updated_at": "2026-06-18 16:56:03.770426",
+            "updated_at": "2026-06-18 21:18:53.501379",
             "updated_by": "MCP"
           }
         ],
@@ -6128,14 +6128,14 @@ Output:
             "installment_ratio": "33.33333333333333",
             "priority": "0",
             "status": "pending",
-            "created_at": "2026-06-18 16:56:43.856230",
-            "installment_uuid": "22130425663423791232",
+            "created_at": "2026-06-18 21:19:33.668187",
+            "installment_uuid": "32517421146647314560",
             "partition_key": "gpt#nestaging",
             "payment_method": "bank_transfer",
-            "quote_uuid": "06086118673104257152",
-            "request_uuid": "37099861459585745024",
-            "scheduled_date": "2026-08-15 16:56:40",
-            "updated_at": "2026-06-18 16:56:43.856230",
+            "quote_uuid": "28968787357267411072",
+            "request_uuid": "76072955795966279808",
+            "scheduled_date": "2026-08-15 21:19:30",
+            "updated_at": "2026-06-18 21:19:33.668187",
             "updated_by": "MCP"
           }
         ],
@@ -6301,18 +6301,18 @@ Output:
 ... (truncated)
 ```
 
-### 33. installments / update_installment (uuid=782805522423...)
+### 33. installments / update_installment (uuid=233918654089...)
 
 - Method: `update_installment`
 - Status: `pass`
-- Elapsed: `34483.87 ms`
+- Elapsed: `34794.18 ms`
 
 Arguments:
 
 ```json
 {
-  "quote_uuid": "90196658928596566144",
-  "installment_uuid": "78280552242331271296",
+  "quote_uuid": "82681485742934343808",
+  "installment_uuid": "23391865408930726016",
   "status": "paid"
 }
 ```
@@ -6321,23 +6321,23 @@ Output:
 
 ```json
 {
-  "quote_uuid": "90196658928596566144",
-  "installment_uuid": "78280552242331271296",
-  "request_uuid": "92318534130092490880",
+  "quote_uuid": "82681485742934343808",
+  "installment_uuid": "23391865408930726016",
+  "request_uuid": "93486578053808144512",
   "priority": 0,
   "partition_key": "gpt#nestaging",
   "installment_amount": 875.0,
   "installment_ratio": 100.0,
   "salesorder_no": null,
-  "scheduled_date": "2026-06-18T16:53:23",
+  "scheduled_date": "2026-06-18T21:16:13",
   "payment_method": "bank_transfer",
   "status": "paid",
   "updated_by": "MCP",
-  "created_at": "2026-06-18T16:53:26.792351",
-  "updated_at": "2026-06-18T16:57:05.342161",
+  "created_at": "2026-06-18T21:16:16.554322",
+  "updated_at": "2026-06-18T21:19:54.289160",
   "quote": {
-    "request_uuid": "92318534130092490880",
-    "quote_uuid": "90196658928596566144",
+    "request_uuid": "93486578053808144512",
+    "quote_uuid": "82681485742934343808",
     "partition_key": "gpt#nestaging",
     "provider_corp_external_id": "AIRLINE-AF",
     "sales_rep_email": null,
@@ -6358,7 +6358,7 @@ Output:
       "partition_key": "gpt#nestaging",
       "endpoint_id": "gpt",
       "part_id": "nestaging",
-      "request_uuid": "92318534130092490880",
+      "request_uuid": "93486578053808144512",
       "email": "jessicacooper@example.com",
       "request_title": "HTTP integration test: Flight ATL->ORD Premium Economy (updated)",
       "request_description": "E2E test request via MCPHttpClient through gateway /mcp",
@@ -6386,9 +6386,9 @@ Output:
       "bundle_uuid": null,
       "status": "confirmed",
       "expired_at": "2026-12-31T23:59:59",
-      "created_at": "2026-06-18T16:49:40.173842",
+      "created_at": "2026-06-18T21:12:29.737965",
       "updated_by": "MCP",
-      "updated_at": "2026-06-18T16:51:25.251407",
+      "updated_at": "2026-06-18T21:14:14.737548",
       "quotes": [
         {
           "final_total_quote_amount": "875",
@@ -6398,13 +6398,13 @@ Output:
           "status": "confirmed",
           "total_quote_amount": "900",
           "total_quote_discount": "50",
-          "created_at": "2026-06-18 16:51:32.388073",
+          "created_at": "2026-06-18 21:14:22.358281",
           "notes": "Updated via HTTP integration test",
           "partition_key": "gpt#nestaging",
-          "quote_uuid": "90196658928596566144",
-          "request_uuid": "92318534130092490880",
+          "quote_uuid": "82681485742934343808",
+          "request_uuid": "93486578053808144512",
           "shipping_method": "ticket_delivery",
-          "updated_at": "2026-06-18 16:53:11.916777",
+          "updated_at": "2026-06-18 21:16:01.937210",
           "updated_by": "MCP"
         }
       ],
@@ -6414,10 +6414,10 @@ Output:
     "quote_items": [
       {
         "batch_no": "AF5319-20260907",
-        "created_at": "2026-06-18 16:51:39.992813",
+        "created_at": "2026-06-18 21:14:29.945258",
         "final_subtotal": "850",
-        "hold_expires_at": "2026-06-18 17:06:40.362457",
-        "hold_token": "e57ea12368767de475e88d9eb3c2a07d",
+        "hold_expires_at": "2026-06-18 21:29:30.294305",
+        "hold_token": "d8c7dea7dd502a81761d466719a2acfc",
         "item_uuid": "06041993713794695296",
         "notes": "HTTP integration test discount",
         "partition_key": "gpt#nestaging",
@@ -6427,8 +6427,8 @@ Output:
         "price_per_uom": "450",
         "provider_item_uuid": "39876487618607726720",
         "qty": "2",
-        "quote_item_uuid": "55051226062314815616",
-        "quote_uuid": "90196658928596566144",
+        "quote_item_uuid": "13595662195546407040",
+        "quote_uuid": "82681485742934343808",
         "request_data": {
           "cancellation_policy_snapshot": {
             "tiers": {
@@ -6452,14 +6452,14 @@ Output:
             "label": "Premium Economy Fare Cancellation",
             "content_hash": "b161d765b3089e5e",
             "policy_uuid": "14167382355785826432",
-            "snapshotted_at": "2026-06-18 16:51:40.631461"
+            "snapshotted_at": "2026-06-18 21:14:30.566505"
           }
         },
-        "request_uuid": "92318534130092490880",
+        "request_uuid": "93486578053808144512",
         "subtotal": "900",
         "subtotal_discount": "50",
         "subtotal_native": "900",
-        "updated_at": "2026-06-18 16:52:33.180830",
+        "updated_at": "2026-06-18 21:15:22.455458",
         "updated_by": "MCP"
       }
     ],
@@ -6469,14 +6469,14 @@ Output:
         "installment_ratio": "100",
         "priority": "0",
         "status": "paid",
-        "created_at": "2026-06-18 16:53:26.792351",
-        "installment_uuid": "78280552242331271296",
+        "created_at": "2026-06-18 21:16:16.554322",
+        "installment_uuid": "23391865408930726016",
         "partition_key": "gpt#nestaging",
         "payment_method": "bank_transfer",
-        "quote_uuid": "90196658928596566144",
-        "request_uuid": "92318534130092490880",
-        "scheduled_date": "2026-06-18 16:53:23",
-        "updated_at": "2026-06-18 16:57:05.342161",
+        "quote_uuid": "82681485742934343808",
+        "request_uuid": "93486578053808144512",
+        "scheduled_date": "2026-06-18 21:16:13",
+        "updated_at": "2026-06-18 21:19:54.289160",
         "updated_by": "MCP"
       }
     ],
@@ -6667,8 +6667,8 @@ Output:
       }
     ],
     "updated_by": "MCP",
-    "created_at": "2026-06-18T16:51:32.388073",
-    "updated_at": "2026-06-18T16:53:11.916777"
+    "created_at": "2026-06-18T21:14:22.358281",
+    "updated_at": "2026-06-18T21:16:01.937210"
   }
 }
 ```
@@ -6677,7 +6677,7 @@ Output:
 
 - Method: `upload_rfq_file`
 - Status: `pass`
-- Elapsed: `7725.29 ms`
+- Elapsed: `7750.41 ms`
 
 Arguments:
 
@@ -6810,7 +6810,7 @@ Output:
           "file_name": "http_integration_test_spec.pdf",
           "partition_key": "gpt#nestaging",
           "request_uuid": "96306650268729098368",
-          "updated_at": "2026-06-18 16:57:35.951735",
+          "updated_at": "2026-06-18 21:20:25.105145",
           "updated_by": "MCP"
         },
         {
@@ -6819,7 +6819,7 @@ Output:
           "file_name": "integration_test_spec.pdf",
           "partition_key": "gpt#nestaging",
           "request_uuid": "96306650268729098368",
-          "updated_at": "2026-06-18 04:40:22.620940",
+          "updated_at": "2026-06-18 20:38:19.588731",
           "updated_by": "MCP"
         }
       ],
@@ -6827,7 +6827,7 @@ Output:
     },
     "updated_by": "MCP",
     "created_at": "2026-06-18T14:18:54.785362",
-    "updated_at": "2026-06-18T16:57:35.951735"
+    "updated_at": "2026-06-18T21:20:25.105145"
   }
 }
 ```
@@ -6836,7 +6836,7 @@ Output:
 
 - Method: `get_rfq_files`
 - Status: `pass`
-- Elapsed: `7591.08 ms`
+- Elapsed: `7728.71 ms`
 
 Arguments:
 
@@ -6973,7 +6973,7 @@ Output:
             "file_name": "http_integration_test_spec.pdf",
             "partition_key": "gpt#nestaging",
             "request_uuid": "96306650268729098368",
-            "updated_at": "2026-06-18 16:57:35.951735",
+            "updated_at": "2026-06-18 21:20:25.105145",
             "updated_by": "MCP"
           },
           {
@@ -6982,7 +6982,7 @@ Output:
             "file_name": "integration_test_spec.pdf",
             "partition_key": "gpt#nestaging",
             "request_uuid": "96306650268729098368",
-            "updated_at": "2026-06-18 04:40:22.620940",
+            "updated_at": "2026-06-18 20:38:19.588731",
             "updated_by": "MCP"
           }
         ],
@@ -6990,7 +6990,7 @@ Output:
       },
       "updated_by": "MCP",
       "created_at": "2026-06-17T19:11:33.981790",
-      "updated_at": "2026-06-18T04:40:22.620940"
+      "updated_at": "2026-06-18T20:38:19.588731"
     },
     {
       "request_uuid": "96306650268729098368",
@@ -7109,7 +7109,7 @@ Output:
             "file_name": "http_integration_test_spec.pdf",
             "partition_key": "gpt#nestaging",
             "request_uuid": "96306650268729098368",
-            "updated_at": "2026-06-18 16:57:35.951735",
+            "updated_at": "2026-06-18 21:20:25.105145",
             "updated_by": "MCP"
           },
           {
@@ -7118,7 +7118,7 @@ Output:
             "file_name": "integration_test_spec.pdf",
             "partition_key": "gpt#nestaging",
             "request_uuid": "96306650268729098368",
-            "updated_at": "2026-06-18 04:40:22.620940",
+            "updated_at": "2026-06-18 20:38:19.588731",
             "updated_by": "MCP"
           }
         ],
@@ -7126,7 +7126,7 @@ Output:
       },
       "updated_by": "MCP",
       "created_at": "2026-06-18T14:18:54.785362",
-      "updated_at": "2026-06-18T16:57:35.951735"
+      "updated_at": "2026-06-18T21:20:25.105145"
     }
   ]
 }
@@ -7136,7 +7136,7 @@ Output:
 
 - Method: `get_segment_contacts`
 - Status: `pass`
-- Elapsed: `8394.4 ms`
+- Elapsed: `7828.81 ms`
 
 Arguments:
 
@@ -7452,7 +7452,7 @@ Output:
 
 - Method: `check_availability`
 - Status: `pass`
-- Elapsed: `7932.08 ms`
+- Elapsed: `7515.28 ms`
 
 Arguments:
 
@@ -7483,10 +7483,10 @@ Output:
     "reason": "available",
     "matched_batches": 1,
     "available_batches": 1,
-    "total_available_qty": 22.0,
+    "total_available_qty": 8.0,
     "slow_move": false
   },
-  "fetched_at": "2026-06-18T16:58:00.118764+00:00",
+  "fetched_at": "2026-06-18T21:20:48.415334+00:00",
   "ttl_seconds": null,
   "error_code": null,
   "error_message": null
@@ -7497,7 +7497,7 @@ Output:
 
 - Method: `acquire_availability_hold`
 - Status: `pass`
-- Elapsed: `7660.01 ms`
+- Elapsed: `7707.43 ms`
 
 Arguments:
 
@@ -7526,16 +7526,16 @@ Output:
     "service_start_at": "2026-09-07T12:00:00+00:00",
     "service_end_at": "2026-09-07T14:37:07.381744+00:00",
     "available": true,
-    "hold_token": "6519c2bc1d04ad41cdddb954d727494f",
-    "expires_at": "2026-06-18T17:13:07.659340+00:00",
+    "hold_token": "b9f1f7b52faa0e5a3475f3a5505fbc31",
+    "expires_at": "2026-06-18T21:35:56.003129+00:00",
     "payload": {
       "reason": "hold_acquired",
       "matched_batches": 1,
       "available_batches": 1,
-      "total_available_qty": 22.0,
+      "total_available_qty": 8.0,
       "slow_move": false
     },
-    "fetched_at": "2026-06-18T16:58:07.765135+00:00",
+    "fetched_at": "2026-06-18T21:20:56.118960+00:00",
     "ttl_seconds": 900,
     "error_code": null,
     "error_message": null
@@ -7547,14 +7547,14 @@ Output:
 
 - Method: `confirm_availability_hold`
 - Status: `pass`
-- Elapsed: `7494.53 ms`
+- Elapsed: `7929.13 ms`
 
 Arguments:
 
 ```json
 {
   "partition_key": "gpt#nestaging",
-  "hold_token": "6519c2bc1d04ad41cdddb954d727494f",
+  "hold_token": "b9f1f7b52faa0e5a3475f3a5505fbc31",
   "provider_item_uuid": "39876487618607726720",
   "batch_no": "AF5319-20260907"
 }
@@ -7571,12 +7571,12 @@ Output:
     "service_start_at": null,
     "service_end_at": null,
     "available": true,
-    "hold_token": "6519c2bc1d04ad41cdddb954d727494f",
+    "hold_token": "b9f1f7b52faa0e5a3475f3a5505fbc31",
     "expires_at": null,
     "payload": {
       "reason": "hold_confirmed"
     },
-    "fetched_at": "2026-06-18T16:58:15.280306+00:00",
+    "fetched_at": "2026-06-18T21:21:04.055222+00:00",
     "ttl_seconds": null,
     "error_code": null,
     "error_message": null
@@ -7588,7 +7588,7 @@ Output:
 
 - Method: `acquire_availability_hold`
 - Status: `pass`
-- Elapsed: `7638.22 ms`
+- Elapsed: `7565.22 ms`
 
 Arguments:
 
@@ -7614,16 +7614,16 @@ Output:
     "service_start_at": "2026-09-07T12:00:00+00:00",
     "service_end_at": "2026-09-07T14:37:07.381744+00:00",
     "available": true,
-    "hold_token": "d38055b750206059a782b6dfb76d5b49",
-    "expires_at": "2026-06-18T17:13:22.811610+00:00",
+    "hold_token": "cf0e2819145088df156278b457455b02",
+    "expires_at": "2026-06-18T21:36:11.493979+00:00",
     "payload": {
       "reason": "hold_acquired",
       "matched_batches": 1,
       "available_batches": 1,
-      "total_available_qty": 20.0,
+      "total_available_qty": 6.0,
       "slow_move": false
     },
-    "fetched_at": "2026-06-18T16:58:22.915543+00:00",
+    "fetched_at": "2026-06-18T21:21:11.613620+00:00",
     "ttl_seconds": 900,
     "error_code": null,
     "error_message": null
@@ -7635,14 +7635,14 @@ Output:
 
 - Method: `release_availability_hold`
 - Status: `pass`
-- Elapsed: `7471.1 ms`
+- Elapsed: `7631.23 ms`
 
 Arguments:
 
 ```json
 {
   "partition_key": "gpt#nestaging",
-  "hold_token": "d38055b750206059a782b6dfb76d5b49",
+  "hold_token": "cf0e2819145088df156278b457455b02",
   "provider_item_uuid": "39876487618607726720",
   "batch_no": "AF5319-20260907"
 }
@@ -7659,12 +7659,12 @@ Output:
     "service_start_at": null,
     "service_end_at": null,
     "available": true,
-    "hold_token": "d38055b750206059a782b6dfb76d5b49",
+    "hold_token": "cf0e2819145088df156278b457455b02",
     "expires_at": null,
     "payload": {
       "reason": "hold_released"
     },
-    "fetched_at": "2026-06-18T16:58:30.381947+00:00",
+    "fetched_at": "2026-06-18T21:21:19.255220+00:00",
     "ttl_seconds": null,
     "error_code": null,
     "error_message": null
@@ -7676,7 +7676,7 @@ Output:
 
 - Method: `acquire_availability_hold`
 - Status: `pass`
-- Elapsed: `7597.61 ms`
+- Elapsed: `7551.97 ms`
 
 Arguments:
 
@@ -7702,16 +7702,16 @@ Output:
     "service_start_at": "2026-09-07T12:00:00+00:00",
     "service_end_at": "2026-09-07T14:37:07.381744+00:00",
     "available": true,
-    "hold_token": "c3d686c2395ae4a98d3ae84d8c58de0c",
-    "expires_at": "2026-06-18T17:13:37.865873+00:00",
+    "hold_token": "b64cd846ef4e641dbebd708490c29690",
+    "expires_at": "2026-06-18T21:36:26.695842+00:00",
     "payload": {
       "reason": "hold_acquired",
       "matched_batches": 1,
       "available_batches": 1,
-      "total_available_qty": 20.0,
+      "total_available_qty": 6.0,
       "slow_move": false
     },
-    "fetched_at": "2026-06-18T16:58:37.974926+00:00",
+    "fetched_at": "2026-06-18T21:21:26.802578+00:00",
     "ttl_seconds": 900,
     "error_code": null,
     "error_message": null
@@ -7723,14 +7723,14 @@ Output:
 
 - Method: `expire_availability_hold`
 - Status: `pass`
-- Elapsed: `7499.78 ms`
+- Elapsed: `7408.29 ms`
 
 Arguments:
 
 ```json
 {
   "partition_key": "gpt#nestaging",
-  "hold_token": "c3d686c2395ae4a98d3ae84d8c58de0c",
+  "hold_token": "b64cd846ef4e641dbebd708490c29690",
   "provider_item_uuid": "39876487618607726720",
   "batch_no": "AF5319-20260907"
 }
@@ -7762,7 +7762,7 @@ Output:
 
 - Method: `search_bundles`
 - Status: `pass`
-- Elapsed: `7781.15 ms`
+- Elapsed: `7355.8 ms`
 
 Arguments:
 
@@ -7788,7 +7788,7 @@ Output:
 
 - Method: `get_bundle`
 - Status: `pass`
-- Elapsed: `7616.64 ms`
+- Elapsed: `7573.33 ms`
 
 Arguments:
 
@@ -7896,7 +7896,7 @@ Output:
 
 - Method: `search_bundle_components`
 - Status: `pass`
-- Elapsed: `7501.2 ms`
+- Elapsed: `7455.25 ms`
 
 Arguments:
 
@@ -7983,7 +7983,7 @@ Output:
 
 - Method: `get_cancellation_policy`
 - Status: `pass`
-- Elapsed: `7592.48 ms`
+- Elapsed: `7507.95 ms`
 
 Arguments:
 
@@ -8031,7 +8031,7 @@ Output:
 
 - Method: `search_cancellation_policies`
 - Status: `pass`
-- Elapsed: `7444.54 ms`
+- Elapsed: `7442.44 ms`
 
 Arguments:
 
@@ -8057,7 +8057,7 @@ Output:
 
 - Method: `inquire_catalog`
 - Status: `pass`
-- Elapsed: `16089.53 ms`
+- Elapsed: `15863.42 ms`
 
 Arguments:
 
@@ -8169,86 +8169,9 @@ Output:
     "page": 1,
     "limit": 5
   },
-  "fetched_at": "2026-06-18T16:59:39.500190+00:00",
+  "fetched_at": "2026-06-18T21:22:27.417554+00:00",
   "ttl_seconds": null,
   "error_code": null,
   "error_message": null
 }
 ```
-
-## Certification Addendum
-
-- SOP reference: `docs/integration_scenarios_sop_http.md`
-- SOP approval: approved by user on 2026-06-18
-- Environment target: local staging-equivalent gateway
-- Phases executed: discovery/readiness checks, MCP transport validation, dependency-ordered HTTP end-to-end transaction testing, per-call evidence export, certification review
-- Skipped / blocked: `0`
-- Final certification status: `Ready with Conditions`
-
-## Dependency Readiness
-
-| Dependency | Type | Available | Configured | Initialized | Operational | Evidence |
-|---|---|---|---|---|---|---|
-| Python runtime and runner | infrastructure | yes | yes | yes | yes | `run_http_integration.py` syntax check passed before execution |
-| `mcp_http_client` package | library | yes | yes | yes | yes | import check passed before execution |
-| `silvaengine_gateway` local instance | internal | yes | yes | yes | yes | TCP check passed on `localhost:8765`; `/auth/token` returned a JWT during the run |
-| MCP HTTP route | integration middleware | yes | yes | yes | yes | JSON-RPC `tools/call` completed through `http://localhost:8765/gpt/nestaging/mcp` |
-| Prepared flight data | test data | yes | yes | yes | yes | item, provider item, request, quote, bundle, cancellation, availability, and catalog scenarios returned live data |
-| Catalog / KGE path | internal | yes | yes | yes | yes | `inquire_catalog` returned 5 `FLIGHTS` results without an error envelope |
-
-## End-to-End Workflow Validation
-
-| Workflow | Steps executed | Validation points | Result |
-|---|---|---|---|
-| MCP transport | gateway auth, JSON-RPC initialize, tools/list observation, tools/call execution | bearer auth, MCP route reachability, response decoding | pass with condition |
-| Item and provider discovery | `search_items`, `get_item`, `get_provider_items` | flight item and provider item data returned | pass |
-| RFQ request lifecycle | submit, get, search, update, add/remove item, assign/remove provider item | generated request UUID, mutable item list, provider assignment | pass |
-| Quote lifecycle | confirm request, create quote, get/search/update quote, update quote item | quote UUID, quote item UUID, discount update | pass |
-| Pricing and installments | price tiers, discount prompts, quote pricing, confirm quote, create/update installments | pricing payloads, installment UUIDs, payment status update | pass |
-| Support/reference APIs | files, segments, bundles, cancellation policies, catalog inquiry | reference data and catalog results returned | pass |
-| Availability hold lifecycle | check, acquire, confirm, acquire/release, acquire/expire | hold token flow, capacity lifecycle, expected non-expired hold behavior | pass |
-
-## Failure and Resilience Results
-
-| Scenario | Injected fault | Expected behavior | Observed behavior | Result |
-|---|---|---|---|---|
-| Immediate hold expiry | Expire a fresh 15-minute hold | Expected live no-op is accepted by runner | `expire_availability_hold` returned `Availability hold has not expired` and was classified as expected pass | pass |
-| Unexpected error envelope check | None injected; all calls inspected for error payloads | No unexpected top-level or in-band error responses | 0 error responses across 49 calls | pass |
-
-## Data Reconciliation
-
-| Check | Rule | Tolerance | Observed | Result |
-|---|---|---|---|---|
-| Generated request linkage | Quote workflow uses request created earlier in the run | 0 mismatches | Request and quote workflow completed in order | pass |
-| Pricing/installment consistency | Installment creation requires confirmed quote and positive quote balance | amount: 0.01 | Single and multi-installment setup flows passed | pass |
-| Catalog consistency | Catalog namespace is `FLIGHTS` and result payload is non-empty | 0 missing | 5 catalog results returned | pass |
-| Error envelope check | No unexpected `error`, `error_code`, or `errorCode` payloads | 0 unexpected | 0 error responses | pass |
-
-## Coverage Analysis
-
-| Area | Covered | Total | % | Notes |
-|---|---:|---:|---:|---|
-| MCP HTTP tool calls | 49 | 49 | 100 | Dependency-ordered runner call count |
-| Runner groups | 11 | 11 | 100 | items, requests, quotes, pricing, installments, files, segments, availability, bundles, cancellation, catalog |
-| Error response target | 0 | 0 | 100 | No unexpected error responses observed |
-
-## Defect Analysis
-
-| ID | Severity | Title | Root cause | Affected call(s) | Recommendation |
-|---|---|---|---|---|---|
-| COND-001 | informational | Gateway tool inventory differs from SOP expectation | `tools/list` returned 50 tools because the gateway also exposes non-HospiRFQ tools, while the SOP expects exactly 38 | P0 tool discovery | Scope tool-count validation to the `mcp_hospirfq_processor` tool subset or update the SOP to reflect a shared gateway inventory |
-| COND-002 | informational | `--list-tools` does not exit after listing tools | Runner continues into group execution after printing tool inventory | P0 tool discovery command | Add an explicit return after `--list-tools` when only discovery is requested |
-
-## Open Risks and Mitigation Plan
-
-| Risk | Likelihood | Impact | Mitigation | Owner |
-|---|---|---|---|---|
-| Shared gateway exposes tools outside this module | medium | low | Filter tool discovery by expected module tools or isolate the gateway route for module certification | project owner |
-| Live generated records accumulate in local staging data | medium | low | Add approved cleanup or isolated tenant reset procedure before repeated certification runs | project owner |
-
-## Certification Decision
-
-- Status: `Ready with Conditions`
-- Rationale: The dependency-ordered HTTP end-to-end suite passed with 49 successful calls, 0 unexpected error responses, and 0 failures against the local gateway. The only certification conditions are documentation/runner alignment issues around tool discovery: the active gateway exposes 50 tools instead of the SOP's expected 38, and `--list-tools` continues into suite execution instead of exiting after discovery.
-- Conditions: Resolve or document `COND-001` and `COND-002` before labeling this exact SOP as fully `Integration Certified`.
-- Evidence sources: `mcp_hospirfq_processor/tests/.env`, `mcp_hospirfq_processor/tests/run_http_integration.py`, `docs/integration_scenarios_sop_http.md`, gateway auth response, JSON-RPC `tools/call` outputs recorded above.

@@ -20,7 +20,7 @@ This SOP defines the ordered live integration scenarios used to validate `mcp_ho
 
 - **In scope:** MCP JSON-RPC protocol (initialize, tools/list, tools/call), gateway MCP dispatch layer, `MCPHttpClient` async transport, SSE/JSON response parsing, Bearer token auth through `MCPHttpClient`, all 38 processor tools across 11 tool groups.
 - **Out of scope:** production testing, destructive cleanup of generated live test records, cloud provisioning, third-party production side effects, UI testing, load testing, direct in-process method calls (covered by companion SOP), GraphQL endpoint configuration (handled internally by the gateway).
-- **System(s) under test:** `mcp_http_client.MCPHttpClient`, `silvaengine_gateway` REST MCP route (`/{endpoint_id}/{part_id}/mcp`), `mcp_daemon_engine` dispatch, `mcp_hospirfq_processor`.
+- **System(s) under test:** `mcp_http_client.MCPHttpClient`, `silvaengine_gateway` REST MCP route (`/{endpoint_id}/mcp` with `Part-Id` request header), `mcp_daemon_engine` dispatch, `mcp_hospirfq_processor`.
 - **Transport validation:** this SOP validates that the gateway correctly dispatches JSON-RPC `tools/call` requests to the MCP daemon engine, which instantiates and invokes `MCPHospiRFQProcessor` methods, serializes results into MCP `content` arrays, and returns them over HTTP. The test script never accesses GraphQL directly.
 
 ## 2.1 Controlling End-to-End Testing Procedure
@@ -43,7 +43,7 @@ The following procedure is authoritative for this MCP HTTP transport SOP:
 | Item | Value / source |
 |---|---|
 | Environment target | local gateway instance |
-| MCP REST endpoint | `MCP_REST_URL` from `.env`, default `{GATEWAY_BASE_URL}/{endpoint_id}/{part_id}/mcp` |
+| MCP REST endpoint | `MCP_REST_URL` from `.env`, default `{GATEWAY_BASE_URL}/{endpoint_id}/mcp` |
 | Credential source | `.env` variable names only; do not write secret values into reports |
 | Auth flow | `MCPHttpClient` obtains JWT Bearer token from `{GATEWAY_BASE_URL}/auth/token` using `TOKEN_USERNAME` / `TOKEN_PASSWORD` (or uses `GATEWAY_TOKEN` if set); token is sent as `Authorization: Bearer ***` header on all JSON-RPC requests |
 | Required env vars | `base_dir`, `GATEWAY_BASE_URL`, `TOKEN_USERNAME`, `TOKEN_PASSWORD`, `GATEWAY_TOKEN`, `endpoint_id`, `part_id`, `MCP_REST_URL` (optional, derived by default) |
@@ -51,7 +51,7 @@ The following procedure is authoritative for this MCP HTTP transport SOP:
 | Messaging / events | none verified |
 | Access constraints | local process access to gateway; `mcp_http_client` package must be importable (on `sys.path`) |
 | Provisioning policy | manual approval required for new services or destructive cleanup |
-| MCP client config | `base_url` = `MCP_REST_URL`, `bearer_token` = gateway JWT, `headers` = `{"Part-Id": PART_ID}` |
+| MCP client config | `base_url` = `MCP_REST_URL` (`/{endpoint_id}/mcp`), `bearer_token` = gateway JWT, `headers` = `{"Part-Id": PART_ID}` |
 
 ## 4. Dependency Readiness Requirements
 

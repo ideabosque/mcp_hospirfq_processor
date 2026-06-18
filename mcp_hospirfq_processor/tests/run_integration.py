@@ -3,7 +3,7 @@
 """
 End-to-end integration tests for MCP HospiRFQ Processor through silvaengine_gateway.
 
-This script exercises all 38 processor tools against a live gateway instance.
+This script exercises the processor tools against a live gateway instance.
 The GraphQLClient itself handles gateway JWT Bearer auth (driven by the
 gateway_base_url / token_username / token_password settings), so this script
 just configures those settings and calls each tool with sample data from
@@ -16,7 +16,7 @@ Prerequisites:
   3. tests/.env is configured with correct endpoint_id, part_id, and credentials.
 
 Usage:
-  # Run all 38 tools end-to-end:
+  # Run all tools end-to-end:
   python -m mcp_hospirfq_processor.tests.run_integration
 
   # Run only specific tool groups:
@@ -104,7 +104,7 @@ TOKEN_PASSWORD = os.getenv("TOKEN_PASSWORD", os.getenv("ADMIN_PASSWORD", "admin1
 GATEWAY_TOKEN = os.getenv("GATEWAY_TOKEN", os.getenv("ADMIN_STATIC_TOKEN", ""))
 
 # GraphQL endpoint template on the gateway. Only {endpoint_id} is interpolated
-# by GraphQLModule; part_id is sent in the Part-Id request header, not the URL.
+# into the URL path; part_id is sent in the Part-Id request header.
 AI_RFQ_ENGINE_ENDPOINT = os.getenv(
     "AI_RFQ_ENGINE_ENDPOINT",
     f"{GATEWAY_BASE_URL}/{{endpoint_id}}/ai_rfq_graphql",

@@ -9,7 +9,7 @@ it drives every call through the **gateway REST/JSON-RPC MCP endpoint**
 using ``mcp_http_client.MCPHttpClient``.
 
 Flow:
-    test script → MCPHttpClient → HTTP JSON-RPC → gateway /{endpoint_id}/{part_id}/mcp
+    test script → MCPHttpClient → HTTP JSON-RPC → gateway /{endpoint_id}/mcp
         → dispatch_mcp → MCPHospiRFQProcessor.<tool>()
 
 The gateway handles all backend dispatch internally. The test script only
@@ -122,7 +122,7 @@ GATEWAY_TOKEN = os.getenv("GATEWAY_TOKEN", os.getenv("ADMIN_STATIC_TOKEN", ""))
 # messages (initialize, tools/list, tools/call) to this URL.
 MCP_REST_URL = os.getenv(
     "MCP_REST_URL",
-    f"{GATEWAY_BASE_URL}/{ENDPOINT_ID}/{PART_ID}/mcp",
+    f"{GATEWAY_BASE_URL}/{ENDPOINT_ID}/mcp",
 )
 
 PARTITION_KEY = f"{ENDPOINT_ID}#{PART_ID}"
@@ -400,7 +400,8 @@ def export_results(path: str, run_groups: List[str]) -> None:
         "",
         "End-to-end HTTP integration testing was executed through the "
         "`mcp_http_client.MCPHttpClient` against the `silvaengine_gateway` "
-        "REST/JSON-RPC MCP endpoint (`/{endpoint_id}/{part_id}/mcp`). Each "
+        "REST/JSON-RPC MCP endpoint (`/{endpoint_id}/mcp`, with `Part-Id` "
+        "sent as a request header). Each "
         "tool was invoked via JSON-RPC `tools/call`, exercising the full "
         "agent → gateway → `MCPHospiRFQProcessor` stack. The gateway handles "
         "all backend dispatch internally. "
