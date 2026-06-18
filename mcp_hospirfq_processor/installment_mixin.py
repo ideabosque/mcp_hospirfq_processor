@@ -304,7 +304,9 @@ class InstallmentMixin(GraphQLBackedProcessor):
         months_per_interval = total_pay_period / interval_num
 
         # Get the configured day of month for installment scheduled dates (default: 15)
-        installment_scheduled_day = self.setting.get("installment_scheduled_day", 15)
+        installment_scheduled_day = int(
+            self.setting.get("installment_scheduled_day", 15)
+        )
 
         # Create installments
         created_installments = []

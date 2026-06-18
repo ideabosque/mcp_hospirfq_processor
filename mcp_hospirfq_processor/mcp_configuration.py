@@ -1487,15 +1487,16 @@ MCP_CONFIGURATION = {
             # Default settings consumed by MCPHospiRFQProcessor / GraphQLClient.
             # Override per-deployment (e.g. via environment-specific config).
             "setting": {
-                # GraphQL backend modules. The endpoint template supports both
-                # the AWS API Gateway form ("...{endpoint_id}...") and the local
+                # GraphQL backend modules. The endpoint template references only
+                # {endpoint_id} (interpolated at runtime); it works for both the
+                # AWS API Gateway form ("...{endpoint_id}...") and the local
                 # silvaengine_gateway route form
-                # ("http://localhost:8765/{endpoint_id}/{part_id}/ai_rfq_graphql").
-                # {endpoint_id} and {part_id} are interpolated at runtime.
+                # ("http://localhost:8765/{endpoint_id}/ai_rfq_graphql").
+                # part_id is NOT part of the URL — it is sent in the Part-Id header.
                 "graphql_modules": {
                     "ai_rfq_engine": {
                         "class_name": "AIRFQEngine",
-                        "endpoint": "http://localhost:8765/{endpoint_id}/{part_id}/ai_rfq_graphql",
+                        "endpoint": "http://localhost:8765/{endpoint_id}/ai_rfq_graphql",
                         # Used only for the AWS API Gateway (x-api-key) auth path;
                         # ignored when gateway_base_url is configured below.
                         "x_api_key": "placeholder",

@@ -103,14 +103,14 @@ TOKEN_USERNAME = os.getenv("TOKEN_USERNAME", os.getenv("ADMIN_USERNAME", "admin"
 TOKEN_PASSWORD = os.getenv("TOKEN_PASSWORD", os.getenv("ADMIN_PASSWORD", "admin123"))
 GATEWAY_TOKEN = os.getenv("GATEWAY_TOKEN", os.getenv("ADMIN_STATIC_TOKEN", ""))
 
-# GraphQL endpoint template on the gateway. {endpoint_id} and {part_id} are
-# interpolated by GraphQLModule, so the local gateway route format is supported.
+# GraphQL endpoint template on the gateway. Only {endpoint_id} is interpolated
+# by GraphQLModule; part_id is sent in the Part-Id request header, not the URL.
 AI_RFQ_ENGINE_ENDPOINT = os.getenv(
     "AI_RFQ_ENGINE_ENDPOINT",
-    f"{GATEWAY_BASE_URL}/{{endpoint_id}}/{{part_id}}/ai_rfq_graphql",
+    f"{GATEWAY_BASE_URL}/{{endpoint_id}}/ai_rfq_graphql",
 )
 # Resolved URL for display / report headers only.
-GRAPHQL_URL = AI_RFQ_ENGINE_ENDPOINT.format(endpoint_id=ENDPOINT_ID, part_id=PART_ID)
+GRAPHQL_URL = AI_RFQ_ENGINE_ENDPOINT.format(endpoint_id=ENDPOINT_ID)
 
 # Partition key (gateway constructs this from path params, but some tools pass it directly)
 PARTITION_KEY = f"{ENDPOINT_ID}#{PART_ID}"

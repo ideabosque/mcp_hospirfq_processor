@@ -35,22 +35,14 @@ class GraphQLModule:
         class_name: str | None = None,
         endpoint: str | None = None,
         x_api_key: str | None = None,
-        part_id: str | None = None,
     ):
         self.endpoint_id = endpoint_id
-        self.part_id = part_id
         self._module_name = module_name
         self._class_name = class_name
-        # Endpoint templates may reference both ``{endpoint_id}`` (AWS API
-        # Gateway form) and ``{part_id}`` (local silvaengine_gateway route form,
-        # e.g. ``http://localhost:8765/{endpoint_id}/{part_id}/ai_rfq_graphql``).
-        # ``str.format`` ignores unused keyword arguments, so passing both is
-        # safe for either template.
-        self._endpoint = (
-            endpoint.format(endpoint_id=endpoint_id, part_id=part_id)
-            if endpoint
-            else None
-        )
+        # The endpoint template references only ``{endpoint_id}``. part_id is
+        # never part of the URL path — it is carried in the ``Part-Id`` request
+        # header (see GraphQLClient.execute_query).
+        self._endpoint = endpoint.format(endpoint_id=endpoint_id) if endpoint else None
         self._x_api_key = x_api_key
         self._schema = None
 
@@ -130,7 +122,6 @@ class GraphQLClient:
         if not self._graphql_modules.get(module_name):
             self._graphql_modules[module_name] = GraphQLModule(
                 endpoint_id=self.endpoint_id,
-                part_id=self.part_id,
                 module_name=module_name,
                 class_name=self.setting.get("graphql_modules", {})
                 .get(module_name, {})

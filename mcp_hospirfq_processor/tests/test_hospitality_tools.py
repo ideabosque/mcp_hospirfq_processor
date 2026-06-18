@@ -658,6 +658,56 @@ class TestFacadeMRO:
 # ============================================================================
 
 
+class TestInstallmentSettings:
+    """Verify installment settings loaded from environment strings are accepted."""
+
+    @pytest.mark.unit
+    def test_create_installments_accepts_string_scheduled_day(self, processor):
+        processor.setting["installment_scheduled_day"] = "15"
+        processor._execute_graphql_query.side_effect = [
+            {
+                "quoteUuid": "quote-1",
+                "status": "confirmed",
+                "finalTotalQuoteAmount": 100.0,
+            },
+            {"installmentList": []},
+            {
+                "installment": {
+                    "installmentUuid": "inst-1",
+                    "scheduledDate": "2026-07-15T00:00:00Z",
+                    "installmentAmount": 50.0,
+                    "status": "pending",
+                }
+            },
+            {
+                "installment": {
+                    "installmentUuid": "inst-2",
+                    "scheduledDate": "2026-08-15T00:00:00Z",
+                    "installmentAmount": 50.0,
+                    "status": "pending",
+                }
+            },
+        ]
+
+        result = processor._create_installments(
+            quote_uuid="quote-1",
+            request_uuid="request-1",
+            interval_num=2,
+            total_pay_period=2,
+        )
+
+        assert "error" not in result
+        assert result["total_created"] == 2
+
+        mutation_calls = [
+            call
+            for call in processor._execute_graphql_query.call_args_list
+            if call.args[1] == "insertUpdateInstallment"
+        ]
+        assert len(mutation_calls) == 2
+        assert mutation_calls[0].args[3]["scheduledDate"][8:10] == "15"
+
+
 class TestErrorPropagation:
     """Verify that GraphQL errors are properly caught and returned."""
 

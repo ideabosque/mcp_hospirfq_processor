@@ -13,7 +13,10 @@ authors = [
 ]
 requires-python = ">=3.11"
 dependencies = [
-    "humps>=0.2",
+    # pyhumps installs the importable ``humps`` module that provides
+    # ``decamelize``. The unrelated ``humps`` PyPI package does NOT, which
+    # causes: module 'humps' has no attribute 'decamelize'.
+    "pyhumps>=3.8",
     "httpx[http2]>=0.25",
     "silvaengine-utility",
 ]
