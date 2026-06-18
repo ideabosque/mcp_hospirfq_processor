@@ -1,0 +1,1490 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""MCP Configuration for Hospi RFQ Processor"""
+
+__author__ = "bibow"
+
+# MCP Configuration
+MCP_CONFIGURATION = {
+    "tools": [
+        # Request Management Tools (4)
+        {
+            "name": "submit_rfq_request",
+            "description": "Submit a new RFQ request with contact information, title, items, and optional description. Returns the created request UUID and status.",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "description": "Email address of the contact submitting the request",
+                    },
+                    "request_title": {
+                        "type": "string",
+                        "description": "Title of the RFQ request",
+                    },
+                    "request_description": {
+                        "type": "string",
+                        "description": "Detailed description of the request",
+                    },
+                    "billing_address": {
+                        "type": "object",
+                        "description": "Billing address (JSON object)",
+                    },
+                    "shipping_address": {
+                        "type": "object",
+                        "description": "Shipping address (JSON object)",
+                    },
+                    "items": {
+                        "type": "array",
+                        "description": "List of items in the request (array of JSON objects)",
+                        "items": {"type": "object"},
+                    },
+                    "notes": {
+                        "type": "string",
+                        "description": "Additional notes",
+                    },
+                    "expired_at": {
+                        "type": "string",
+                        "description": "Expiration date (ISO 8601 format)",
+                    },
+                    "status": {
+                        "type": "string",
+                        "description": "Request status (default: initial)",
+                        "enum": [
+                            "initial",
+                            "in_progress",
+                            "confirmed",
+                            "completed",
+                            "modified",
+                        ],
+                    },
+                },
+                "required": ["email", "request_title"],
+            },
+        },
+        {
+            "name": "update_rfq_request",
+            "description": "Update existing RFQ request including title, description, addresses, notes, status, and items. For individual item modifications, you can also use add_item_to_rfq_request or remove_item_from_rfq_request. Returns updated request information.",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "request_uuid": {
+                        "type": "string",
+                        "description": "UUID of the request to update",
+                    },
+                    "contact_uuid": {
+                        "type": "string",
+                        "description": "Updated contact email address (passed through to GraphQL email field)",
+                    },
+                    "request_title": {
+                        "type": "string",
+                        "description": "Updated request title",
+                    },
+                    "request_description": {
+                        "type": "string",
+                        "description": "Updated request description",
+                    },
+                    "billing_address": {
+                        "type": "object",
+                        "description": "Updated billing address (JSON object)",
+                    },
+                    "shipping_address": {
+                        "type": "object",
+                        "description": "Updated shipping address (JSON object)",
+                    },
+                    "items": {
+                        "type": "array",
+                        "description": "Updated list of items (array of JSON objects)",
+                        "items": {"type": "object"},
+                    },
+                    "notes": {
+                        "type": "string",
+                        "description": "Updated notes",
+                    },
+                    "expired_at": {
+                        "type": "string",
+                        "description": "Updated expiration date",
+                    },
+                    "status": {
+                        "type": "string",
+                        "description": "Updated status",
+                        "enum": [
+                            "initial",
+                            "in_progress",
+                            "confirmed",
+                            "completed",
+                            "modified",
+                        ],
+                    },
+                },
+                "required": ["request_uuid"],
+            },
+        },
+        {
+            "name": "get_rfq_request",
+            "description": "Retrieve detailed information about a specific RFQ request by UUID. Returns complete request data including quotes and files.",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "request_uuid": {
+                        "type": "string",
+                        "description": "UUID of the request to retrieve",
+                    }
+                },
+                "required": ["request_uuid"],
+            },
+        },
+        {
+            "name": "search_rfq_requests",
+            "description": "Search and filter RFQ requests by contact, status, and date range. Returns paginated list of matching requests.",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "page_number": {
+                        "type": "integer",
+                        "description": "Page number for pagination (default: 1)",
+                    },
+                    "limit": {
+                        "type": "integer",
+                        "description": "Results per page (default: 20)",
+                    },
+                    "contact_uuid": {
+                        "type": "string",
+                        "description": "Filter by contact UUID",
+                    },
+                    "statuses": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "description": "Filter by status list",
+                    },
+                    "from_expired_at": {
+                        "type": "string",
+                        "description": "Filter by expiration start date",
+                    },
+                    "to_expired_at": {
+                        "type": "string",
+                        "description": "Filter by expiration end date",
+                    },
+                },
+            },
+        },
+        {
+            "name": "add_item_to_rfq_request",
+            "description": "Add a single item to an existing RFQ request. Automatically fetches the current request, adds the new item, and updates the request. Returns the updated request with status set to 'modified'.",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "request_uuid": {
+                        "type": "string",
+                        "description": "UUID of the request to update",
+                    },
+                    "item": {
+                        "type": "object",
+                        "description": "Item object to add with item_uuid, item_name, and qty",
+                        "properties": {
+                            "item_uuid": {
+                                "type": "string",
+                                "description": "UUID of the item",
+                            },
+                            "item_name": {
+                                "type": "string",
+                                "description": "Name of the item",
+                            },
+                            "qty": {
+                                "type": "integer",
+                                "description": "Quantity of the item",
+                            },
+                        },
+                        "required": ["item_uuid", "item_name", "qty"],
+                    },
+                },
+                "required": ["request_uuid", "item"],
+            },
+        },
+        {
+            "name": "remove_item_from_rfq_request",
+            "description": "Remove a single item from an existing RFQ request. Can remove by item UUID or item name. Returns the updated request with status set to 'modified'.",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "request_uuid": {
+                        "type": "string",
+                        "description": "UUID of the request to update",
+                    },
+                    "item_uuid": {
+                        "type": "string",
+                        "description": "UUID of the item to remove (mutually exclusive with item_name)",
+                    },
+                    "item_name": {
+                        "type": "string",
+                        "description": "Name of the item to remove (mutually exclusive with item_uuid)",
+                    },
+                },
+                "required": ["request_uuid"],
+            },
+        },
+        {
+            "name": "assign_provider_item_to_request_item",
+            "description": "Assign a provider item to a specific item in an RFQ request. Adds the provider item to the item's provider_items array with optional batch number and quantity. If the provider item already exists (with matching batch_no), quantity can be added or replaced based on add_qty flag. Returns the updated request with status set to 'modified'.",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "request_uuid": {
+                        "type": "string",
+                        "description": "UUID of the request to update",
+                    },
+                    "item_uuid": {
+                        "type": "string",
+                        "description": "UUID of the item in the request to assign provider item to",
+                    },
+                    "provider_item_uuid": {
+                        "type": "string",
+                        "description": "UUID of the provider item to assign",
+                    },
+                    "provider_corp_external_id": {
+                        "type": "string",
+                        "description": "Provider corporation external ID",
+                    },
+                    "batch_no": {
+                        "type": "string",
+                        "description": "Optional batch number for the provider item",
+                    },
+                    "qty": {
+                        "type": "integer",
+                        "description": "Optional quantity for this provider item (defaults to item qty if not specified)",
+                    },
+                    "add_qty": {
+                        "type": "boolean",
+                        "description": "If true, add to existing quantity; if false, replace quantity (default: false)",
+                    },
+                },
+                "required": [
+                    "request_uuid",
+                    "item_uuid",
+                    "provider_item_uuid",
+                    "provider_corp_external_id",
+                ],
+            },
+        },
+        {
+            "name": "remove_provider_item_from_request_item",
+            "description": "Remove provider item assignment from a specific item in an RFQ request. Removes the provider item from the item's provider_items array. If provider_item_uuid is not specified, removes all provider items. If batch_no is not specified, removes all instances of the provider_item_uuid regardless of batch. Returns the updated request with status set to 'modified'.",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "request_uuid": {
+                        "type": "string",
+                        "description": "UUID of the request to update",
+                    },
+                    "item_uuid": {
+                        "type": "string",
+                        "description": "UUID of the item in the request to remove provider item from",
+                    },
+                    "provider_item_uuid": {
+                        "type": "string",
+                        "description": "UUID of the provider item to remove (optional, removes all provider items if not specified)",
+                    },
+                    "batch_no": {
+                        "type": "string",
+                        "description": "Optional batch number to match. If not specified, removes all instances of the provider_item_uuid regardless of batch",
+                    },
+                },
+                "required": ["request_uuid", "item_uuid"],
+            },
+        },
+        # Item Management Tools (4)
+        {
+            "name": "search_items",
+            "description": "Search available items in the catalog by type, name, or unit of measure. Returns paginated list of items with details.",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "page_number": {
+                        "type": "integer",
+                        "description": "Page number (default: 1)",
+                    },
+                    "limit": {
+                        "type": "integer",
+                        "description": "Results per page (default: 50)",
+                    },
+                    "item_type": {
+                        "type": "string",
+                        "description": "Filter by item type",
+                    },
+                    "item_name": {
+                        "type": "string",
+                        "description": "Search by item name",
+                    },
+                    "uoms": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "description": "Filter by units of measure",
+                    },
+                },
+            },
+        },
+        {
+            "name": "get_item",
+            "description": "Get detailed information about a specific item by UUID. Returns complete item data including provider items and pricing.",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "item_uuid": {
+                        "type": "string",
+                        "description": "UUID of the item to retrieve",
+                    }
+                },
+                "required": ["item_uuid"],
+            },
+        },
+        {
+            "name": "get_provider_items",
+            "description": "Search provider inventory with batch information merged. For each provider item, fetches and merges batch information including slow_move_item flags and guardrail pricing. Each batch includes: batch_no, expired_at, produced_at, slow_move_item, guardrail_price_per_uom. Optional batch filters can be applied when fetching batches. If expired_at_gt not provided, defaults to batches expiring 90+ days from now.",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "page_number": {
+                        "type": "integer",
+                        "description": "Page number (default: 1)",
+                    },
+                    "limit": {
+                        "type": "integer",
+                        "description": "Results per page (default: 50)",
+                    },
+                    "item_uuid": {
+                        "type": "string",
+                        "description": "Filter by item UUID",
+                    },
+                    "expired_at_gt": {
+                        "type": "string",
+                        "description": "Filter batches expiring after this date (ISO 8601 format)",
+                    },
+                    "slow_move_item": {
+                        "type": "boolean",
+                        "description": "Filter for slow-moving inventory (default: false)",
+                    },
+                    "in_stock": {
+                        "type": "boolean",
+                        "description": "Filter for in-stock batches (default: true)",
+                    },
+                },
+                "required": ["item_uuid"],
+            },
+        },
+        # Quote Management Tools (3)
+        {
+            "name": "update_quote",
+            "description": "Update quote metadata (shipping, status, notes). Returns updated quote information. Note: rounds (negotiation rounds) are auto-calculated by the backend based on existing quotes from the same provider.",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "request_uuid": {
+                        "type": "string",
+                        "description": "UUID of the request",
+                    },
+                    "quote_uuid": {
+                        "type": "string",
+                        "description": "UUID of the quote to update",
+                    },
+                    "shipping_method": {
+                        "type": "string",
+                        "description": "Updated shipping method",
+                    },
+                    "shipping_amount": {
+                        "type": "number",
+                        "description": "Updated shipping cost",
+                    },
+                    "status": {
+                        "type": "string",
+                        "description": "Updated status",
+                        "enum": [
+                            "initial",
+                            "in_progress",
+                            "confirmed",
+                            "completed",
+                            "disapproved",
+                        ],
+                    },
+                    "notes": {"type": "string", "description": "Updated notes"},
+                },
+                "required": ["request_uuid", "quote_uuid"],
+            },
+        },
+        {
+            "name": "get_quote",
+            "description": "Retrieve detailed quote information by UUID. Returns complete quote data including embedded quote_items array with slow_move_item flags and guardrail pricing, and installments.",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "quote_uuid": {
+                        "type": "string",
+                        "description": "UUID of the quote to retrieve",
+                    },
+                    "request_uuid": {
+                        "type": "string",
+                        "description": "UUID of the request (optional, may be required by some GraphQL schemas)",
+                    },
+                },
+                "required": ["quote_uuid"],
+            },
+        },
+        {
+            "name": "search_quotes",
+            "description": "Search quotes with filters for request, provider, status, and date range. Returns paginated list of matching quotes.",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "page_number": {
+                        "type": "integer",
+                        "description": "Page number (default: 1)",
+                    },
+                    "limit": {
+                        "type": "integer",
+                        "description": "Results per page (default: 20)",
+                    },
+                    "request_uuid": {
+                        "type": "string",
+                        "description": "Filter by request UUID",
+                    },
+                    "provider_corp_external_id": {
+                        "type": "string",
+                        "description": "Filter by provider ID",
+                    },
+                    "statuses": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "description": "Filter by status list",
+                    },
+                    "from_created_at": {
+                        "type": "string",
+                        "description": "Filter by creation start date",
+                    },
+                    "to_created_at": {
+                        "type": "string",
+                        "description": "Filter by creation end date",
+                    },
+                },
+            },
+        },
+        {
+            "name": "update_quote_item",
+            "description": "Update quote item discount only. Returns updated item totals with slow_move_item flag (indicates slow-moving inventory) and guardrail_price_per_uom (minimum acceptable price for profitability).",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "quote_uuid": {
+                        "type": "string",
+                        "description": "UUID of the quote",
+                    },
+                    "quote_item_uuid": {
+                        "type": "string",
+                        "description": "UUID of the quote item to update",
+                    },
+                    "request_uuid": {
+                        "type": "string",
+                        "description": "UUID of the request",
+                    },
+                    "discount_amount": {
+                        "type": "number",
+                        "description": "Discount amount (subtotal discount)",
+                    },
+                    "notes": {
+                        "type": "string",
+                        "description": "Updated notes for the quote item",
+                    },
+                },
+                "required": ["quote_uuid", "quote_item_uuid"],
+            },
+        },
+        # Pricing Tools (3)
+        {
+            "name": "get_item_price_tiers",
+            "description": "Get tiered pricing for multiple items using batch loader optimization. Uses customer email for segment lookup and efficiently loads price tiers for quote items with automatic quantity filtering. Returns only tiers matching each item's quantity range. Preferred for processing multiple items efficiently.",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "description": "Customer email address for segment lookup",
+                    },
+                    "quote_items": {
+                        "type": "array",
+                        "description": "List of quote items with item_uuid, provider_item_uuid, and qty. Each item will have its applicable price tiers returned based on quantity thresholds.",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "item_uuid": {
+                                    "type": "string",
+                                    "description": "Item UUID",
+                                },
+                                "provider_item_uuid": {
+                                    "type": "string",
+                                    "description": "Provider item UUID",
+                                },
+                                "qty": {
+                                    "type": "number",
+                                    "description": "Quantity for this item (used to filter matching price tiers)",
+                                },
+                            },
+                            "required": ["item_uuid", "provider_item_uuid", "qty"],
+                        },
+                    },
+                },
+                "required": ["email"],
+            },
+        },
+        {
+            "name": "get_discount_prompts",
+            "description": "Get discount prompts for items using batch loader optimization. Loads prompts from all hierarchical scopes (GLOBAL, SEGMENT, ITEM, PROVIDER_ITEM) and deduplicates. Returns combined discount prompts with conditions and rules. Preferred for processing multiple items efficiently.",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "description": "Customer email address for segment lookup",
+                    },
+                    "quote_items": {
+                        "type": "array",
+                        "description": "List of quote items with item_uuid and provider_item_uuid to determine applicable prompts",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "item_uuid": {
+                                    "type": "string",
+                                    "description": "Item UUID",
+                                },
+                                "provider_item_uuid": {
+                                    "type": "string",
+                                    "description": "Provider item UUID",
+                                },
+                            },
+                            "required": ["item_uuid", "provider_item_uuid"],
+                        },
+                    },
+                },
+                "required": ["email"],
+            },
+        },
+        {
+            "name": "calculate_quote_pricing",
+            "description": "Calculate pricing information for an RFQ request using batch-optimized queries. Groups items by provider and provides subtotals and price tiers. Uses batch loaders for efficient multi-item processing. Returns pricing structure for decision-making.",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "request_uuid": {
+                        "type": "string",
+                        "description": "UUID of the RFQ request",
+                    },
+                    "email": {
+                        "type": "string",
+                        "description": "Customer email for segment lookup and batch-optimized price tier queries",
+                    },
+                },
+                "required": ["request_uuid", "email"],
+            },
+        },
+        # Installment Tools (3)
+        {
+            "name": "create_installment",
+            "description": "Create payment installment for a quote. If installment_amount not provided, uses remaining balance (final_total_quote_amount - existing_installments_total). If provided, uses the lesser of requested amount or remaining balance (auto-caps). Priority auto-increments based on existing installments. Sets due_date to current time. Typically created when quote status changes to 'confirmed'. Returns created installment details.",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "quote_uuid": {
+                        "type": "string",
+                        "description": "UUID of the quote",
+                    },
+                    "request_uuid": {
+                        "type": "string",
+                        "description": "UUID of the request",
+                    },
+                    "installment_amount": {
+                        "type": "number",
+                        "description": "Optional installment amount. If not provided, uses remaining balance. If provided and exceeds remaining balance, automatically capped at remaining balance. Must be > 0.",
+                    },
+                    "payment_method": {
+                        "type": "string",
+                        "description": "Payment method for this installment (e.g., credit_card, bank_transfer, check, cash)",
+                    },
+                    "status": {
+                        "type": "string",
+                        "description": "Installment status (default: pending)",
+                        "enum": ["pending", "paid", "cancelled"],
+                    },
+                },
+                "required": ["quote_uuid", "request_uuid"],
+            },
+        },
+        {
+            "name": "update_installment",
+            "description": "Update installment status and sales order number. Used to mark installments as paid or cancelled, and to link them to sales orders. Returns updated installment details.",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "quote_uuid": {
+                        "type": "string",
+                        "description": "UUID of the quote",
+                    },
+                    "installment_uuid": {
+                        "type": "string",
+                        "description": "UUID of the installment to update",
+                    },
+                    "status": {
+                        "type": "string",
+                        "description": "Installment status",
+                        "enum": ["pending", "paid", "cancelled"],
+                    },
+                    "salesorder_no": {
+                        "type": "string",
+                        "description": "Sales order number to link to this installment",
+                    },
+                    "payment_method": {
+                        "type": "string",
+                        "description": "Payment method for this installment (e.g., credit_card, bank_transfer, check, cash)",
+                    },
+                },
+                "required": ["quote_uuid", "installment_uuid"],
+            },
+        },
+        {
+            "name": "create_installments",
+            "description": "Create multiple payment installments for a quote based on payment schedule. Calculates remaining balance (final_total_quote_amount - existing_installments_total) and divides equally across installments. Scheduled dates are calculated based on interval and total pay period (e.g., monthly intervals over 12 months). Priority auto-increments for each installment. All installments created with status 'pending'. Returns list of created installments.",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "quote_uuid": {
+                        "type": "string",
+                        "description": "UUID of the quote",
+                    },
+                    "request_uuid": {
+                        "type": "string",
+                        "description": "UUID of the request",
+                    },
+                    "interval_num": {
+                        "type": "integer",
+                        "description": "Number of installments to create (e.g., 12 for monthly payments over a year)",
+                    },
+                    "total_pay_period": {
+                        "type": "integer",
+                        "description": "Total payment period in months (e.g., 12 for one year, 24 for two years)",
+                    },
+                    "payment_method": {
+                        "type": "string",
+                        "description": "Payment method for all installments (e.g., credit_card, bank_transfer, check, cash)",
+                    },
+                },
+                "required": [
+                    "quote_uuid",
+                    "request_uuid",
+                    "interval_num",
+                    "total_pay_period",
+                ],
+            },
+        },
+        {
+            "name": "get_installments",
+            "description": "Get installment schedule for a quote. Returns paginated list of installments.",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "page_number": {
+                        "type": "integer",
+                        "description": "Page number (default: 1)",
+                    },
+                    "limit": {
+                        "type": "integer",
+                        "description": "Results per page (default: 50)",
+                    },
+                    "quote_uuid": {
+                        "type": "string",
+                        "description": "Filter by quote UUID",
+                    },
+                    "statuses": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "description": "Filter by status list",
+                    },
+                },
+            },
+        },
+        # Convenience/Workflow Tools (2)
+        {
+            "name": "confirm_request_and_create_quotes",
+            "description": "Convenience function to confirm an RFQ request and create quotes for selected providers in one operation. This combines update_rfq_request (to confirmed status) and create_quote (for each provider). Returns confirmed request and list of created quotes with full details.",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "request_uuid": {
+                        "type": "string",
+                        "description": "UUID of the RFQ request to confirm",
+                    },
+                    "provider_corp_external_ids": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "description": "List of provider corporation external IDs to create quotes for",
+                    },
+                    "segment_uuid": {
+                        "type": "string",
+                        "description": "Customer segment UUID for pricing",
+                    },
+                },
+                "required": [
+                    "request_uuid",
+                    "provider_corp_external_ids",
+                    "segment_uuid",
+                ],
+            },
+        },
+        {
+            "name": "confirm_quote_and_create_installments",
+            "description": "Convenience function to confirm a quote and create installment plan in one operation. This combines update_quote (to confirmed status) and either create_installment or create_installments. Returns confirmed quote and created installments.",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "request_uuid": {
+                        "type": "string",
+                        "description": "UUID of the request",
+                    },
+                    "quote_uuid": {
+                        "type": "string",
+                        "description": "UUID of the quote to confirm",
+                    },
+                    "create_single_installment": {
+                        "type": "boolean",
+                        "description": "If true, creates one installment for full amount (default: true)",
+                    },
+                    "interval_num": {
+                        "type": "integer",
+                        "description": "Number of installments (required if create_single_installment=false)",
+                    },
+                    "total_pay_period": {
+                        "type": "integer",
+                        "description": "Total payment period in months (required if create_single_installment=false)",
+                    },
+                    "payment_method": {
+                        "type": "string",
+                        "description": "Optional payment method for installments",
+                    },
+                },
+                "required": ["request_uuid", "quote_uuid"],
+            },
+        },
+        # File Tools (2)
+        {
+            "name": "upload_rfq_file",
+            "description": "Upload document attachment to RFQ request (quotes, specifications, terms). Returns file UUID and metadata.",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "request_uuid": {
+                        "type": "string",
+                        "description": "UUID of the request",
+                    },
+                    "file_name": {
+                        "type": "string",
+                        "description": "Name of the file",
+                    },
+                    "email": {
+                        "type": "string",
+                        "description": "Email of the uploader",
+                    },
+                },
+                "required": ["request_uuid", "file_name"],
+            },
+        },
+        {
+            "name": "get_rfq_files",
+            "description": "Get files associated with RFQ request. Returns paginated list of files with URLs.",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "page_number": {
+                        "type": "integer",
+                        "description": "Page number (default: 1)",
+                    },
+                    "limit": {
+                        "type": "integer",
+                        "description": "Results per page (default: 50)",
+                    },
+                    "request_uuid": {
+                        "type": "string",
+                        "description": "Filter by request UUID",
+                    },
+                    "file_type": {
+                        "type": "string",
+                        "description": "Filter by file type",
+                    },
+                },
+            },
+        },
+        # Segment Tools (1)
+        {
+            "name": "get_segment_contacts",
+            "description": "List contacts in a pricing segment. Returns paginated list of segment contacts.",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "page_number": {
+                        "type": "integer",
+                        "description": "Page number (default: 1)",
+                    },
+                    "limit": {
+                        "type": "integer",
+                        "description": "Results per page (default: 50)",
+                    },
+                    "consumer_corp_external_id": {
+                        "type": "string",
+                        "description": "Filter by consumer corporation external ID",
+                    },
+                    "email": {
+                        "type": "string",
+                        "description": "Contact email address (required)",
+                    },
+                },
+                "required": ["email"],
+            },
+        },
+        # Availability Tools (5)
+        {
+            "name": "check_availability",
+            "description": "Check if a provider item has available capacity for a service window. Returns availability status and remaining capacity for the specified time range.",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "partition_key": {
+                        "type": "string",
+                        "description": "Partition key for the availability record (typically provider or tenant identifier)",
+                    },
+                    "provider_item_uuid": {
+                        "type": "string",
+                        "description": "UUID of the provider item to check availability for",
+                    },
+                    "service_start_at": {
+                        "type": "string",
+                        "description": "Service window start datetime (ISO 8601 format)",
+                    },
+                    "service_end_at": {
+                        "type": "string",
+                        "description": "Service window end datetime (ISO 8601 format)",
+                    },
+                    "batch_no": {
+                        "type": "string",
+                        "description": "Optional batch number to scope the availability check",
+                    },
+                    "qty": {
+                        "type": "integer",
+                        "description": "Quantity required (default: 1)",
+                    },
+                },
+                "required": [
+                    "partition_key",
+                    "provider_item_uuid",
+                    "service_start_at",
+                    "service_end_at",
+                ],
+            },
+        },
+        {
+            "name": "acquire_availability_hold",
+            "description": "Atomically reserve capacity and create a hold with 15-minute TTL. Decrements available capacity and returns a hold_token for subsequent confirmation or release. If insufficient capacity, the operation fails without side effects.",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "partition_key": {
+                        "type": "string",
+                        "description": "Partition key for the availability record",
+                    },
+                    "provider_item_uuid": {
+                        "type": "string",
+                        "description": "UUID of the provider item to hold capacity for",
+                    },
+                    "service_start_at": {
+                        "type": "string",
+                        "description": "Service window start datetime (ISO 8601 format)",
+                    },
+                    "service_end_at": {
+                        "type": "string",
+                        "description": "Service window end datetime (ISO 8601 format)",
+                    },
+                    "qty": {
+                        "type": "integer",
+                        "description": "Number of units to reserve",
+                    },
+                    "batch_no": {
+                        "type": "string",
+                        "description": "Optional batch number to scope the hold",
+                    },
+                    "pax_breakdown": {
+                        "type": "object",
+                        "description": "Breakdown of passengers by type",
+                        "properties": {
+                            "adult": {
+                                "type": "integer",
+                                "description": "Number of adults",
+                            },
+                            "child": {
+                                "type": "integer",
+                                "description": "Number of children",
+                            },
+                            "infant": {
+                                "type": "integer",
+                                "description": "Number of infants",
+                            },
+                        },
+                    },
+                    "quote_uuid": {
+                        "type": "string",
+                        "description": "Optional quote UUID to associate with the hold",
+                    },
+                    "quote_item_uuid": {
+                        "type": "string",
+                        "description": "Optional quote item UUID to associate with the hold",
+                    },
+                },
+                "required": [
+                    "partition_key",
+                    "provider_item_uuid",
+                    "service_start_at",
+                    "service_end_at",
+                    "qty",
+                ],
+            },
+        },
+        {
+            "name": "release_availability_hold",
+            "description": "Release a held reservation and restore capacity. Increments available capacity back and removes the hold record. Use when a booking is cancelled or a hold is no longer needed.",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "partition_key": {
+                        "type": "string",
+                        "description": "Partition key for the availability record",
+                    },
+                    "hold_token": {
+                        "type": "string",
+                        "description": "Token of the hold to release",
+                    },
+                    "provider_item_uuid": {
+                        "type": "string",
+                        "description": "UUID of the provider item the hold was for",
+                    },
+                    "batch_no": {
+                        "type": "string",
+                        "description": "Optional batch number to scope the release",
+                    },
+                },
+                "required": ["partition_key", "hold_token", "provider_item_uuid"],
+            },
+        },
+        {
+            "name": "confirm_availability_hold",
+            "description": "Confirm a held reservation (transition to confirmed, no 2nd decrement). Changes hold status from 'held' to 'confirmed' without further reducing capacity. Use when a quote is finalized and the booking is committed.",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "partition_key": {
+                        "type": "string",
+                        "description": "Partition key for the availability record",
+                    },
+                    "hold_token": {
+                        "type": "string",
+                        "description": "Token of the hold to confirm",
+                    },
+                    "provider_item_uuid": {
+                        "type": "string",
+                        "description": "UUID of the provider item the hold was for",
+                    },
+                    "batch_no": {
+                        "type": "string",
+                        "description": "Optional batch number to scope the confirmation",
+                    },
+                },
+                "required": ["partition_key", "hold_token", "provider_item_uuid"],
+            },
+        },
+        {
+            "name": "expire_availability_hold",
+            "description": "Expire a stale hold and restore capacity (idempotent). Increments available capacity back and marks the hold as expired. Safe to call repeatedly — no-op if the hold is already expired, confirmed, or released.",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "partition_key": {
+                        "type": "string",
+                        "description": "Partition key for the availability record",
+                    },
+                    "hold_token": {
+                        "type": "string",
+                        "description": "Token of the hold to expire",
+                    },
+                    "provider_item_uuid": {
+                        "type": "string",
+                        "description": "UUID of the provider item the hold was for",
+                    },
+                    "batch_no": {
+                        "type": "string",
+                        "description": "Optional batch number to scope the expiry",
+                    },
+                },
+                "required": ["partition_key", "hold_token", "provider_item_uuid"],
+            },
+        },
+        # Bundle Tools (3)
+        {
+            "name": "search_bundles",
+            "description": "List and search package and itinerary templates. Supports filtering by bundle code, type, and status. Returns paginated list of matching bundles.",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "partition_key": {
+                        "type": "string",
+                        "description": "Partition key for bundle records",
+                    },
+                    "bundle_code": {
+                        "type": "string",
+                        "description": "Filter by bundle code",
+                    },
+                    "bundle_type": {
+                        "type": "string",
+                        "description": "Filter by bundle type",
+                        "enum": ["package", "itinerary", "event"],
+                    },
+                    "status": {
+                        "type": "string",
+                        "description": "Filter by bundle status",
+                    },
+                },
+                "required": ["partition_key"],
+            },
+        },
+        {
+            "name": "get_bundle",
+            "description": "Get a bundle with nested components by UUID. Returns complete bundle data including all associated components, pricing, and configuration.",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "partition_key": {
+                        "type": "string",
+                        "description": "Partition key for bundle records",
+                    },
+                    "bundle_uuid": {
+                        "type": "string",
+                        "description": "UUID of the bundle to retrieve",
+                    },
+                },
+                "required": ["partition_key", "bundle_uuid"],
+            },
+        },
+        {
+            "name": "search_bundle_components",
+            "description": "List components for a given bundle. Returns paginated list of components with their details, including component type, ordering, and configuration.",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "partition_key": {
+                        "type": "string",
+                        "description": "Partition key for bundle records",
+                    },
+                    "bundle_uuid": {
+                        "type": "string",
+                        "description": "UUID of the bundle to list components for",
+                    },
+                },
+                "required": ["partition_key", "bundle_uuid"],
+            },
+        },
+        # Cancellation Policy Tools (2)
+        {
+            "name": "get_cancellation_policy",
+            "description": "Get a cancellation policy by UUID. Returns complete policy details including tiers, deadlines, and penalty rules.",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "partition_key": {
+                        "type": "string",
+                        "description": "Partition key for cancellation policy records",
+                    },
+                    "policy_uuid": {
+                        "type": "string",
+                        "description": "UUID of the cancellation policy to retrieve",
+                    },
+                },
+                "required": ["partition_key", "policy_uuid"],
+            },
+        },
+        {
+            "name": "search_cancellation_policies",
+            "description": "List and search cancellation policies. Supports filtering by provider item and status. Returns paginated list of matching cancellation policies.",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "partition_key": {
+                        "type": "string",
+                        "description": "Partition key for cancellation policy records",
+                    },
+                    "provider_item_uuid": {
+                        "type": "string",
+                        "description": "Filter by provider item UUID",
+                    },
+                    "status": {
+                        "type": "string",
+                        "description": "Filter by policy status",
+                    },
+                },
+                "required": ["partition_key"],
+            },
+        },
+        # Catalog Tools (1)
+        {
+            "name": "inquire_catalog",
+            "description": "Search the Knowledge Graph Engine for products. Uses natural language queries to find matching products across the hospitality catalog. Returns ranked results with product details and metadata.",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "partition_key": {
+                        "type": "string",
+                        "description": "Partition key for catalog records",
+                    },
+                    "query_text": {
+                        "type": "string",
+                        "description": "Natural language search query for products",
+                    },
+                    "namespace": {
+                        "type": "string",
+                        "description": "Optional namespace to scope the search (e.g., hotel, flight, activity)",
+                    },
+                    "limit": {
+                        "type": "integer",
+                        "description": "Maximum number of results to return (default: 20)",
+                    },
+                },
+                "required": ["partition_key", "query_text"],
+            },
+        },
+    ],
+    "module_links": [
+        # Request Management Tools
+        {
+            "type": "tool",
+            "name": "submit_rfq_request",
+            "module_name": "mcp_hospirfq_processor",
+            "class_name": "MCPHospiRFQProcessor",
+            "function_name": "submit_rfq_request",
+            "return_type": "text",
+        },
+        {
+            "type": "tool",
+            "name": "update_rfq_request",
+            "module_name": "mcp_hospirfq_processor",
+            "class_name": "MCPHospiRFQProcessor",
+            "function_name": "update_rfq_request",
+            "return_type": "text",
+        },
+        {
+            "type": "tool",
+            "name": "get_rfq_request",
+            "module_name": "mcp_hospirfq_processor",
+            "class_name": "MCPHospiRFQProcessor",
+            "function_name": "get_rfq_request",
+            "return_type": "text",
+        },
+        {
+            "type": "tool",
+            "name": "search_rfq_requests",
+            "module_name": "mcp_hospirfq_processor",
+            "class_name": "MCPHospiRFQProcessor",
+            "function_name": "search_rfq_requests",
+            "return_type": "text",
+        },
+        {
+            "type": "tool",
+            "name": "add_item_to_rfq_request",
+            "module_name": "mcp_hospirfq_processor",
+            "class_name": "MCPHospiRFQProcessor",
+            "function_name": "add_item_to_rfq_request",
+            "return_type": "text",
+        },
+        {
+            "type": "tool",
+            "name": "remove_item_from_rfq_request",
+            "module_name": "mcp_hospirfq_processor",
+            "class_name": "MCPHospiRFQProcessor",
+            "function_name": "remove_item_from_rfq_request",
+            "return_type": "text",
+        },
+        {
+            "type": "tool",
+            "name": "assign_provider_item_to_request_item",
+            "module_name": "mcp_hospirfq_processor",
+            "class_name": "MCPHospiRFQProcessor",
+            "function_name": "assign_provider_item_to_request_item",
+            "return_type": "text",
+        },
+        {
+            "type": "tool",
+            "name": "remove_provider_item_from_request_item",
+            "module_name": "mcp_hospirfq_processor",
+            "class_name": "MCPHospiRFQProcessor",
+            "function_name": "remove_provider_item_from_request_item",
+            "return_type": "text",
+        },
+        # Item Management Tools
+        {
+            "type": "tool",
+            "name": "search_items",
+            "module_name": "mcp_hospirfq_processor",
+            "class_name": "MCPHospiRFQProcessor",
+            "function_name": "search_items",
+            "return_type": "text",
+        },
+        {
+            "type": "tool",
+            "name": "get_item",
+            "module_name": "mcp_hospirfq_processor",
+            "class_name": "MCPHospiRFQProcessor",
+            "function_name": "get_item",
+            "return_type": "text",
+        },
+        {
+            "type": "tool",
+            "name": "get_provider_items",
+            "module_name": "mcp_hospirfq_processor",
+            "class_name": "MCPHospiRFQProcessor",
+            "function_name": "get_provider_items",
+            "return_type": "text",
+        },
+        # Quote Management Tools
+        {
+            "type": "tool",
+            "name": "update_quote",
+            "module_name": "mcp_hospirfq_processor",
+            "class_name": "MCPHospiRFQProcessor",
+            "function_name": "update_quote",
+            "return_type": "text",
+        },
+        {
+            "type": "tool",
+            "name": "get_quote",
+            "module_name": "mcp_hospirfq_processor",
+            "class_name": "MCPHospiRFQProcessor",
+            "function_name": "get_quote",
+            "return_type": "text",
+        },
+        {
+            "type": "tool",
+            "name": "search_quotes",
+            "module_name": "mcp_hospirfq_processor",
+            "class_name": "MCPHospiRFQProcessor",
+            "function_name": "search_quotes",
+            "return_type": "text",
+        },
+        {
+            "type": "tool",
+            "name": "update_quote_item",
+            "module_name": "mcp_hospirfq_processor",
+            "class_name": "MCPHospiRFQProcessor",
+            "function_name": "update_quote_item",
+            "return_type": "text",
+        },
+        # Pricing Tools
+        {
+            "type": "tool",
+            "name": "get_item_price_tiers",
+            "module_name": "mcp_hospirfq_processor",
+            "class_name": "MCPHospiRFQProcessor",
+            "function_name": "get_item_price_tiers",
+            "return_type": "text",
+        },
+        {
+            "type": "tool",
+            "name": "get_discount_prompts",
+            "module_name": "mcp_hospirfq_processor",
+            "class_name": "MCPHospiRFQProcessor",
+            "function_name": "get_discount_prompts",
+            "return_type": "text",
+        },
+        {
+            "type": "tool",
+            "name": "calculate_quote_pricing",
+            "module_name": "mcp_hospirfq_processor",
+            "class_name": "MCPHospiRFQProcessor",
+            "function_name": "calculate_quote_pricing",
+            "return_type": "text",
+        },
+        # Installment Tools
+        {
+            "type": "tool",
+            "name": "create_installment",
+            "module_name": "mcp_hospirfq_processor",
+            "class_name": "MCPHospiRFQProcessor",
+            "function_name": "_create_installment",
+            "return_type": "text",
+        },
+        {
+            "type": "tool",
+            "name": "update_installment",
+            "module_name": "mcp_hospirfq_processor",
+            "class_name": "MCPHospiRFQProcessor",
+            "function_name": "update_installment",
+            "return_type": "text",
+        },
+        {
+            "type": "tool",
+            "name": "create_installments",
+            "module_name": "mcp_hospirfq_processor",
+            "class_name": "MCPHospiRFQProcessor",
+            "function_name": "_create_installments",
+            "return_type": "text",
+        },
+        {
+            "type": "tool",
+            "name": "get_installments",
+            "module_name": "mcp_hospirfq_processor",
+            "class_name": "MCPHospiRFQProcessor",
+            "function_name": "get_installments",
+            "return_type": "text",
+        },
+        # Convenience/Workflow Tools
+        {
+            "type": "tool",
+            "name": "confirm_request_and_create_quotes",
+            "module_name": "mcp_hospirfq_processor",
+            "class_name": "MCPHospiRFQProcessor",
+            "function_name": "confirm_request_and_create_quotes",
+            "return_type": "text",
+        },
+        {
+            "type": "tool",
+            "name": "confirm_quote_and_create_installments",
+            "module_name": "mcp_hospirfq_processor",
+            "class_name": "MCPHospiRFQProcessor",
+            "function_name": "confirm_quote_and_create_installments",
+            "return_type": "text",
+        },
+        # File Tools
+        {
+            "type": "tool",
+            "name": "upload_rfq_file",
+            "module_name": "mcp_hospirfq_processor",
+            "class_name": "MCPHospiRFQProcessor",
+            "function_name": "upload_rfq_file",
+            "return_type": "text",
+        },
+        {
+            "type": "tool",
+            "name": "get_rfq_files",
+            "module_name": "mcp_hospirfq_processor",
+            "class_name": "MCPHospiRFQProcessor",
+            "function_name": "get_rfq_files",
+            "return_type": "text",
+        },
+        # Segment Tools
+        {
+            "type": "tool",
+            "name": "get_segment_contacts",
+            "module_name": "mcp_hospirfq_processor",
+            "class_name": "MCPHospiRFQProcessor",
+            "function_name": "get_segment_contacts",
+            "return_type": "text",
+        },
+        # Availability Tools
+        {
+            "type": "tool",
+            "name": "check_availability",
+            "module_name": "mcp_hospirfq_processor",
+            "class_name": "MCPHospiRFQProcessor",
+            "function_name": "check_availability",
+            "return_type": "text",
+        },
+        {
+            "type": "tool",
+            "name": "acquire_availability_hold",
+            "module_name": "mcp_hospirfq_processor",
+            "class_name": "MCPHospiRFQProcessor",
+            "function_name": "acquire_availability_hold",
+            "return_type": "text",
+        },
+        {
+            "type": "tool",
+            "name": "release_availability_hold",
+            "module_name": "mcp_hospirfq_processor",
+            "class_name": "MCPHospiRFQProcessor",
+            "function_name": "release_availability_hold",
+            "return_type": "text",
+        },
+        {
+            "type": "tool",
+            "name": "confirm_availability_hold",
+            "module_name": "mcp_hospirfq_processor",
+            "class_name": "MCPHospiRFQProcessor",
+            "function_name": "confirm_availability_hold",
+            "return_type": "text",
+        },
+        {
+            "type": "tool",
+            "name": "expire_availability_hold",
+            "module_name": "mcp_hospirfq_processor",
+            "class_name": "MCPHospiRFQProcessor",
+            "function_name": "expire_availability_hold",
+            "return_type": "text",
+        },
+        # Bundle Tools
+        {
+            "type": "tool",
+            "name": "search_bundles",
+            "module_name": "mcp_hospirfq_processor",
+            "class_name": "MCPHospiRFQProcessor",
+            "function_name": "search_bundles",
+            "return_type": "text",
+        },
+        {
+            "type": "tool",
+            "name": "get_bundle",
+            "module_name": "mcp_hospirfq_processor",
+            "class_name": "MCPHospiRFQProcessor",
+            "function_name": "get_bundle",
+            "return_type": "text",
+        },
+        {
+            "type": "tool",
+            "name": "search_bundle_components",
+            "module_name": "mcp_hospirfq_processor",
+            "class_name": "MCPHospiRFQProcessor",
+            "function_name": "search_bundle_components",
+            "return_type": "text",
+        },
+        # Cancellation Policy Tools
+        {
+            "type": "tool",
+            "name": "get_cancellation_policy",
+            "module_name": "mcp_hospirfq_processor",
+            "class_name": "MCPHospiRFQProcessor",
+            "function_name": "get_cancellation_policy",
+            "return_type": "text",
+        },
+        {
+            "type": "tool",
+            "name": "search_cancellation_policies",
+            "module_name": "mcp_hospirfq_processor",
+            "class_name": "MCPHospiRFQProcessor",
+            "function_name": "search_cancellation_policies",
+            "return_type": "text",
+        },
+        # Catalog Tools
+        {
+            "type": "tool",
+            "name": "inquire_catalog",
+            "module_name": "mcp_hospirfq_processor",
+            "class_name": "MCPHospiRFQProcessor",
+            "function_name": "inquire_catalog",
+            "return_type": "text",
+        },
+    ],
+    "modules": [
+        {
+            "package_name": "mcp_hospirfq_processor",
+            "module_name": "mcp_hospirfq_processor",
+            "class_name": "MCPHospiRFQProcessor",
+            "setting": {},
+        }
+    ],
+}

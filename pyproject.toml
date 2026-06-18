@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mcp_hospirfq_processor"
+version = "0.1.0"
+description = "Travel and hospitality RFQ tools for SilvaEngine MCP hosts"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [
+    {name = "Idea Bosque"},
+]
+requires-python = ">=3.11"
+dependencies = [
+    "humps>=0.2",
+    "httpx[http2]>=0.25",
+    "silvaengine-utility",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-asyncio>=0.21",
+]
+
+[tool.setuptools.packages.find]
+include = ["mcp_hospirfq_processor*"]
+
+[tool.pytest.ini_options]
+testpaths = ["mcp_hospirfq_processor/tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "--strict-markers --tb=short"
+markers = [
+    "unit: tests that do not require external services",
+    "integration: tests that exercise external service integration",
+    "slow: tests that take significant time to run",
+]
