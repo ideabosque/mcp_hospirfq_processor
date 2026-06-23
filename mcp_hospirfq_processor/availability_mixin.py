@@ -64,7 +64,7 @@ class AvailabilityMixin(GraphQLBackedProcessor):
         variables = {k: v for k, v in variables.items() if v is not None and v != ""}
 
         result = self._execute_graphql_query(
-            "ai_rfq_graphql",
+            "rfq_graphql",
             "checkAvailability",
             "Query",
             variables,
@@ -117,7 +117,7 @@ class AvailabilityMixin(GraphQLBackedProcessor):
         variables = {k: v for k, v in variables.items() if v is not None and v != ""}
 
         result = self._execute_graphql_query(
-            "ai_rfq_graphql",
+            "rfq_graphql",
             "acquireAvailabilityHold",
             "Mutation",
             variables,
@@ -159,7 +159,7 @@ class AvailabilityMixin(GraphQLBackedProcessor):
         variables = {k: v for k, v in variables.items() if v is not None and v != ""}
 
         result = self._execute_graphql_query(
-            "ai_rfq_graphql",
+            "rfq_graphql",
             "releaseAvailabilityHold",
             "Mutation",
             variables,
@@ -201,7 +201,7 @@ class AvailabilityMixin(GraphQLBackedProcessor):
         variables = {k: v for k, v in variables.items() if v is not None and v != ""}
 
         result = self._execute_graphql_query(
-            "ai_rfq_graphql",
+            "rfq_graphql",
             "confirmAvailabilityHold",
             "Mutation",
             variables,
@@ -243,7 +243,7 @@ class AvailabilityMixin(GraphQLBackedProcessor):
         variables = {k: v for k, v in variables.items() if v is not None and v != ""}
 
         result = self._execute_graphql_query(
-            "ai_rfq_graphql",
+            "rfq_graphql",
             "expireAvailabilityHold",
             "Mutation",
             variables,

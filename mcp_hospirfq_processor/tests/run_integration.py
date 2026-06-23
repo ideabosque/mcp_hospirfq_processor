@@ -7,12 +7,12 @@ This script exercises the processor tools against a live gateway instance.
 The GraphQLClient itself handles gateway JWT Bearer auth (driven by the
 gateway_base_url / token_username / token_password settings), so this script
 just configures those settings and calls each tool with sample data from
-ai_rfq_engine's prepare_test_data fixtures.
+rfq_engine's prepare_test_data fixtures.
 
 Prerequisites:
   1. silvaengine_gateway is running:
        python -m silvaengine_gateway.tests.run_daemon
-  2. ai_rfq_engine test data has been seeded (prepare_test_data scripts).
+  2. rfq_engine test data has been seeded (prepare_test_data scripts).
   3. tests/.env is configured with correct endpoint_id, part_id, and credentials.
 
 Usage:
@@ -76,7 +76,7 @@ sys.path.insert(0, base_dir)
 sys.path.insert(0, os.path.join(base_dir, "silvaengine_utility"))
 sys.path.insert(0, os.path.join(base_dir, "silvaengine_constants"))
 sys.path.insert(0, os.path.join(base_dir, "silvaengine_dynamodb_base"))
-sys.path.insert(0, os.path.join(base_dir, "ai_rfq_engine"))
+sys.path.insert(0, os.path.join(base_dir, "rfq_engine"))
 sys.path.insert(0, os.path.join(base_dir, "mcp_hospirfq_processor"))
 
 # ── Logging ──────────────────────────────────────────────────────────────────
@@ -105,12 +105,12 @@ GATEWAY_TOKEN = os.getenv("GATEWAY_TOKEN", os.getenv("ADMIN_STATIC_TOKEN", ""))
 
 # GraphQL endpoint template on the gateway. Only {endpoint_id} is interpolated
 # into the URL path; part_id is sent in the Part-Id request header.
-AI_RFQ_ENGINE_ENDPOINT = os.getenv(
-    "AI_RFQ_ENGINE_ENDPOINT",
-    f"{GATEWAY_BASE_URL}/{{endpoint_id}}/ai_rfq_graphql",
+RFQ_ENGINE_ENDPOINT = os.getenv(
+    "RFQ_ENGINE_ENDPOINT",
+    f"{GATEWAY_BASE_URL}/{{endpoint_id}}/rfq_graphql",
 )
 # Resolved URL for display / report headers only.
-GRAPHQL_URL = AI_RFQ_ENGINE_ENDPOINT.format(endpoint_id=ENDPOINT_ID)
+GRAPHQL_URL = RFQ_ENGINE_ENDPOINT.format(endpoint_id=ENDPOINT_ID)
 
 # Partition key (gateway constructs this from path params, but some tools pass it directly)
 PARTITION_KEY = f"{ENDPOINT_ID}#{PART_ID}"
@@ -120,10 +120,10 @@ PARTITION_KEY = f"{ENDPOINT_ID}#{PART_ID}"
 # a placeholder kept for the non-gateway (AWS API Gateway) code path.
 SETTING = {
     "graphql_modules": {
-        "ai_rfq_engine": {
-            "class_name": os.getenv("AI_RFQ_ENGINE_CLASS_NAME", "AIRFQEngine"),
-            "endpoint": AI_RFQ_ENGINE_ENDPOINT,
-            "x_api_key": os.getenv("AI_RFQ_ENGINE_X_API_KEY", "placeholder"),
+        "rfq_engine": {
+            "class_name": os.getenv("RFQ_ENGINE_CLASS_NAME", "RFQEngine"),
+            "endpoint": RFQ_ENGINE_ENDPOINT,
+            "x_api_key": os.getenv("RFQ_ENGINE_X_API_KEY", "placeholder"),
         }
     },
     "gateway_base_url": GATEWAY_BASE_URL,
@@ -139,49 +139,114 @@ SETTING = {
 }
 
 # =============================================================================
-# Sample data (from ai_rfq_engine/tests/prepare_test_data/)
+# Sample data (from rfq_engine/tests/prepare_test_data/)
 # =============================================================================
 
 SAMPLE = {
-    # Items (flight_products.json)
-    "item_uuid": "17735923656909930624",        # Flight CDG->JFK Business
-    "item_uuid_2": "52065619693805781120",       # Flight ATL->ORD Economy
-    # Item that exists in the seeded request 96306650268729098368
-    "item_uuid_in_request": "06041993713794695296",  # Flight ATL->ORD Premium Economy
-    "item_name": "Flight CDG->JFK Business",
+    # Items (flight_products.json) — current seeded flight products.
+    # Primary item: Flight NRT->CDG First (Delta Air Lines, meal included).
+    "item_uuid": "9f965bf9-7302-4f1d-8d37-6f335f880c58",        # Flight NRT->CDG First
+    "item_uuid_2": "d6dd8e87-34f1-4741-b293-dc41992089b1",       # Flight CDG->ORD Economy
+    # Item that exists in a seeded request with quote items (quote 9e8378fa...).
+    "item_uuid_in_request": "9f965bf9-7302-4f1d-8d37-6f335f880c58",  # Flight NRT->CDG First
+    "item_name": "Flight NRT->CDG First",
     "item_type": "flight",
     # Provider items
-    "provider_item_uuid": "55349863084404523136",  # AF-CDG-JFK-BUS
-    "provider_item_uuid_2": "39876487618607726720",  # AF-ATL-ORD-PRE
+    "provider_item_uuid": "24529e36-bd9c-4427-ac05-d1d545ad8963",  # DL-NRT-CDG-FIR
+    "provider_item_uuid_2": "bad12922-6da1-4117-95ec-5ee0284a5d95",  # SQ-CDG-ORD-ECO
     # Provider item for the item in the seeded request
-    "provider_item_uuid_in_request": "39876487618607726720",  # AF-ATL-ORD-PRE (matches item 06041993713794695296)
-    "provider_corp_external_id": "AIRLINE-AF",
-    "provider_corp_external_id_2": "AIRLINE-QF",
+    "provider_item_uuid_in_request": "24529e36-bd9c-4427-ac05-d1d545ad8963",  # DL-NRT-CDG-FIR
+    "provider_corp_external_id": "AIRLINE-DL",
+    "provider_corp_external_id_2": "AIRLINE-SQ",
     # Batches (provider_item_batches in flight_products.json)
-    "batch_no": "AF8751-20260811",
-    "service_start_at": "2026-08-11T08:30:00Z",
-    "service_end_at": "2026-08-11T20:57:51.046308Z",
-    # Requests (requests.json)
-    "request_uuid": "96306650268729098368",
-    "email": "jessicacooper@example.com",
-    # Quotes (quotes.json) — quote 83893620897501692032 is empty (no quote items)
-    # Use quote 51485446173562519680 which has quote items (quote_items.json)
-    "quote_uuid": "83893620897501692032",
-    "quote_uuid_with_items": "51485446173562519680",
-    "request_uuid_for_quote_with_items": "87119168162060320896",
+    "batch_no": "DL4000-20260905",
+    "service_start_at": "2026-09-05T21:15:00Z",
+    "service_end_at": "2026-09-06T08:30:40.740402Z",
+    # Requests (requests.json) — first seeded request (has quote items).
+    "request_uuid": "c6e3730a-e8b5-4d18-bc54-10b0c86a1a4a",
+    "email": "zbrown@example.org",
+    # Quotes (quotes.json) — quote 9e8378fa... is initial with quote items for NRT->CDG First.
+    "quote_uuid": "9e8378fa-f6b3-4353-bf9a-af2ff6036ff8",
+    "quote_uuid_with_items": "9e8378fa-f6b3-4353-bf9a-af2ff6036ff8",
+    "request_uuid_for_quote_with_items": "c6e3730a-e8b5-4d18-bc54-10b0c86a1a4a",
     # Quote items (quote_items.json)
-    "quote_item_uuid": "73631515167125684352",
-    # Segments
-    "segment_uuid": "61268299727527493760",
+    "quote_item_uuid": "84336230-ce18-4a57-bf2b-4b8759255781",
+    # Segments (flight_products.json segmentUuid)
+    "segment_uuid": "323dec2b-1f03-4d42-a5ef-73ef9e17c4e6",
     # Bundles (flight_products.json)
-    "bundle_uuid": "80092055917037633664",       # FLT-ITIN-001
-    "bundle_uuid_2": "49956565412585947264",      # FLT-ITIN-002
-    # Cancellation policies (flight_products.json)
-    "policy_uuid": "70591963290008567936",       # Business Fare Cancellation
-    # Catalog
-    "catalog_query": "Air France ATL ORD Premium Economy flight with meal included",
+    "bundle_uuid": "0f19ab66-07f9-44fa-ac17-5d87434e6639",       # FLT-ITIN-001
+    "bundle_uuid_2": "78af79fc-f9bc-4661-b968-72ab4233df5b",      # FLT-ITIN-002
+    # Cancellation policies (flight_products.json) — First Fare Cancellation.
+    "policy_uuid": "b2ede6e5-e595-4719-b0b8-07a1f5f74baf",       # First Fare Cancellation
+    # Catalog — query targets the NRT->CDG First flight (Delta, meal included).
+    "catalog_query": "Delta Air Lines NRT CDG First class flight with meal included",
     "catalog_namespace": "FLIGHTS",
 }
+
+# DynamoDB-backend sample data. Active when SAMPLE_BACKEND=dynamodb (or when
+# the gateway is running with DB_BACKEND=dynamodb and no flight_catalog_refs.json
+# mapping applies). These IDs come from the DynamoDB-seeded fixtures
+# (rfq_engine/tests/load_sample_data.py), not the PostgreSQL flight_products.json
+# fixtures, so they resolve on the DynamoDB backend.
+#
+# Primary mutable-workflow item: Flight CDG->SFO First (Qantas, QF1351-20260709).
+# This batch has ample capacity (145+ seats) so the availability-hold and
+# installment setup tests do not exhaust it across repeated runs. The seeded
+# AF request/quote (read-only lookups) are kept in the *_seeded fields.
+SAMPLE_DYNAMODB = {
+    # Primary item: Flight CDG->SFO First (Qantas) — high-capacity batch.
+    "item_uuid": "52065619693805781120",
+    "item_uuid_2": "06041993713794695296",                    # Flight ATL->ORD Premium Economy
+    "item_uuid_in_request": "06041993713794695296",
+    "item_name": "Flight CDG->SFO First",
+    "item_type": "flight",
+    # Provider items
+    "provider_item_uuid": "94764066649319424128",             # QF-CDG-SFO-FIR
+    "provider_item_uuid_2": "39876487618607726720",          # AF-ATL-ORD-PRE
+    "provider_item_uuid_in_request": "39876487618607726720",
+    "provider_corp_external_id": "AIRLINE-QF",
+    "provider_corp_external_id_2": "AIRLINE-AF",
+    # Batches — primary batch has ample capacity for holds + installment setup.
+    "batch_no": "QF1351-20260709",
+    "service_start_at": "2026-07-09T21:45:00Z",
+    "service_end_at": "2026-07-10T03:11:29.751482Z",
+    # Requests — seeded request with items + provider assignment (read-only).
+    "request_uuid": "03075416831792529536",
+    "email": "jessicacooper@example.com",
+    # Quotes — seeded quote for the seeded request (read-only).
+    "quote_uuid": "60187438571235328128",
+    "quote_uuid_with_items": "60187438571235328128",
+    "request_uuid_for_quote_with_items": "03075416831792529536",
+    # Quote items — seeded quote item (read-only).
+    "quote_item_uuid": "86175401676691751040",
+    # Segments
+    "segment_uuid": "61268299727527493760",
+    # Bundles
+    "bundle_uuid": "21965879857802920064",                    # Flight Itinerary HKG->SFO + SFO->SYD + ATL->LAX
+    "bundle_uuid_2": "49956565412585947264",
+    # Cancellation policies — First Fare Cancellation (QF batch policy).
+    "policy_uuid": "45519135682445983872",
+    # Catalog — query targets the CDG->SFO First flight.
+    "catalog_query": "Qantas CDG SFO First class flight",
+    "catalog_namespace": "FLIGHTS",
+    # Alternate provider item/batch with ample capacity, used by the
+    # installment setup helper to avoid capacity contention with the primary
+    # batch. QF5796-20260921 (165 seats).
+    "alt_provider_item_uuid": "94764066649319424128",
+    "alt_item_uuid": "52065619693805781120",
+    "alt_provider_corp_external_id": "AIRLINE-QF",
+    "alt_batch_no": "QF5796-20260921",
+    "alt_service_start_at": "2026-09-21T19:45:00Z",
+    "alt_service_end_at": "2026-09-21T22:44:57.764776Z",
+}
+
+# Active backend selector for sample data. "dynamodb" switches to the
+# DynamoDB-seeded fixtures; anything else (default) uses the PostgreSQL
+# flight_products.json fixtures. Driven by the SAMPLE_BACKEND env var so the
+# runner does not need code changes per backend.
+_SAMPLE_BACKEND = (os.getenv("SAMPLE_BACKEND") or "").strip().lower()
+if _SAMPLE_BACKEND == "dynamodb":
+    SAMPLE = dict(SAMPLE_DYNAMODB)
 
 
 RUN_STATE: Dict[str, Any] = {}
@@ -190,8 +255,8 @@ RUN_STATE: Dict[str, Any] = {}
 def _load_flight_catalog_refs() -> Dict[str, Any]:
     refs_path = (
         Path(base_dir)
-        / "ai_rfq_engine"
-        / "ai_rfq_engine"
+        / "rfq_engine"
+        / "rfq_engine"
         / "tests"
         / "prepare_test_data"
         / "flight_catalog_refs.json"
@@ -204,8 +269,8 @@ def _load_flight_catalog_refs() -> Dict[str, Any]:
 def _load_flight_products() -> Dict[str, Any]:
     products_path = (
         Path(base_dir)
-        / "ai_rfq_engine"
-        / "ai_rfq_engine"
+        / "rfq_engine"
+        / "rfq_engine"
         / "tests"
         / "prepare_test_data"
         / "flight_products.json"
@@ -238,20 +303,65 @@ def _provider_corp_from_catalog_ref(ref: Dict[str, Any]) -> str:
 def _batch_from_selected_ref(ref: Dict[str, Any]) -> Optional[Dict[str, Any]]:
     products = _load_flight_products()
     batches = products.get("provider_item_batches") or []
-    for batch in batches:
+    matching = [
+        batch
+        for batch in batches
         if (
             batch.get("itemUuid") == ref.get("itemUuid")
             and batch.get("providerItemUuid") == ref.get("providerItemUuid")
-        ):
-            return batch
-    return None
+        )
+    ]
+    if not matching:
+        return None
+    # Prefer the matching batch with the most seeded capacity (tie-break: latest
+    # serviceStartAt). The availability-hold and installment-setup tests acquire
+    # and confirm holds that permanently consume capacity across runs; selecting
+    # the highest-capacity batch avoids exhausting a low-capacity one (e.g. the
+    # 7-seat Delta DL4000 batch) and keeps INT-PG-006 repeatable.
+    return max(
+        matching,
+        key=lambda b: (
+            b.get("availabilityQty") or 0,
+            str(b.get("serviceStartAt") or ""),
+        ),
+    )
 
 
 def _apply_catalog_discovery(result: Any) -> bool:
-    """Use the first matching catalog search hit to choose the primary test item."""
+    """Use the first matching catalog search hit to choose the primary test item.
+
+    On the DynamoDB backend (``SAMPLE_BACKEND=dynamodb``) the catalog result is
+    used only to confirm the catalog/KGE path returns a payload without
+    ``errorCode`` and that a flight hit is present; the prepared
+    ``flight_catalog_refs.json`` refs are PostgreSQL-specific UUIDs and must NOT
+    override the DynamoDB-seeded ``SAMPLE`` IDs (which resolve on DynamoDB).
+    """
+    if _SAMPLE_BACKEND == "dynamodb":
+        if not isinstance(result, dict):
+            return False
+        results = ((result.get("payload") or {}).get("results") or [])
+        if not results:
+            return False
+        # Confirm a flight hit was returned; keep the DynamoDB SAMPLE as-is.
+        RUN_STATE["catalog_selected_item"] = {
+            "item_uuid": SAMPLE["item_uuid"],
+            "provider_item_uuid": SAMPLE["provider_item_uuid"],
+            "provider_corp_external_id": SAMPLE["provider_corp_external_id"],
+            "item_name": SAMPLE["item_name"],
+            "batch_no": SAMPLE["batch_no"],
+            "service_start_at": SAMPLE["service_start_at"],
+            "service_end_at": SAMPLE["service_end_at"],
+            "node_id": None,
+            "catalog_ref_uuid": None,
+        }
+        return True
+
     refs = _load_flight_catalog_refs()
-    matched_refs = refs.get("matched") or []
-    if not matched_refs or not isinstance(result, dict):
+    # Consider both KGE-matched refs and itemExternalId-fallback refs so the
+    # selection gate works in link-only (skip-ingest) mode where every ref is
+    # resolved via the ``fallbacks`` bucket.
+    candidate_refs = (refs.get("matched") or []) + (refs.get("fallbacks") or [])
+    if not candidate_refs or not isinstance(result, dict):
         return False
 
     results = ((result.get("payload") or {}).get("results") or [])
@@ -262,7 +372,7 @@ def _apply_catalog_discovery(result: Any) -> bool:
         if not isinstance(hit, dict):
             continue
         hit_text = str(((hit.get("metadata") or {}).get("node") or {}).get("text") or "")
-        for ref in matched_refs:
+        for ref in candidate_refs:
             item_name = _item_name_from_catalog_ref(ref)
             node_id = ref.get("nodeId")
             if (
@@ -275,7 +385,7 @@ def _apply_catalog_discovery(result: Any) -> bool:
             break
 
     if selected_ref is None:
-        for ref in matched_refs:
+        for ref in candidate_refs:
             item_name = _item_name_from_catalog_ref(ref)
             node_id = ref.get("nodeId")
             if (
@@ -542,7 +652,7 @@ def export_results(path: str, run_groups: List[str]) -> None:
         "",
         "End-to-end live integration testing was executed against the local "
         "`silvaengine_gateway` route for `mcp_hospirfq_processor` using "
-        "`.env`-driven connection settings and prepared `../ai_rfq_engine` "
+        "`.env`-driven connection settings and prepared `../rfq_engine` "
         "flight RFQ data. The final dependency-ordered run completed with "
         f"{_passed} passing function calls, {_skipped} error responses, and "
         f"{_failed} failures. Catalog search was executed first and selected "
@@ -575,7 +685,7 @@ def export_results(path: str, run_groups: List[str]) -> None:
         "|---|---|---|---|---|---|---|",
         "| Python test environment | infrastructure | yes | yes | yes | yes | Unit tests passed: 62 passed |",
         "| `silvaengine_gateway` local instance | internal | yes | yes | yes | yes | `/auth/token` returned 200 and GraphQL calls completed |",
-        "| `ai_rfq_engine` route | internal | yes | yes | yes | yes | GraphQL-backed function calls passed |",
+        "| `rfq_engine` route | internal | yes | yes | yes | yes | GraphQL-backed function calls passed |",
         "| prepared flight data | test data | yes | yes | yes | yes | Catalog-selected item mapped to prepared refs and batch data |",
         "| catalog/KGE path | internal | yes | yes | yes | yes | `inquire_catalog` returned ranked `FLIGHTS` results |",
         "",
@@ -775,7 +885,7 @@ def run_requests(processor: MCPHospiRFQProcessor) -> None:
         "request_uuid": target_request_uuid,
         "item": {
             "item_uuid": SAMPLE["item_uuid_2"],
-            "item_name": "Flight ATL->ORD Economy",
+            "item_name": "Flight CDG->ORD Economy",
             "qty": 1,
         },
     }, "requests", "add_item_to_rfq_request")
@@ -924,19 +1034,43 @@ def _create_confirmed_quote_for_installments(
     processor: MCPHospiRFQProcessor,
     label: str,
 ) -> Optional[str]:
-    """Create and confirm a fresh quote used only as installment test setup."""
+    """Create and confirm a fresh quote used only as installment test setup.
+
+    On the DynamoDB backend an alternate provider item/batch (with ample
+    capacity) is used for the ``create_installments`` setup so it does not
+    contend with the primary batch (whose capacity is consumed by the
+    availability-hold test and the ``create_installment`` setup).
+    """
     request_uuid = RUN_STATE.get("request_uuid")
     if not request_uuid:
         return None
 
+    use_alt = _SAMPLE_BACKEND == "dynamodb" and label == "create_installments"
+    provider_corp = (
+        SAMPLE.get("alt_provider_corp_external_id")
+        if use_alt
+        else SAMPLE["provider_corp_external_id"]
+    )
+    batch_no = SAMPLE.get("alt_batch_no") if use_alt else SAMPLE["batch_no"]
+    service_start_at = (
+        SAMPLE.get("alt_service_start_at")
+        if use_alt
+        else SAMPLE["service_start_at"]
+    )
+    service_end_at = (
+        SAMPLE.get("alt_service_end_at")
+        if use_alt
+        else SAMPLE["service_end_at"]
+    )
+
     quote = processor._create_quote(
         request_uuid=request_uuid,
-        provider_corp_external_id=SAMPLE["provider_corp_external_id"],
-        sales_rep_email=SETTING["sales_rep_emails"].get(SAMPLE["provider_corp_external_id"]),
+        provider_corp_external_id=provider_corp,
+        sales_rep_email=SETTING["sales_rep_emails"].get(provider_corp),
         segment_uuid=SAMPLE["segment_uuid"],
-        batch_no=SAMPLE["batch_no"],
-        service_start_at=SAMPLE["service_start_at"],
-        service_end_at=SAMPLE["service_end_at"],
+        batch_no=batch_no,
+        service_start_at=service_start_at,
+        service_end_at=service_end_at,
         notes=f"Setup quote for {label}",
     )
     if not isinstance(quote, dict) or quote.get("error"):

@@ -4,7 +4,7 @@
 - Gateway: `http://localhost:8765`
 - Endpoint: `gpt`
 - Partition: `nestaging`
-- GraphQL URL: `http://localhost:8765/gpt/nestaging/ai_rfq_graphql`
+- GraphQL URL: `http://localhost:8765/gpt/nestaging/rfq_graphql`
 - Dependency order: `catalog_discovery, availability`
 - Passed: `8`
 - Error responses: `0`

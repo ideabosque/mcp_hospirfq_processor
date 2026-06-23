@@ -124,7 +124,7 @@ class RequestMixin(GraphQLBackedProcessor):
         variables = {k: v for k, v in variables.items() if v is not None and v != ""}
 
         result = self._execute_graphql_query(
-            "ai_rfq_graphql",
+            "rfq_graphql",
             "insertUpdateRequest",
             "Mutation",
             variables,
@@ -188,7 +188,7 @@ class RequestMixin(GraphQLBackedProcessor):
         variables = {k: v for k, v in variables.items() if v is not None and v != ""}
 
         result = self._execute_graphql_query(
-            "ai_rfq_graphql",
+            "rfq_graphql",
             "insertUpdateRequest",
             "Mutation",
             variables,
@@ -220,7 +220,7 @@ class RequestMixin(GraphQLBackedProcessor):
         Maps to GraphQL: request query
         """
         result = self._execute_graphql_query(
-            "ai_rfq_graphql",
+            "rfq_graphql",
             "request",
             "Query",
             {"requestUuid": arguments["request_uuid"]},
@@ -271,7 +271,7 @@ class RequestMixin(GraphQLBackedProcessor):
         variables = {k: v for k, v in variables.items() if v is not None and v != ""}
 
         result = self._execute_graphql_query(
-            "ai_rfq_graphql",
+            "rfq_graphql",
             "requestList",
             "Query",
             variables,
@@ -364,7 +364,7 @@ class RequestMixin(GraphQLBackedProcessor):
             variables["status"] = new_status
 
         result = self._execute_graphql_query(
-            "ai_rfq_graphql",
+            "rfq_graphql",
             "insertUpdateRequest",
             "Mutation",
             variables,
@@ -478,7 +478,7 @@ class RequestMixin(GraphQLBackedProcessor):
             variables["status"] = new_status
 
         result = self._execute_graphql_query(
-            "ai_rfq_graphql",
+            "rfq_graphql",
             "insertUpdateRequest",
             "Mutation",
             variables,
@@ -556,7 +556,7 @@ class RequestMixin(GraphQLBackedProcessor):
 
         # Validate that the provider item belongs to the specified provider
         provider_item_result = self._execute_graphql_query(
-            "ai_rfq_graphql",
+            "rfq_graphql",
             "providerItem",
             "Query",
             {"providerItemUuid": provider_item_uuid},
@@ -669,7 +669,7 @@ class RequestMixin(GraphQLBackedProcessor):
         }
 
         result = self._execute_graphql_query(
-            "ai_rfq_graphql",
+            "rfq_graphql",
             "insertUpdateRequest",
             "Mutation",
             variables,
@@ -806,7 +806,7 @@ class RequestMixin(GraphQLBackedProcessor):
         }
 
         result = self._execute_graphql_query(
-            "ai_rfq_graphql",
+            "rfq_graphql",
             "insertUpdateRequest",
             "Mutation",
             variables,

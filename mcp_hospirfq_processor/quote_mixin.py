@@ -78,7 +78,7 @@ class QuoteMixin(GraphQLBackedProcessor):
         variables = {k: v for k, v in variables.items() if v is not None and v != ""}
 
         result = self._execute_graphql_query(
-            "ai_rfq_graphql",
+            "rfq_graphql",
             "insertUpdateQuote",
             "Mutation",
             variables,
@@ -242,7 +242,7 @@ class QuoteMixin(GraphQLBackedProcessor):
         variables = {k: v for k, v in variables.items() if v is not None and v != ""}
 
         result = self._execute_graphql_query(
-            "ai_rfq_graphql",
+            "rfq_graphql",
             "insertUpdateQuoteItem",
             "Mutation",
             variables,
@@ -337,7 +337,7 @@ class QuoteMixin(GraphQLBackedProcessor):
         variables = {k: v for k, v in variables.items() if v is not None and v != ""}
 
         result = self._execute_graphql_query(
-            "ai_rfq_graphql",
+            "rfq_graphql",
             "insertUpdateQuote",
             "Mutation",
             variables,
@@ -371,7 +371,7 @@ class QuoteMixin(GraphQLBackedProcessor):
             variables["requestUuid"] = arguments["request_uuid"]
 
         result = self._execute_graphql_query(
-            "ai_rfq_graphql", "quote", "Query", variables
+            "rfq_graphql", "quote", "Query", variables
         )
 
         # Check for error in response and propagate if present
@@ -419,7 +419,7 @@ class QuoteMixin(GraphQLBackedProcessor):
         variables = {k: v for k, v in variables.items() if v is not None and v != ""}
 
         result = self._execute_graphql_query(
-            "ai_rfq_graphql",
+            "rfq_graphql",
             "quoteList",
             "Query",
             variables,
@@ -476,7 +476,7 @@ class QuoteMixin(GraphQLBackedProcessor):
         variables = {k: v for k, v in variables.items() if v is not None and v != ""}
 
         result = self._execute_graphql_query(
-            "ai_rfq_graphql",
+            "rfq_graphql",
             "insertUpdateQuoteItem",
             "Mutation",
             variables,

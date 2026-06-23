@@ -3,7 +3,7 @@
 """
 GraphQL Client for MCP HospiRFQ Processor
 
-Handles GraphQL query execution via HTTP/2 against the ai_rfq_engine backend.
+Handles GraphQL query execution via HTTP/2 against the rfq_engine backend.
 """
 
 __author__ = "Idea Bosque"
@@ -168,7 +168,7 @@ class GraphQLClient:
         operation_type: str,
         variables: Dict[str, Any],
         query: str = None,
-        module_name: str = "ai_rfq_engine",
+        module_name: str = "rfq_engine",
     ) -> Dict[str, Any]:
         """Execute a GraphQL query or mutation."""
         try:

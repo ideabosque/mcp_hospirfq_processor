@@ -31,8 +31,8 @@ from mcp_hospirfq_processor.mcp_hospirfq_processor import MCPHospiRFQProcessor
 # but for unit tests we mock _execute_graphql_query so they're not called.
 SETTING = {
     "graphql_modules": {
-        "ai_rfq_engine": {
-            "class_name": "AIRFQEngine",
+        "rfq_engine": {
+            "class_name": "RFQEngine",
             "endpoint": "https://mock.example.com/graphql/{endpoint_id}",
             "x_api_key": "mock-api-key",
         }

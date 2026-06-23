@@ -27,7 +27,7 @@ class FileMixin(GraphQLBackedProcessor):
         variables = {k: v for k, v in variables.items() if v is not None and v != ""}
 
         operation_name = "insertUpdateFile"
-        result = self._execute_graphql_query("ai_rfq_graphql", operation_name, "Mutation", variables)
+        result = self._execute_graphql_query("rfq_graphql", operation_name, "Mutation", variables)
         if error := propagate_error_if_present(result):
             return error
 
@@ -44,7 +44,7 @@ class FileMixin(GraphQLBackedProcessor):
         variables = {k: v for k, v in variables.items() if v is not None and v != ""}
 
         operation_name = "fileList"
-        result = self._execute_graphql_query("ai_rfq_graphql", operation_name, "Query", variables)
+        result = self._execute_graphql_query("rfq_graphql", operation_name, "Query", variables)
         if error := propagate_error_if_present(result):
             return error
 

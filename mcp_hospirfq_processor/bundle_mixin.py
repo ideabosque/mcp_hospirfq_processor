@@ -25,7 +25,7 @@ class BundleMixin(GraphQLBackedProcessor):
         variables = {k: v for k, v in variables.items() if v is not None and v != ""}
 
         operation_name = "bundleList"
-        result = self._execute_graphql_query("ai_rfq_graphql", operation_name, "Query", variables)
+        result = self._execute_graphql_query("rfq_graphql", operation_name, "Query", variables)
         if error := propagate_error_if_present(result):
             return error
 
@@ -45,7 +45,7 @@ class BundleMixin(GraphQLBackedProcessor):
         variables = {k: v for k, v in variables.items() if v is not None and v != ""}
 
         operation_name = "bundle"
-        result = self._execute_graphql_query("ai_rfq_graphql", operation_name, "Query", variables)
+        result = self._execute_graphql_query("rfq_graphql", operation_name, "Query", variables)
         if error := propagate_error_if_present(result):
             return error
 
@@ -65,7 +65,7 @@ class BundleMixin(GraphQLBackedProcessor):
         variables = {k: v for k, v in variables.items() if v is not None and v != ""}
 
         operation_name = "bundleComponentList"
-        result = self._execute_graphql_query("ai_rfq_graphql", operation_name, "Query", variables)
+        result = self._execute_graphql_query("rfq_graphql", operation_name, "Query", variables)
         if error := propagate_error_if_present(result):
             return error
 

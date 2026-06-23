@@ -1,7 +1,7 @@
 # MCP HospiRFQ Processor
 
 `mcp_hospirfq_processor` exposes RFQ, travel, and hospitality operations as
-SilvaEngine MCP tools backed by the `ai_rfq_engine` GraphQL API.
+SilvaEngine MCP tools backed by the `rfq_engine` GraphQL API.
 
 The package provides a processor facade and MCP configuration for a host
 runtime. It is not a standalone MCP server executable.
@@ -35,7 +35,7 @@ MCP host
   -> MCPHospiRFQProcessor
   -> domain mixins
   -> GraphQLClient
-  -> ai_rfq_engine
+  -> rfq_engine
 ```
 
 Each mixin owns one domain concern and uses the shared GraphQL client. The
@@ -63,8 +63,8 @@ from mcp_hospirfq_processor import MCPHospiRFQProcessor
 
 settings = {
     "graphql_modules": {
-        "ai_rfq_engine": {
-            "class_name": "AIRFQEngine",
+        "rfq_engine": {
+            "class_name": "RFQEngine",
             "endpoint": "https://example.test/graphql/{endpoint_id}",
             "x_api_key": "replace-me",
         }
@@ -77,7 +77,7 @@ processor.endpoint_id = "endpoint-id"
 processor.part_id = "partition-id"
 ```
 
-The GraphQL module key must be `ai_rfq_engine`. The endpoint template may use
+The GraphQL module key must be `rfq_engine`. The endpoint template may use
 `{endpoint_id}`. Requests send `x-api-key` and `Part-Id` headers.
 
 ## Usage
@@ -109,7 +109,7 @@ python -m compileall -q mcp_hospirfq_processor
 The current tests mock GraphQL execution. They verify tool registration,
 argument mapping, response normalization, error propagation, status
 transitions, and flight/hospitality conventions. They do not validate a live
-`ai_rfq_engine` deployment, network authentication, inventory contention, or
+`rfq_engine` deployment, network authentication, inventory contention, or
 scheduled hold expiry.
 
 See [docs/DEVELOPMENT_PLAN.md](docs/DEVELOPMENT_PLAN.md) for implementation

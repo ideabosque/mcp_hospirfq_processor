@@ -17,7 +17,7 @@ class GraphQLBackedProcessor:
 
     Provides ``self.logger``, ``self.setting``, ``self.graphql_client``,
     and the ``_execute_graphql_query`` method that every mixin uses to
-    communicate with the ai_rfq_engine backend.
+    communicate with the rfq_engine backend.
     """
 
     def __init__(self, logger: logging.Logger, **setting: Dict[str, Any]):

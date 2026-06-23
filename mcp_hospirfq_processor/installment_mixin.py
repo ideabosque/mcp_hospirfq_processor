@@ -173,7 +173,7 @@ class InstallmentMixin(GraphQLBackedProcessor):
             variables["paymentMethod"] = arguments["payment_method"]
 
         result = self._execute_graphql_query(
-            "ai_rfq_graphql",
+            "rfq_graphql",
             "insertUpdateInstallment",
             "Mutation",
             variables,
@@ -360,7 +360,7 @@ class InstallmentMixin(GraphQLBackedProcessor):
                 variables["paymentMethod"] = arguments["payment_method"]
 
             result = self._execute_graphql_query(
-                "ai_rfq_graphql",
+                "rfq_graphql",
                 "insertUpdateInstallment",
                 "Mutation",
                 variables,
@@ -455,7 +455,7 @@ class InstallmentMixin(GraphQLBackedProcessor):
             variables["paymentMethod"] = arguments["payment_method"]
 
         result = self._execute_graphql_query(
-            "ai_rfq_graphql",
+            "rfq_graphql",
             "insertUpdateInstallment",
             "Mutation",
             variables,
@@ -493,11 +493,16 @@ class InstallmentMixin(GraphQLBackedProcessor):
                     )
 
                     # Get the request_uuid from the quote object in the installment
-                    request_uuid = (
-                        installment.get("quote", {})
-                        .get("request", {})
-                        .get("request_uuid")
-                    )
+                    quote_obj = installment.get("quote") or {}
+                    request_obj = quote_obj.get("request") or {}
+                    request_uuid = request_obj.get("request_uuid")
+
+                    if not request_uuid:
+                        # Fall back to the installment's request_uuid if the
+                        # nested quote/request graph was not returned by the
+                        # backend (some backends omit the nested object on
+                        # update mutations).
+                        request_uuid = installment.get("request_uuid")
 
                     # Update quote status to completed
                     update_quote_result = self.update_quote(
@@ -574,7 +579,7 @@ class InstallmentMixin(GraphQLBackedProcessor):
         variables = {k: v for k, v in variables.items() if v is not None and v != ""}
 
         result = self._execute_graphql_query(
-            "ai_rfq_graphql",
+            "rfq_graphql",
             "installmentList",
             "Query",
             variables,

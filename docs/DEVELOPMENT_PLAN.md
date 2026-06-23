@@ -7,7 +7,7 @@
 
 ## Purpose
 
-`mcp_hospirfq_processor` adapts the `ai_rfq_engine` GraphQL API into tools for
+`mcp_hospirfq_processor` adapts the `rfq_engine` GraphQL API into tools for
 a SilvaEngine MCP host. It combines generic RFQ workflows with travel and
 hospitality operations such as availability holds, passenger and occupancy
 pricing inputs, bundles, cancellation policies, and catalog inquiry.
@@ -60,7 +60,7 @@ SilvaEngine MCP host
               |
               +-- GraphQLClient
                     |
-                    +-- ai_rfq_engine GraphQL API
+                    +-- rfq_engine GraphQL API
 ```
 
 The flat mixin composition keeps domain methods separate while sharing logger,
@@ -135,8 +135,8 @@ The processor receives settings from its host:
 ```python
 settings = {
     "graphql_modules": {
-        "ai_rfq_engine": {
-            "class_name": "AIRFQEngine",
+        "rfq_engine": {
+            "class_name": "RFQEngine",
             "endpoint": "https://example.test/graphql/{endpoint_id}",
             "x_api_key": "replace-me",
         }
@@ -151,9 +151,9 @@ Required runtime state:
 
 - `endpoint_id`: assigned to the processor before GraphQL execution
 - `part_id`: assigned to the processor and sent as the `Part-Id` header
-- `graphql_modules.ai_rfq_engine.endpoint`: GraphQL endpoint template
-- `graphql_modules.ai_rfq_engine.class_name`: schema source class
-- `graphql_modules.ai_rfq_engine.x_api_key`: API credential
+- `graphql_modules.rfq_engine.endpoint`: GraphQL endpoint template
+- `graphql_modules.rfq_engine.class_name`: schema source class
+- `graphql_modules.rfq_engine.x_api_key`: API credential
 
 AWS credentials are deployment concerns only when required by the surrounding
 host or backend. This package does not read AWS environment variables itself.
@@ -199,7 +199,7 @@ test environment:
 
 ## Next Development Work
 
-1. Add contract tests against a deployed `ai_rfq_engine` schema.
+1. Add contract tests against a deployed `rfq_engine` schema.
 2. Add integration fixtures for hotel, flight, mixed itinerary, and FX cases.
 3. Test concurrent hold acquisition and terminal-state idempotency.
 4. Validate cancellation snapshots on persisted quote items.

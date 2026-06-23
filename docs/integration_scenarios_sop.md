@@ -14,11 +14,11 @@
 
 ## 2. Purpose and Scope
 
-This SOP defines the ordered live integration scenarios used to validate `mcp_hospirfq_processor` against the local `silvaengine_gateway` route for `ai_rfq_engine`, using the integration testing scripts under the project test directory and prepared flight RFQ data from `../ai_rfq_engine`.
+This SOP defines the ordered live integration scenarios used to validate `mcp_hospirfq_processor` against the local `silvaengine_gateway` route for `rfq_engine`, using the integration testing scripts under the project test directory and prepared flight RFQ data from `../rfq_engine`.
 
 - **In scope:** MCP HospiRFQ processor facade, GraphQL client path, item search/detail, RFQ request lifecycle, quote lifecycle, pricing, installments, files, segments, availability holds, bundles, cancellation policies, and catalog inquiry.
 - **Out of scope:** production testing, destructive cleanup of generated live test records, cloud provisioning, third-party production side effects, UI testing, load testing.
-- **System(s) under test:** `mcp_hospirfq_processor`, local `silvaengine_gateway`, `ai_rfq_engine`, and catalog/KGE-backed inquiry path reachable through `ai_rfq_engine`.
+- **System(s) under test:** `mcp_hospirfq_processor`, local `silvaengine_gateway`, `rfq_engine`, and catalog/KGE-backed inquiry path reachable through `rfq_engine`.
 
 ## 2.1 Controlling End-to-End Testing Procedure
 
@@ -26,9 +26,9 @@ The following procedure is authoritative for this project-specific SOP:
 
 1. Execute the end-to-end live integration testing with the testing scripts under the project test directory, currently `mcp_hospirfq_processor/tests`.
 2. Use variables from `mcp_hospirfq_processor/tests/.env` to target the local integration instance. Do not hard-code credentials, endpoint IDs, partition IDs, or gateway URLs in generated reports.
-3. Read and use the prepared data in `../ai_rfq_engine` as the reference dataset and dependency source for function inputs, expected relationships, and scenario ordering.
+3. Read and use the prepared data in `../rfq_engine` as the reference dataset and dependency source for function inputs, expected relationships, and scenario ordering.
 4. Before any item/request/quote workflow is executed, perform catalog search first and use the catalog result to identify the primary item and provider item for the remainder of the test run.
-5. Reconcile the catalog result to prepared data in `../ai_rfq_engine`, especially `flight_catalog_refs.json`, so the selected catalog node maps back to known `itemUuid`, `providerItemUuid`, provider, bundle, and reference data.
+5. Reconcile the catalog result to prepared data in `../rfq_engine`, especially `flight_catalog_refs.json`, so the selected catalog node maps back to known `itemUuid`, `providerItemUuid`, provider, bundle, and reference data.
 6. Build the function dependency map before execution, then derive the test sequence priority from that dependency map rather than file-discovery order.
 7. Perform end-to-end live integration testing in dependency order.
 8. Address any implementation, runner, data-contract, or scenario-ordering issues found during live execution.
@@ -40,10 +40,10 @@ The following procedure is authoritative for this project-specific SOP:
 | Item | Value / source |
 |---|---|
 | Environment target | local gateway instance |
-| Base URLs / endpoints | `GATEWAY_BASE_URL`, `/{endpoint_id}/{part_id}/ai_rfq_graphql` from `.env` |
+| Base URLs / endpoints | `GATEWAY_BASE_URL`, `/{endpoint_id}/{part_id}/rfq_graphql` from `.env` |
 | Credential source | `.env` variable names only; do not write secret values into reports |
-| Required env vars | `base_dir`, `GATEWAY_BASE_URL`, `ADMIN_USERNAME`, `ADMIN_PASSWORD`, `ADMIN_STATIC_TOKEN`, `endpoint_id`, `part_id`, `AI_RFQ_ENGINE_CLASS_NAME`, `AI_RFQ_ENGINE_X_API_KEY`, `SALES_REP_EMAILS` |
-| Data stores | assumed: `ai_rfq_engine` configured backing stores through local gateway |
+| Required env vars | `base_dir`, `GATEWAY_BASE_URL`, `TOKEN_USERNAME`, `TOKEN_PASSWORD`, `endpoint_id`, `part_id`, `RFQ_ENGINE_CLASS_NAME`, `RFQ_ENGINE_X_API_KEY`, `SALES_REP_EMAILS` |
+| Data stores | assumed: `rfq_engine` configured backing stores through local gateway |
 | Messaging / events | none verified |
 | Access constraints | local process access to gateway and package paths |
 | Provisioning policy | manual approval required for new services or destructive cleanup |
@@ -54,7 +54,7 @@ The following procedure is authoritative for this project-specific SOP:
 |---|---|---|---|---|
 | Python environment | infrastructure | import and pytest collection | operational | project owner |
 | `silvaengine_gateway` local instance | internal | `POST /auth/token`, GraphQL route call | operational | project owner |
-| `ai_rfq_engine` route | internal | GraphQL operations through gateway | operational | project owner |
+| `rfq_engine` route | internal | GraphQL operations through gateway | operational | project owner |
 | prepared flight data | test data | item, provider item, request, quote, bundle, policy IDs resolve | initialized | project owner |
 | catalog / KGE path | internal dependency | `inquireCatalog` returns payload without `errorCode` | operational | project owner |
 
@@ -62,7 +62,7 @@ The following procedure is authoritative for this project-specific SOP:
 
 | Asset type | Count | Notes / constraints |
 |---|---|---|
-| flight items | 5 prepared | sourced from `../ai_rfq_engine` prepared data |
+| flight items | 5 prepared | sourced from `../rfq_engine` prepared data |
 | provider items / batches | at least 1 usable provider item and batch | required for quote items and availability holds |
 | RFQ request | generated per run | runner creates a fresh request for mutable workflow tests |
 | quote / quote item | generated per run | quote item must include `pax_breakdown` for `per_pax_type` pricing |
@@ -70,8 +70,8 @@ The following procedure is authoritative for this project-specific SOP:
 | catalog refs | prepared | namespace `FLIGHTS` |
 
 - **Load order:** prepared catalog data -> catalog search and item/provider selection -> item/provider validation -> request -> provider assignment -> quote -> quote item -> pricing -> installments -> file/segment reads -> availability -> bundle/cancellation/catalog reads.
-- **Data source:** existing prepared `../ai_rfq_engine` fixtures plus generated live request/quote/installment entities.
-- **Reference requirement:** before live execution, inspect the relevant prepared data in `../ai_rfq_engine` and verify that every function input used by the integration runner is backed by available prepared data or by a generated entity created earlier in the same run. The primary item must be selected from catalog search first and reconciled against `../ai_rfq_engine/ai_rfq_engine/tests/prepare_test_data/flight_catalog_refs.json`.
+- **Data source:** existing prepared `../rfq_engine` fixtures plus generated live request/quote/installment entities.
+- **Reference requirement:** before live execution, inspect the relevant prepared data in `../rfq_engine` and verify that every function input used by the integration runner is backed by available prepared data or by a generated entity created earlier in the same run. The primary item must be selected from catalog search first and reconciled against `../rfq_engine/rfq_engine/tests/prepare_test_data/flight_catalog_refs.json`.
 
 ## 6. Execution Order
 
@@ -93,12 +93,12 @@ catalog_discovery -> items -> requests -> quotes -> pricing -> installments -> f
 | **Type** | API / GraphQL / data reconciliation |
 | **CI trigger** | manual / pre-release |
 | **Preconditions** | Gateway, catalog/KGE path, and prepared `flight_catalog_refs.json` are available |
-| **Dependencies** | gateway, ai_rfq_engine, catalog/KGE path, prepared catalog refs |
+| **Dependencies** | gateway, rfq_engine, catalog/KGE path, prepared catalog refs |
 | **Test data** | catalog query, namespace `FLIGHTS`, prepared catalog refs |
 | **Steps** | run `inquire_catalog`; inspect payload results; map selected result to `flight_catalog_refs.json`; set primary item/provider inputs for downstream tests |
 | **Expected behavior** | catalog returns payload without unexpected `errorCode`; selected result maps to prepared `itemUuid` and `providerItemUuid` |
 | **Validation points** | catalog result namespace, selected node/ref, item UUID, provider item UUID |
-| **Cross-system checks** | selected catalog node exists in prepared `../ai_rfq_engine` reference data |
+| **Cross-system checks** | selected catalog node exists in prepared `../rfq_engine` reference data |
 
 | Field | Value |
 |---|---|
@@ -108,7 +108,7 @@ catalog_discovery -> items -> requests -> quotes -> pricing -> installments -> f
 | **Type** | API / GraphQL |
 | **CI trigger** | manual / pre-release |
 | **Preconditions** | Catalog discovery has selected and reconciled a primary item/provider |
-| **Dependencies** | gateway, ai_rfq_engine, INT-000 |
+| **Dependencies** | gateway, rfq_engine, INT-000 |
 | **Test data** | catalog-selected prepared flight item and provider item IDs |
 | **Steps** | search flight items; get one item; get provider items |
 | **Expected behavior** | all calls return successful item/provider payloads |
@@ -218,7 +218,7 @@ catalog_discovery -> items -> requests -> quotes -> pricing -> installments -> f
 - SOP is approved.
 - Local gateway is running and reachable.
 - `.env` names are configured.
-- Prepared `../ai_rfq_engine` flight data exists.
+- Prepared `../rfq_engine` flight data exists.
 - Authentication succeeds.
 - No destructive cleanup is required.
 

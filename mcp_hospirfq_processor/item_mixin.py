@@ -43,7 +43,7 @@ class ItemMixin(GraphQLBackedProcessor):
         variables = {k: v for k, v in variables.items() if v is not None and v != ""}
 
         result = self._execute_graphql_query(
-            "ai_rfq_graphql",
+            "rfq_graphql",
             "itemList",
             "Query",
             variables,
@@ -69,7 +69,7 @@ class ItemMixin(GraphQLBackedProcessor):
             variables["itemExternalId"] = arguments["item_external_id"]
 
         result = self._execute_graphql_query(
-            "ai_rfq_graphql",
+            "rfq_graphql",
             "item",
             "Query",
             variables,
@@ -108,7 +108,7 @@ class ItemMixin(GraphQLBackedProcessor):
         variables = {k: v for k, v in variables.items() if v is not None and v != ""}
 
         result = self._execute_graphql_query(
-            "ai_rfq_graphql",
+            "rfq_graphql",
             "providerItemList",
             "Query",
             variables,
@@ -197,7 +197,7 @@ class ItemMixin(GraphQLBackedProcessor):
         variables = {k: v for k, v in variables.items() if v is not None and v != ""}
 
         result = self._execute_graphql_query(
-            "ai_rfq_graphql",
+            "rfq_graphql",
             "providerItemBatchList",
             "Query",
             variables,

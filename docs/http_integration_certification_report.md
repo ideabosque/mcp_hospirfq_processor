@@ -39,7 +39,7 @@ The MCP HTTP transport integration SOP was executed from the beginning against t
 | Local gateway | internal | yes | yes | yes | yes | `Test-NetConnection localhost:8765` passed on IPv4 and `/auth/token` returned a JWT. |
 | MCP daemon engine route | internal | yes | partial | yes | yes | `tools/list` worked, but returned 50 tools instead of the SOP's expected 38. |
 | HospiRFQ tool registry | internal | yes | yes | yes | yes | Local `MCP_CONFIGURATION` contains 38 HospiRFQ tools. |
-| Prepared flight fixtures | test data | yes | yes | yes | yes | JSON fixtures were present under `../ai_rfq_engine/ai_rfq_engine/tests/prepare_test_data`. |
+| Prepared flight fixtures | test data | yes | yes | yes | yes | JSON fixtures were present under `../rfq_engine/rfq_engine/tests/prepare_test_data`. |
 | Catalog / KGE path | internal | yes | yes | yes | yes | `inquire_catalog` returned `namespace=FLIGHTS` with search results and no unexpected error envelope. |
 
 ## Function Results

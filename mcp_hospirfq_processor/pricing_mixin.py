@@ -32,7 +32,7 @@ class PricingMixin(GraphQLBackedProcessor):
         Get tiered pricing for items using batch loader optimization.
         Maps to GraphQL: itemPriceTiers query (uses resolve_item_price_tiers)
 
-        This function uses the optimized batch loader approach from ai_rfq_engine that:
+        This function uses the optimized batch loader approach from rfq_engine that:
         1. Looks up segment_uuid from email address via segment_contact_loader
         2. Efficiently loads price tiers for multiple items using batch loaders
         3. Filters tiers based on quantity thresholds at the database level
@@ -103,7 +103,7 @@ class PricingMixin(GraphQLBackedProcessor):
         }
 
         result = self._execute_graphql_query(
-            "ai_rfq_graphql",
+            "rfq_graphql",
             "itemPriceTiers",
             "Query",
             variables,
@@ -124,7 +124,7 @@ class PricingMixin(GraphQLBackedProcessor):
         Get discount prompts for items using batch loader optimization.
         Maps to GraphQL: discountPrompts query (uses resolve_discount_prompts)
 
-        This function uses the optimized batch loader approach from ai_rfq_engine that:
+        This function uses the optimized batch loader approach from rfq_engine that:
         1. Looks up segment_uuid from email address via segment_contact_loader
         2. Efficiently loads discount prompts from all hierarchical scopes:
            - GLOBAL scope (applies to all quotes)
@@ -198,7 +198,7 @@ class PricingMixin(GraphQLBackedProcessor):
         }
 
         result = self._execute_graphql_query(
-            "ai_rfq_graphql",
+            "rfq_graphql",
             "discountPrompts",
             "Query",
             variables,
