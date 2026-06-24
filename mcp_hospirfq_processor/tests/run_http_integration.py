@@ -168,6 +168,44 @@ SAMPLE: Dict[str, Any] = {
     "catalog_namespace": "FLIGHTS",
 }
 
+# PostgreSQL-backend sample data. Active when SAMPLE_BACKEND=postgresql.
+# These IDs come from the PostgreSQL flight_products.json fixtures (UUID-style),
+# not the DynamoDB load_sample_data.py numeric keys.
+SAMPLE_POSTGRESQL: Dict[str, Any] = {
+    "item_uuid": "9f965bf9-7302-4f1d-8d37-6f335f880c58",       # Flight NRT->CDG First
+    "item_uuid_2": "d6dd8e87-34f1-4741-b293-dc41992089b1",      # Flight CDG->ORD Economy
+    "item_uuid_in_request": "9f965bf9-7302-4f1d-8d37-6f335f880c58",
+    "item_name": "Flight NRT->CDG First",
+    "item_type": "flight",
+    "provider_item_uuid": "24529e36-bd9c-4427-ac05-d1d545ad8963",  # DL-NRT-CDG-FIR
+    "provider_item_uuid_2": "bad12922-6da1-4117-95ec-5ee0284a5d95",  # SQ-CDG-ORD-ECO
+    "provider_item_uuid_in_request": "24529e36-bd9c-4427-ac05-d1d545ad8963",
+    "provider_corp_external_id": "AIRLINE-DL",
+    "provider_corp_external_id_2": "AIRLINE-SQ",
+    "batch_no": "DL4822-20260918",
+    "service_start_at": "2026-09-18T14:45:00Z",
+    "service_end_at": "2026-09-18T23:28:08.831283Z",
+    "request_uuid": "c6e3730a-e8b5-4d18-bc54-10b0c86a1a4a",
+    "email": "zbrown@example.org",
+    "quote_uuid": "9e8378fa-f6b3-4353-bf9a-af2ff6036ff8",
+    "quote_uuid_with_items": "9e8378fa-f6b3-4353-bf9a-af2ff6036ff8",
+    "request_uuid_for_quote_with_items": "c6e3730a-e8b5-4d18-bc54-10b0c86a1a4a",
+    "quote_item_uuid": "84336230-ce18-4a57-bf2b-4b8759255781",
+    "segment_uuid": "323dec2b-1f03-4d42-a5ef-73ef9e17c4e6",
+    "bundle_uuid": "0f19ab66-07f9-44fa-ac17-5d87434e6639",     # FLT-ITIN-001
+    "bundle_uuid_2": "78af79fc-f9bc-4661-b968-72ab4233df5b",   # FLT-ITIN-002
+    "policy_uuid": "b2ede6e5-e595-4719-b0b8-07a1f5f74baf",     # First Fare Cancellation
+    "catalog_query": "Delta Air Lines NRT CDG First class flight with meal included",
+    "catalog_namespace": "FLIGHTS",
+}
+
+# Active backend selector for sample data. "postgresql" switches to the
+# PostgreSQL-seeded fixtures; anything else (default) uses the DynamoDB
+# numeric-key fixtures. Driven by the SAMPLE_BACKEND env var.
+_SAMPLE_BACKEND = (os.getenv("SAMPLE_BACKEND") or "").strip().lower()
+if _SAMPLE_BACKEND == "postgresql":
+    SAMPLE = dict(SAMPLE_POSTGRESQL)
+
 RUN_STATE: Dict[str, Any] = {}
 
 
@@ -267,6 +305,7 @@ async def call_tool(
 
     Returns (result, error_str).
     """
+    global _passed, _failed, _skipped
     display = label or tool_name
     cid = uuid.uuid4().hex[:8]
     print(f"\n{'-' * 80}")
@@ -315,7 +354,6 @@ async def call_tool(
                 "result": result,
                 "elapsed_ms": elapsed,
             })
-            global _skipped
             _skipped += 1
             return result, error_msg
 
@@ -325,7 +363,6 @@ async def call_tool(
             result_str = result_str[:2000] + "\n  ... (truncated)"
         print(f"  PASS  ({elapsed}ms)")
         print(f"  {result_str}")
-        global _passed
         _passed += 1
         _results.append({
             "tool": display,
