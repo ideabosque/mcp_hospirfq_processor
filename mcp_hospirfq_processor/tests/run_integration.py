@@ -178,8 +178,10 @@ SAMPLE = {
     "bundle_uuid_2": "78af79fc-f9bc-4661-b968-72ab4233df5b",      # FLT-ITIN-002
     # Cancellation policies (flight_products.json) — First Fare Cancellation.
     "policy_uuid": "b2ede6e5-e595-4719-b0b8-07a1f5f74baf",       # First Fare Cancellation
-    # Catalog — query targets the NRT->CDG First flight (Delta, meal included).
-    "catalog_query": "Delta Air Lines NRT CDG First class flight with meal included",
+    # Catalog — query targets a Chinese B2B flight route from the sample dataset.
+    # The catalog discovery gate will reconcile the hit to flight_catalog_refs.json
+    # and select the highest-capacity matching batch for downstream tests.
+    "catalog_query": "航班 桃園 香港 經濟艙",
     "catalog_namespace": "FLIGHTS",
 }
 
@@ -253,40 +255,64 @@ RUN_STATE: Dict[str, Any] = {}
 
 
 def _load_flight_catalog_refs() -> Dict[str, Any]:
-    refs_path = (
-        Path(base_dir)
-        / "rfq_engine"
-        / "rfq_engine"
-        / "tests"
-        / "prepare_test_data"
-        / "flight_catalog_refs.json"
-    )
-    if not refs_path.exists():
-        return {}
-    return json.loads(refs_path.read_text(encoding="utf-8"))
+    # Prefer sample_dataset/ (real B2B Chinese data) over parent prepare_test_data/
+    # (Faker-era data). Falls back to parent if sample_dataset not found.
+    for subdir in ("sample_dataset", ""):
+        refs_path = (
+            Path(base_dir)
+            / "rfq_engine"
+            / "rfq_engine"
+            / "tests"
+            / "prepare_test_data"
+            / subdir
+            / "flight_catalog_refs.json"
+        )
+        if refs_path.exists():
+            return json.loads(refs_path.read_text(encoding="utf-8"))
+    return {}
 
 
 def _load_flight_products() -> Dict[str, Any]:
-    products_path = (
-        Path(base_dir)
-        / "rfq_engine"
-        / "rfq_engine"
-        / "tests"
-        / "prepare_test_data"
-        / "flight_products.json"
-    )
-    if not products_path.exists():
-        return {}
-    return json.loads(products_path.read_text(encoding="utf-8"))
+    # Prefer sample_dataset/ (real B2B Chinese data) over parent prepare_test_data/
+    # (Faker-era data). Falls back to parent if sample_dataset not found.
+    for subdir in ("sample_dataset", ""):
+        products_path = (
+            Path(base_dir)
+            / "rfq_engine"
+            / "rfq_engine"
+            / "tests"
+            / "prepare_test_data"
+            / subdir
+            / "flight_products.json"
+        )
+        if products_path.exists():
+            return json.loads(products_path.read_text(encoding="utf-8"))
+    return {}
 
 
 def _item_name_from_catalog_ref(ref: Dict[str, Any]) -> Optional[str]:
+    """Extract a searchable item-name token from a catalog ref.
+
+    The sample_dataset catalog refs use Chinese item names (e.g.
+    ``航班 TPE->HKG 經濟艙（桃園→香港）``) while the parent prepare_test_data
+    refs use English names (e.g. ``Flight NRT-CDG First``).  We return
+    the route with ``->`` separator (e.g. ``TPE->HKG``) which appears
+    verbatim in the KGE search-result text for the sample dataset.
+    If route is missing, fall back to nodeId, then to the English name
+    pattern.
+    """
     extra = ref.get("extra") or {}
     route = extra.get("route")
     cabin_class = extra.get("cabinClass")
-    if not route or not cabin_class:
+    node_id = ref.get("nodeId")
+    # Route with -> separator matches Chinese KGE text (e.g. "TPE->HKG")
+    if route:
+        return route.replace("-", "->")
+    if node_id:
+        return node_id
+    if not cabin_class:
         return None
-    return f"Flight {route.replace('-', '->')} {cabin_class}"
+    return f"Flight {route.replace('-', '->')} {cabin_class}" if route else None
 
 
 def _provider_corp_from_catalog_ref(ref: Dict[str, Any]) -> str:

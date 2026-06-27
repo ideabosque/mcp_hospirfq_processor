@@ -259,7 +259,7 @@ The following procedure is authoritative for this MCP HTTP transport SOP:
 ## 12. Reporting and Certification Expectations
 
 - **Report format:** Markdown.
-- **Report artifact:** `docs/http_integration_results.md` (default export path from `run_http_integration.py --export`).
+- **Report artifact:** `docs/test_results/http_integration_results.md` (default export path from `run_http_integration.py --export`).
 - **Required certification decision:** `Integration Certified`, `Ready for UAT`, `Ready for Production`, `Ready with Conditions`, or `Not Ready`.
 - **Distribution:** assumed: project owner / release owner.
 - **Required content:** per-function tool name, MCP method (`tools/call`), arguments, decoded MCP content payload, elapsed time, pass/error/fail status.
@@ -274,7 +274,7 @@ The following procedure is authoritative for this MCP HTTP transport SOP:
 | MCP protocol exercised | no | yes (`initialize`, `tools/list`, `tools/call`) |
 | Auth | `GraphQLClient.get_gateway_token()` for in-process GraphQL | `MCPHttpClient` Bearer token from `/auth/token` (no GraphQL access) |
 | Catalog discovery gate | mandatory first step (INT-000) | optional (can be added as extension) |
-| Report artifact | `docs/live_integration_results.md` | `docs/http_integration_results.md` |
+| Report artifact | `docs/live_integration_results.md` | `docs/test_results/http_integration_results.md` |
 | Execution model | synchronous | asynchronous (`asyncio`) |
 | Tool groups | 12 (includes catalog_discovery) | 11 (items through catalog) |
 | Additional validation | — | MCP transport layer, JSON-RPC dispatch, content parsing |
