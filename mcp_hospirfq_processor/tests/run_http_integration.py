@@ -200,7 +200,7 @@ SAMPLE_POSTGRESQL: Dict[str, Any] = {
     "quote_uuid_with_items": "9e8378fa-f6b3-4353-bf9a-af2ff6036ff8",
     "request_uuid_for_quote_with_items": "d0ead0ab-6516-477b-9688-8a16cdd3cf8b",
     "quote_item_uuid": "fa63d2f0-8c7b-4602-a4fc-5a0c4405bf40",
-    "segment_uuid": "086241f4-bfd3-4563-8fd1-30afc8d3f5b7",     # Farley LLC Tier
+    "segment_uuid": "323dec2b-1f03-4d42-a5ef-73ef9e17c4e6",     # segment used by prepare_flight_products.py (price tiers linked here)
     "bundle_uuid": "53283de6-215f-4f04-bd28-43e852439b5d",     # CN-ITIN-003 (桃園→香港+香港→成都+成都→香港+香港→桃園)
     "bundle_uuid_2": "c4480ddf-ae71-4a26-9c81-15acc9a10ef8",   # CN-ITIN-001
     "policy_uuid": "7cdae692-f084-445f-a5c1-36e4f9030f8e",     # 經濟艙 團體旅遊退票政策
