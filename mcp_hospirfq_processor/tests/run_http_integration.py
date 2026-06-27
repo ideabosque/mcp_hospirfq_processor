@@ -173,29 +173,37 @@ SAMPLE: Dict[str, Any] = {
 # not the DynamoDB load_sample_data.py numeric keys.
 SAMPLE_POSTGRESQL: Dict[str, Any] = {
     # Sample dataset (2026大陸機位B2B動態.xlsx) — Chinese (Traditional), TWD
-    "item_uuid": "28ca431e-a648-430f-8ff0-28dda2868221",       # 航班 TPE->HKG 經濟艙（桃園→香港）
-    "item_uuid_2": "bf9f1273-0d1c-41fb-9943-d9b16e69e433",      # 航班 TPE->CAN 經濟艙（桃園→廣州）
-    "item_uuid_in_request": "9f965bf9-7302-4f1d-8d37-6f335f880c58",  # parent Faker seeded request item
+    # UUIDs from freshly prepared sample dataset (2026-06-27 run)
+    "item_uuid": "ac8ec8c5-e8d2-4bd0-ad9a-2c9ba675e4c4",       # 航班 TPE->HKG 經濟艙（桃園→香港）
+    "item_uuid_2": "9aad94d1-39aa-4f3e-9a44-3b2a537b70fe",      # 航班 TPE->CAN 經濟艙（桃園→廣州）
+    "item_uuid_in_request": "ac8ec8c5-e8d2-4bd0-ad9a-2c9ba675e4c4",
     "item_name": "航班 TPE->HKG 經濟艙（桃園→香港）",
     "item_type": "flight",
-    "provider_item_uuid": "7e30338e-29e7-466b-8999-1e10a6e02c00",  # CX-TPE-HKG-ECO (國泰航空)
-    "provider_item_uuid_2": "3d0d03b5-93d0-4c95-b138-fe249e29d1fa",  # CZ-TPE-CAN-ECO (南方航空)
-    "provider_item_uuid_in_request": "24529e36-bd9c-4427-ac05-d1d545ad8963",  # parent Faker seeded
+    "provider_item_uuid": "26c94a98-a915-46e2-b419-aac7acae18b0",  # CX-TPE-HKG-ECO (國泰航空)
+    "provider_item_uuid_2": "557a25fd-ac83-4ebd-b92b-4e4d9ce5fa01",  # GJ-TPE-HKG-ECO (大彎區航空)
+    "provider_item_uuid_in_request": "26c94a98-a915-46e2-b419-aac7acae18b0",
     "provider_corp_external_id": "AIRLINE-CX",
-    "provider_corp_external_id_2": "AIRLINE-CZ",
-    "batch_no": "CX443-20260905-成都",                            # highest-capacity batch (16 seats remaining)
+    "provider_corp_external_id_2": "AIRLINE-GJ",
+    "batch_no": "CX443-20260905-成都",                           # CX batch (20 seats) — matches provider AIRLINE-CX
     "service_start_at": "2026-09-05T16:10:00",
-    "service_end_at": "2026-09-12T15:20:00",
-    "request_uuid": "c6e3730a-e8b5-4d18-bc54-10b0c86a1a4a",     # parent Faker seeded request
-    "email": "zbrown@example.org",
-    "quote_uuid": "9e8378fa-f6b3-4353-bf9a-af2ff6036ff8",        # parent Faker seeded quote
+    "service_end_at": "2026-09-12T11:10:00",
+    # Availability test uses a different item/provider_item (TPE->TFU 桃園→成都, 中國國際航空 CA)
+    "avail_item_uuid": "e8fcd210-68d3-463f-a9ae-7a4dddf0276f",
+    "avail_provider_item_uuid": "3b957449-244d-4573-bbf3-357006b98799",
+    "avail_provider_corp_external_id": "AIRLINE-CA",
+    "avail_batch_no": "CA418-20260714-成都",                     # CA batch (20 seats) — matches avail_provider_item
+    "avail_service_start_at": "2026-07-14T18:10:00",
+    "avail_service_end_at": "2026-07-21T16:55:00",
+    "request_uuid": "d0ead0ab-6516-477b-9688-8a16cdd3cf8b",     # seeded request
+    "email": "michaela03@example.net",
+    "quote_uuid": "9e8378fa-f6b3-4353-bf9a-af2ff6036ff8",        # seeded quote
     "quote_uuid_with_items": "9e8378fa-f6b3-4353-bf9a-af2ff6036ff8",
-    "request_uuid_for_quote_with_items": "c6e3730a-e8b5-4d18-bc54-10b0c86a1a4a",
-    "quote_item_uuid": "84336230-ce18-4a57-bf2b-4b8759255781",
-    "segment_uuid": "323dec2b-1f03-4d42-a5ef-73ef9e17c4e6",
-    "bundle_uuid": "2dfcfb0c-104d-4da7-ac39-1c3bc11206a9",     # CN-ITIN-001
-    "bundle_uuid_2": "dcc52cf0-b8ac-4822-b190-5d52d41eb09f",   # CN-ITIN-002
-    "policy_uuid": "fbd34345-b3b9-45b0-867f-817574d7ac75",     # 經濟艙 團體旅遊退票政策
+    "request_uuid_for_quote_with_items": "d0ead0ab-6516-477b-9688-8a16cdd3cf8b",
+    "quote_item_uuid": "fa63d2f0-8c7b-4602-a4fc-5a0c4405bf40",
+    "segment_uuid": "086241f4-bfd3-4563-8fd1-30afc8d3f5b7",     # Farley LLC Tier
+    "bundle_uuid": "53283de6-215f-4f04-bd28-43e852439b5d",     # CN-ITIN-003 (桃園→香港+香港→成都+成都→香港+香港→桃園)
+    "bundle_uuid_2": "c4480ddf-ae71-4a26-9c81-15acc9a10ef8",   # CN-ITIN-001
+    "policy_uuid": "7cdae692-f084-445f-a5c1-36e4f9030f8e",     # 經濟艙 團體旅遊退票政策
     "catalog_query": "航班 桃園 香港 經濟艙",
     "catalog_namespace": "FLIGHTS",
 }
@@ -577,10 +585,10 @@ async def run_requests(client: MCPHttpClient) -> None:
     await call_tool(client, "add_item_to_rfq_request", {
         "request_uuid": target_request_uuid,
         "item": {
-            "item_uuid": SAMPLE["item_uuid_2"],
-            "item_name": "Flight ATL->ORD Economy",
-            "qty": 1,
-        },
+     "item_uuid": SAMPLE["item_uuid_2"],
+     "item_name": "航班 TPE->CAN 經濟艙（桃園→廣州）",
+     "qty": 1,
+ },
     }, "requests", "add_item_to_rfq_request")
 
     await call_tool(client, "remove_item_from_rfq_request", {
@@ -850,22 +858,27 @@ async def run_segments(client: MCPHttpClient) -> None:
 
 async def run_availability(client: MCPHttpClient) -> None:
     """Availability hold tools (5)."""
+    avail_pi_uuid = SAMPLE.get("avail_provider_item_uuid", SAMPLE["provider_item_uuid"])
+    avail_batch_no = SAMPLE.get("avail_batch_no", SAMPLE["batch_no"])
+    avail_start = SAMPLE.get("avail_service_start_at", SAMPLE["service_start_at"])
+    avail_end = SAMPLE.get("avail_service_end_at", SAMPLE["service_end_at"])
+
     await call_tool(client, "check_availability", {
         "partition_key": PARTITION_KEY,
-        "provider_item_uuid": SAMPLE["provider_item_uuid"],
-        "service_start_at": SAMPLE["service_start_at"],
-        "service_end_at": SAMPLE["service_end_at"],
-        "batch_no": SAMPLE["batch_no"],
+        "provider_item_uuid": avail_pi_uuid,
+        "service_start_at": avail_start,
+        "service_end_at": avail_end,
+        "batch_no": avail_batch_no,
         "qty": 2,
     }, "availability", "check_availability")
 
     result, _ = await call_tool(client, "acquire_availability_hold", {
         "partition_key": PARTITION_KEY,
-        "provider_item_uuid": SAMPLE["provider_item_uuid"],
-        "service_start_at": SAMPLE["service_start_at"],
-        "service_end_at": SAMPLE["service_end_at"],
+        "provider_item_uuid": avail_pi_uuid,
+        "service_start_at": avail_start,
+        "service_end_at": avail_end,
         "qty": 2,
-        "batch_no": SAMPLE["batch_no"],
+        "batch_no": avail_batch_no,
         "pax_breakdown": {"adult": 2},
     }, "availability", "acquire_availability_hold")
 
@@ -878,17 +891,17 @@ async def run_availability(client: MCPHttpClient) -> None:
         await call_tool(client, "confirm_availability_hold", {
             "partition_key": PARTITION_KEY,
             "hold_token": hold_token,
-            "provider_item_uuid": SAMPLE["provider_item_uuid"],
-            "batch_no": SAMPLE["batch_no"],
+            "provider_item_uuid": avail_pi_uuid,
+            "batch_no": avail_batch_no,
         }, "availability", "confirm_availability_hold")
 
         result2, _ = await call_tool(client, "acquire_availability_hold", {
             "partition_key": PARTITION_KEY,
-            "provider_item_uuid": SAMPLE["provider_item_uuid"],
-            "service_start_at": SAMPLE["service_start_at"],
-            "service_end_at": SAMPLE["service_end_at"],
+            "provider_item_uuid": avail_pi_uuid,
+            "service_start_at": avail_start,
+            "service_end_at": avail_end,
             "qty": 1,
-            "batch_no": SAMPLE["batch_no"],
+            "batch_no": avail_batch_no,
         }, "availability", "acquire_availability_hold (for release test)")
 
         hold_token2 = None
@@ -900,17 +913,17 @@ async def run_availability(client: MCPHttpClient) -> None:
             await call_tool(client, "release_availability_hold", {
                 "partition_key": PARTITION_KEY,
                 "hold_token": hold_token2,
-                "provider_item_uuid": SAMPLE["provider_item_uuid"],
-                "batch_no": SAMPLE["batch_no"],
+                "provider_item_uuid": avail_pi_uuid,
+                "batch_no": avail_batch_no,
             }, "availability", "release_availability_hold")
 
         result3, _ = await call_tool(client, "acquire_availability_hold", {
             "partition_key": PARTITION_KEY,
-            "provider_item_uuid": SAMPLE["provider_item_uuid"],
-            "service_start_at": SAMPLE["service_start_at"],
-            "service_end_at": SAMPLE["service_end_at"],
+            "provider_item_uuid": avail_pi_uuid,
+            "service_start_at": avail_start,
+            "service_end_at": avail_end,
             "qty": 1,
-            "batch_no": SAMPLE["batch_no"],
+            "batch_no": avail_batch_no,
         }, "availability", "acquire_availability_hold (for expire test)")
 
         hold_token3 = None
@@ -922,8 +935,8 @@ async def run_availability(client: MCPHttpClient) -> None:
             await call_tool(client, "expire_availability_hold", {
                 "partition_key": PARTITION_KEY,
                 "hold_token": hold_token3,
-                "provider_item_uuid": SAMPLE["provider_item_uuid"],
-                "batch_no": SAMPLE["batch_no"],
+                "provider_item_uuid": avail_pi_uuid,
+                "batch_no": avail_batch_no,
             }, "availability", "expire_availability_hold")
     else:
         print("  WARNING: No hold_token in acquire result - skipping lifecycle calls")
@@ -939,7 +952,7 @@ async def run_bundles(client: MCPHttpClient) -> None:
     await call_tool(client, "get_bundle", {
         "partition_key": PARTITION_KEY,
         "bundle_uuid": SAMPLE["bundle_uuid"],
-    }, "bundles", "get_bundle (FLT-ITIN-001)")
+    }, "bundles", "get_bundle (CN-ITIN-003 桃園→香港+香港→成都+成都→香港+香港→桃園)")
 
     await call_tool(client, "search_bundle_components", {
         "partition_key": PARTITION_KEY,
@@ -952,11 +965,11 @@ async def run_cancellation(client: MCPHttpClient) -> None:
     await call_tool(client, "get_cancellation_policy", {
         "partition_key": PARTITION_KEY,
         "policy_uuid": SAMPLE["policy_uuid"],
-    }, "cancellation", "get_cancellation_policy (Business Fare)")
+    }, "cancellation", "get_cancellation_policy (經濟艙 團體旅遊退票政策)")
 
     await call_tool(client, "search_cancellation_policies", {
         "partition_key": PARTITION_KEY,
-        "provider_item_uuid": SAMPLE["provider_item_uuid"],
+        "provider_item_uuid": SAMPLE.get("avail_provider_item_uuid", SAMPLE["provider_item_uuid"]),
     }, "cancellation", "search_cancellation_policies")
 
 
