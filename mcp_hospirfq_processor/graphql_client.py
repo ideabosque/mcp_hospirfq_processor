@@ -196,6 +196,14 @@ class GraphQLClient:
                     "Content-Type": "application/json",
                 }
 
+            # httpx rejects None-valued headers with a TypeError. Drop any
+            # that came out None so the request goes through cleanly. The
+            # common case is Part-Id when the tool is invoked via
+            # /{endpoint_id}/mcp instead of /{endpoint_id}/{part_id}/mcp;
+            # x-api-key can also be None when neither Bearer nor API-key
+            # auth is configured for the module.
+            headers = {k: v for k, v in headers.items() if v is not None}
+
             timeout = httpx.Timeout(60.0, connect=15.0)
             with httpx.Client(http2=True, timeout=timeout) as client:
                 response = client.post(
