@@ -94,6 +94,16 @@ sys.path.insert(0, os.path.join(base_dir, "silvaengine_dynamodb_base"))
 sys.path.insert(0, os.path.join(base_dir, "mcp_hospirfq_processor"))
 sys.path.insert(0, os.path.join(base_dir, "mcp_http_client"))
 
+# ── Console encoding ─────────────────────────────────────────────────────────
+# Tool payloads may contain non-ASCII (e.g. CJK) text. Windows consoles default
+# to cp1252, so printing such payloads raises UnicodeEncodeError. Reconfigure
+# stdout/stderr to UTF-8 so results print without crashing the runner.
+for _stream in (sys.stdout, sys.stderr):
+    try:
+        _stream.reconfigure(encoding="utf-8")
+    except (AttributeError, ValueError):
+        pass
+
 # ── Logging ──────────────────────────────────────────────────────────────────
 logging.basicConfig(
     stream=sys.stdout,

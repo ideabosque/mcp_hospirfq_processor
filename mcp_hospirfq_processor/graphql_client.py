@@ -8,7 +8,10 @@ Handles GraphQL query execution via HTTP/2 against the rfq_engine backend.
 
 __author__ = "Idea Bosque"
 
+import base64
+import json
 import logging
+import time
 import traceback
 from typing import Any, Dict
 
@@ -23,6 +26,30 @@ from .error_handler import (
     build_error_response,
     extract_error_message,
 )
+
+# Seconds of safety margin before a JWT's ``exp`` at which the client proactively
+# re-authenticates, so a token never expires mid-request.
+_TOKEN_EXPIRY_SKEW_SECONDS = 60
+
+
+def _jwt_expiry(token: str | None) -> float | None:
+    """Best-effort parse of a JWT's ``exp`` claim (epoch seconds).
+
+    Reads the payload segment only (no signature verification — the client is
+    the token bearer, not the validator). Returns ``None`` when the token is
+    absent, not a JWT, or has no ``exp`` claim, in which case the caller falls
+    back to reactive 401 re-authentication.
+    """
+    if not token:
+        return None
+    try:
+        payload_b64 = token.split(".")[1]
+        payload_b64 += "=" * (-len(payload_b64) % 4)  # restore base64 padding
+        payload = json.loads(base64.urlsafe_b64decode(payload_b64))
+        exp = payload.get("exp")
+        return float(exp) if exp is not None else None
+    except Exception:
+        return None
 
 
 class GraphQLModule:
@@ -96,6 +123,9 @@ class GraphQLClient:
         self._token_password = setting.get("token_password")
         # Optional pre-issued token (skips the /auth/token login round-trip).
         self._gateway_token = setting.get("gateway_token")
+        # Cached JWT expiry (epoch seconds) for proactive refresh; parsed from
+        # the token itself. ``None`` means unknown -> rely on reactive 401 retry.
+        self._gateway_token_exp = _jwt_expiry(self._gateway_token)
 
     @property
     def endpoint_id(self) -> str | None:
@@ -135,19 +165,34 @@ class GraphQLClient:
             )
         return self._graphql_modules.get(module_name)
 
+    def _token_expired(self) -> bool:
+        """True when the cached JWT is at/near its ``exp`` (within the skew).
+
+        Unknown expiry (unparseable token) returns ``False`` so the token is
+        still used and the reactive 401 retry remains the safety net.
+        """
+        if self._gateway_token_exp is None:
+            return False
+        return time.time() >= (self._gateway_token_exp - _TOKEN_EXPIRY_SKEW_SECONDS)
+
     def get_gateway_token(self) -> str | None:
         """Obtain a JWT Bearer token for the silvaengine_gateway.
 
         Returns ``None`` when no gateway auth is configured (in which case the
         client falls back to AWS API Gateway ``x-api-key`` auth). A successfully
-        issued token is cached on the instance and reused on subsequent calls.
+        issued token is cached on the instance and reused until it nears its
+        ``exp`` claim, at which point it is proactively re-issued so a token
+        never expires mid-request (long-lived processes such as the MCP daemon).
         """
         if not self._gateway_base_url:
             return None
-        if self._gateway_token:
+        # Reuse the cached token while it is still valid.
+        if self._gateway_token and not self._token_expired():
             return self._gateway_token
         if not (self._token_username and self._token_password):
-            return None
+            # No credentials to (re)authenticate with — return whatever we have
+            # (possibly a pre-issued token) rather than nothing.
+            return self._gateway_token
 
         resp = httpx.post(
             f"{self._gateway_base_url.rstrip('/')}/auth/token",
@@ -159,6 +204,7 @@ class GraphQLClient:
         )
         resp.raise_for_status()
         self._gateway_token = resp.json()["access_token"]
+        self._gateway_token_exp = _jwt_expiry(self._gateway_token)
         return self._gateway_token
 
     def execute_query(
@@ -182,35 +228,51 @@ class GraphQLClient:
 
             # Prefer gateway JWT Bearer auth when configured; otherwise fall
             # back to AWS API Gateway x-api-key auth.
-            token = self.get_gateway_token()
-            if token:
-                headers = {
-                    "Authorization": f"Bearer {token}",
-                    "Part-Id": self.part_id,
-                    "Content-Type": "application/json",
-                }
-            else:
-                headers = {
-                    "x-api-key": graphql_module.x_api_key,
-                    "Part-Id": self.part_id,
-                    "Content-Type": "application/json",
-                }
+            def _build_headers(token: str | None) -> Dict[str, str]:
+                if token:
+                    hdrs = {
+                        "Authorization": f"Bearer {token}",
+                        "Part-Id": self.part_id,
+                        "Content-Type": "application/json",
+                    }
+                else:
+                    hdrs = {
+                        "x-api-key": graphql_module.x_api_key,
+                        "Part-Id": self.part_id,
+                        "Content-Type": "application/json",
+                    }
+                # httpx rejects None-valued headers with a TypeError. Drop any
+                # that came out None so the request goes through cleanly. The
+                # common case is Part-Id when the tool is invoked via
+                # /{endpoint_id}/mcp instead of /{endpoint_id}/{part_id}/mcp;
+                # x-api-key can also be None when neither Bearer nor API-key
+                # auth is configured for the module.
+                return {k: v for k, v in hdrs.items() if v is not None}
 
-            # httpx rejects None-valued headers with a TypeError. Drop any
-            # that came out None so the request goes through cleanly. The
-            # common case is Part-Id when the tool is invoked via
-            # /{endpoint_id}/mcp instead of /{endpoint_id}/{part_id}/mcp;
-            # x-api-key can also be None when neither Bearer nor API-key
-            # auth is configured for the module.
-            headers = {k: v for k, v in headers.items() if v is not None}
+            token = self.get_gateway_token()
 
             timeout = httpx.Timeout(60.0, connect=15.0)
             with httpx.Client(http2=True, timeout=timeout) as client:
                 response = client.post(
                     graphql_module.endpoint,
-                    headers=headers,
+                    headers=_build_headers(token),
                     content=payload,
                 )
+
+                # The gateway JWT is cached on the instance and can expire in a
+                # long-lived process (e.g. the MCP daemon), causing a 401 even
+                # though the credentials are still valid. Re-authenticate once
+                # with a fresh token and retry before surfacing the failure.
+                if response.status_code in (401, 403) and (
+                    self._token_username and self._token_password
+                ):
+                    self._gateway_token = None
+                    token = self.get_gateway_token()
+                    response = client.post(
+                        graphql_module.endpoint,
+                        headers=_build_headers(token),
+                        content=payload,
+                    )
 
             result = response.json()
 
