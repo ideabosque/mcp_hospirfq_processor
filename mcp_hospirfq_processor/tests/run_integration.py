@@ -123,13 +123,14 @@ SETTING = {
         "rfq_engine": {
             "class_name": os.getenv("RFQ_ENGINE_CLASS_NAME", "RFQEngine"),
             "endpoint": RFQ_ENGINE_ENDPOINT,
+            # Auth is configured per module (gateway JWT Bearer, or x-api-key).
+            "gateway_base_url": GATEWAY_BASE_URL,
+            "token_username": TOKEN_USERNAME,
+            "token_password": TOKEN_PASSWORD,
+            "gateway_token": GATEWAY_TOKEN or None,
             "x_api_key": os.getenv("RFQ_ENGINE_X_API_KEY", "placeholder"),
         }
     },
-    "gateway_base_url": GATEWAY_BASE_URL,
-    "token_username": TOKEN_USERNAME,
-    "token_password": TOKEN_PASSWORD,
-    "gateway_token": GATEWAY_TOKEN or None,
     "sales_rep_emails": json.loads(
         os.getenv(
             "SALES_REP_EMAILS",

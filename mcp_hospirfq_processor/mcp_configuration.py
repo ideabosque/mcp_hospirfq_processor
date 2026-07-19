@@ -1487,9 +1487,10 @@ MCP_CONFIGURATION = {
             # Default settings consumed by MCPHospiRFQProcessor / GraphQLClient.
             # Override per-deployment (e.g. via environment-specific config).
             "setting": {
-                # GraphQL backend modules. The endpoint template references only
-                # {endpoint_id} (interpolated at runtime); it works for both the
-                # AWS API Gateway form ("...{endpoint_id}...") and the local
+                # GraphQL backend modules. Each module owns its endpoint AND its
+                # auth. The endpoint template references only {endpoint_id}
+                # (interpolated at runtime); it works for both the AWS API
+                # Gateway form ("...{endpoint_id}...") and the local
                 # silvaengine_gateway route form
                 # ("http://localhost:8765/{endpoint_id}/rfq_graphql").
                 # part_id is NOT part of the URL — it is sent in the Part-Id header.
@@ -1497,20 +1498,20 @@ MCP_CONFIGURATION = {
                     "rfq_engine": {
                         "class_name": "RFQEngine",
                         "endpoint": "http://localhost:8765/{endpoint_id}/rfq_graphql",
-                        # Used only for the AWS API Gateway (x-api-key) auth path;
-                        # ignored when gateway_base_url is configured below.
+                        # silvaengine_gateway JWT Bearer auth (per module): the
+                        # client logs in at {gateway_base_url}/auth/token with
+                        # token_username/token_password and sends
+                        # "Authorization: Bearer <token>". A pre-issued
+                        # gateway_token skips the login. x_api_key is the
+                        # fallback AWS API Gateway auth, used only when no JWT
+                        # auth is configured.
+                        "gateway_base_url": "http://localhost:8765",
+                        "token_username": "admin",
+                        "token_password": "admin123",
+                        "gateway_token": None,
                         "x_api_key": "placeholder",
                     }
                 },
-                # silvaengine_gateway JWT Bearer auth. When gateway_base_url is
-                # set, the client logs in at {gateway_base_url}/auth/token with
-                # token_username/token_password and sends
-                # "Authorization: Bearer <token>" instead of x-api-key.
-                "gateway_base_url": "http://localhost:8765",
-                "token_username": "admin",
-                "token_password": "admin123",
-                # Optional pre-issued token (skips the /auth/token login).
-                "gateway_token": None,
                 # Map of provider corp external ID -> sales rep email.
                 "sales_rep_emails": {},
                 # Default window (days from now) for filtering provider item
