@@ -5,7 +5,7 @@ __author__ = "Idea Bosque"
 from typing import Any, Dict
 import humps
 from silvaengine_utility import convert_decimal_to_number
-from .error_handler import (ErrorCode, ValidationError, build_error_response, handle_errors, propagate_error_if_present, validate_not_empty)
+from .error_handler import (ErrorCode, ValidationError, build_error_response, handle_errors, is_empty_result, propagate_error_if_present, validate_not_empty)
 from .graphql_backed_processor import GraphQLBackedProcessor
 
 
@@ -43,4 +43,14 @@ class CatalogMixin(GraphQLBackedProcessor):
         if error := propagate_error_if_present(result):
             return error
 
-        return humps.decamelize(convert_decimal_to_number(result))
+        data = humps.decamelize(convert_decimal_to_number(result))
+
+        # The catalog envelope always carries namespace/fetched_at, so a
+        # top-level emptiness check never fires. "No result" for catalog means
+        # the inner payload has no results.
+        payload = data.get("payload") if isinstance(data, dict) else None
+        results = payload.get("results") if isinstance(payload, dict) else None
+        if is_empty_result(results):
+            return "No catalog results found for this query."
+
+        return data

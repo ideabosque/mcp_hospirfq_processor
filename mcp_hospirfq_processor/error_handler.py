@@ -217,3 +217,40 @@ def propagate_error_if_present(result: Dict[str, Any]) -> Optional[Dict[str, Any
     if isinstance(result, dict) and "error" in result:
         return result
     return None
+
+
+def is_empty_result(result: Any) -> bool:
+    """True when a query result carries no data.
+
+    Treats as empty: ``None``; an empty string; an empty list/tuple; an empty
+    dict; and a list-envelope dict whose ``*_list`` values are all empty (e.g.
+    ``{"total": 0, "item_list": []}``). A single-object result (a non-empty dict
+    with no ``*_list`` keys) is NOT empty.
+    """
+    if result is None:
+        return True
+    if isinstance(result, str):
+        return result.strip() == ""
+    if isinstance(result, (list, tuple)):
+        return len(result) == 0
+    if isinstance(result, dict):
+        if not result:
+            return True
+        list_values = [
+            v
+            for k, v in result.items()
+            if k.endswith("_list") and isinstance(v, list)
+        ]
+        if list_values and all(len(v) == 0 for v in list_values):
+            return True
+    return False
+
+
+def no_result_message(
+    result: Any, message: str = "No results found."
+) -> Optional[str]:
+    """Return ``message`` when ``result`` is empty (see :func:`is_empty_result`),
+    otherwise ``None``. Use as ``return no_result_message(data, "...") or data``
+    in a terminal read tool so an empty backend response becomes a friendly
+    string instead of ``None``/an empty envelope."""
+    return message if is_empty_result(result) else None

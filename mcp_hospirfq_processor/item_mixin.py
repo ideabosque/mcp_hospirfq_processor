@@ -14,6 +14,7 @@ from .error_handler import (
     ValidationError,
     build_error_response,
     handle_errors,
+    no_result_message,
     propagate_error_if_present,
     validate_not_empty,
 )
@@ -53,7 +54,8 @@ class ItemMixin(GraphQLBackedProcessor):
         if error := propagate_error_if_present(result):
             return error
 
-        return humps.decamelize(result)
+        data = humps.decamelize(result)
+        return no_result_message(data, "No items found matching the criteria.") or data
 
     # * MCP Function.
     @handle_errors(operation_name="get item")
@@ -79,7 +81,8 @@ class ItemMixin(GraphQLBackedProcessor):
         if error := propagate_error_if_present(result):
             return error
 
-        return humps.decamelize(result)
+        data = humps.decamelize(result)
+        return no_result_message(data, "Item not found.") or data
 
     # * MCP Function.
     @handle_errors(operation_name="get provider items")
@@ -120,6 +123,9 @@ class ItemMixin(GraphQLBackedProcessor):
 
         provider_items_result = humps.decamelize(result)
         provider_item_list = provider_items_result.get("provider_item_list", [])
+
+        if not provider_item_list:
+            return "No provider items found for this item."
 
         # Extract batch filter parameters from arguments (optional)
         batch_expired_at_gt = arguments.get("expired_at_gt")
