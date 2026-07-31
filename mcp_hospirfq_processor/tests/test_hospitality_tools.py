@@ -29,6 +29,63 @@ logger = logging.getLogger("test_mcp_hospirfq_processor")
 
 
 # ============================================================================
+# ItemMixin - provider item batch query behavior
+# ============================================================================
+
+
+class TestGetProviderItems:
+    """get_provider_items: merge provider batches without hiding data."""
+
+    @pytest.mark.unit
+    def test_batch_query_has_no_implicit_expiration_cutoff(self, processor):
+        processor._execute_graphql_query.side_effect = [
+            {
+                "total": 1,
+                "providerItemList": [
+                    {
+                        "providerItemUuid": "provider-1",
+                        "providerItemExternalId": "PX-ITEM",
+                        "itemUuid": "item-1",
+                    }
+                ],
+            },
+            {
+                "total": 1,
+                "providerItemBatchList": [
+                    {"providerItemUuid": "provider-1", "batchNo": "BATCH-1"}
+                ],
+            },
+        ]
+
+        result = processor.get_provider_items(item_uuid="item-1")
+
+        batch_variables = processor._execute_graphql_query.call_args_list[1][0][3]
+        assert "expiredAtGt" not in batch_variables
+        assert batch_variables["providerItemUuid"] == "provider-1"
+        assert result["provider_item_list"][0]["batches"][0]["batch_no"] == "BATCH-1"
+
+    @pytest.mark.unit
+    def test_batch_query_uses_explicit_expiration_cutoff(self, processor):
+        processor._execute_graphql_query.side_effect = [
+            {
+                "total": 1,
+                "providerItemList": [
+                    {"providerItemUuid": "provider-1", "itemUuid": "item-1"}
+                ],
+            },
+            {"total": 0, "providerItemBatchList": []},
+        ]
+
+        processor.get_provider_items(
+            item_uuid="item-1",
+            expired_at_gt="2026-01-01T00:00:00+0000",
+        )
+
+        batch_variables = processor._execute_graphql_query.call_args_list[1][0][3]
+        assert batch_variables["expiredAtGt"] == "2026-01-01T00:00:00+0000"
+
+
+# ============================================================================
 # AvailabilityMixin — 5 tools
 # ============================================================================
 

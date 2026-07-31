@@ -100,7 +100,7 @@ class ItemMixin(GraphQLBackedProcessor):
         - slow_move_item: Filter for slow-moving inventory (default: False)
         - in_stock: Filter for in-stock batches (default: True)
 
-        Note: If expired_at_gt not provided, defaults to batches expiring 90+ days from now.
+        Note: If expired_at_gt is not provided, no expiration filter is applied.
         """
         variables = {
             "pageNumber": arguments.get("page_number", 1),
@@ -172,23 +172,9 @@ class ItemMixin(GraphQLBackedProcessor):
         - guardrail_price_per_uom: Minimum acceptable price for profitability
         - Batch details: expired_at, produced_at, cost breakdown
 
-        Note: If expired_at_gt is not provided, defaults to filtering batches
-        expiring 90+ days from now.
+        Note: If expired_at_gt is not provided, no expiration filter is applied.
         """
-        from datetime import datetime, timedelta, timezone
-
-        # Set default expired_at_gt based on configured days if not provided
         expired_at_gt = arguments.get("expired_at_gt")
-
-        if not expired_at_gt:
-            # Get default expiration filter days from settings (default: 90 days / ~3 months)
-            default_expiration_days = self.setting.get(
-                "default_batch_expiration_filter_days", 90
-            )
-            expiration_date = datetime.now(timezone.utc) + timedelta(
-                days=default_expiration_days
-            )
-            expired_at_gt = expiration_date.strftime("%Y-%m-%dT%H:%M:%S+0000")
 
         variables = {
             "pageNumber": arguments.get("page_number", 1),

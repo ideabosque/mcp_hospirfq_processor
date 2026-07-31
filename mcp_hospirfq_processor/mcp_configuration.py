@@ -339,7 +339,7 @@ MCP_CONFIGURATION = {
         },
         {
             "name": "get_provider_items",
-            "description": "Search provider inventory with batch information merged. For each provider item, fetches and merges batch information including slow_move_item flags and guardrail pricing. Each batch includes: batch_no, expired_at, produced_at, slow_move_item, guardrail_price_per_uom. Optional batch filters can be applied when fetching batches. If expired_at_gt not provided, defaults to batches expiring 90+ days from now.",
+            "description": "Search provider inventory with batch information merged. For each provider item, fetches and merges batch information including slow_move_item flags and guardrail pricing. Each batch includes: batch_no, expired_at, produced_at, slow_move_item, guardrail_price_per_uom. Optional batch filters can be applied when fetching batches. If expired_at_gt is not provided, no expiration filter is applied.",
             "inputSchema": {
                 "type": "object",
                 "properties": {
@@ -1514,9 +1514,6 @@ MCP_CONFIGURATION = {
                 },
                 # Map of provider corp external ID -> sales rep email.
                 "sales_rep_emails": {},
-                # Default window (days from now) for filtering provider item
-                # batches by expiration when no explicit filter is supplied.
-                "default_batch_expiration_filter_days": 90,
                 # Day of month used when scheduling installment due dates.
                 "installment_scheduled_day": 15,
             },
