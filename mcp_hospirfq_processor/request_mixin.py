@@ -331,6 +331,12 @@ class RequestMixin(GraphQLBackedProcessor):
                     merged_qty = existing_qty + new_qty
                     existing_item["qty"] = merged_qty
 
+                    # pax_breakdown is optional; when supplied on the incoming
+                    # item, update the existing item so per-pax-type pricing
+                    # reflects the latest breakdown.
+                    if new_item.get("pax_breakdown") is not None:
+                        existing_item["pax_breakdown"] = new_item["pax_breakdown"]
+
                     item_found = True
                     self.logger.info(
                         f"Merged quantity for item {new_item_uuid}: {existing_qty} + {new_qty} = {merged_qty}"

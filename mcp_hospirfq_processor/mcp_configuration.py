@@ -180,7 +180,7 @@ MCP_CONFIGURATION = {
                     },
                     "item": {
                         "type": "object",
-                        "description": "Item object to add with item_uuid, item_name, and qty",
+                        "description": "Item object to add with item_uuid, item_name, and qty (pax_breakdown optional)",
                         "properties": {
                             "item_uuid": {
                                 "type": "string",
@@ -193,6 +193,20 @@ MCP_CONFIGURATION = {
                             "qty": {
                                 "type": "integer",
                                 "description": "Quantity of the item",
+                            },
+                            "pax_breakdown": {
+                                "type": "object",
+                                "description": "Optional passenger breakdown for per-pax-type pricing (e.g. flights): a map of pax type to count.",
+                                "properties": {
+                                    "adult": {
+                                        "type": "integer",
+                                        "description": "Number of adults",
+                                    },
+                                    "child": {
+                                        "type": "integer",
+                                        "description": "Number of children",
+                                    },
+                                },
                             },
                         },
                         "required": ["item_uuid", "item_name", "qty"],
