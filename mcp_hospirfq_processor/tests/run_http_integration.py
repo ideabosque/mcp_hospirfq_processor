@@ -138,92 +138,25 @@ MCP_REST_URL = os.getenv(
 PARTITION_KEY = f"{ENDPOINT_ID}#{PART_ID}"
 
 # =============================================================================
-# Sample data (hardcoded UUIDs from prepared flight test fixtures)
+# Sample data — loaded from the shared registry
 # =============================================================================
 
-SAMPLE: Dict[str, Any] = {
-    # Items (flight_products.json)
-    "item_uuid": "06041993713794695296",        # Flight ATL->ORD Premium Economy
-    "item_uuid_2": "52065619693805781120",       # Flight ATL->ORD Economy
-    "item_uuid_in_request": "06041993713794695296",
-    "item_name": "Flight ATL->ORD Premium Economy",
-    "item_type": "flight",
-    # Provider items
-    "provider_item_uuid": "39876487618607726720",
-    "provider_item_uuid_2": "39876487618607726720",
-    "provider_item_uuid_in_request": "39876487618607726720",
-    "provider_corp_external_id": "AIRLINE-AF",
-    "provider_corp_external_id_2": "AIRLINE-QF",
-    # Batches
-    "batch_no": "AF5319-20260907",
-    "service_start_at": "2026-09-07T12:00:00Z",
-    "service_end_at": "2026-09-07T14:37:07.381744Z",
-    # Requests
-    "request_uuid": "96306650268729098368",
-    "email": "jessicacooper@example.com",
-    # Quotes
-    "quote_uuid": "83893620897501692032",
-    "quote_uuid_with_items": "51485446173562519680",
-    "request_uuid_for_quote_with_items": "87119168162060320896",
-    "quote_item_uuid": "73631515167125684352",
-    # Segments
-    "segment_uuid": "61268299727527493760",
-    # Bundles
-    "bundle_uuid": "80092055917037633664",
-    "bundle_uuid_2": "49956565412585947264",
-    # Cancellation policies
-    "policy_uuid": "70591963290008567936",
-    # Catalog
-    "catalog_query": "Air France ATL ORD Premium Economy flight with meal included",
-    "catalog_namespace": "FLIGHTS",
-}
+from mcp_hospirfq_processor.tests.sample_datasets import (
+    DATASETS,
+    DEFAULT_DATASET,
+    select_dataset,
+    dataset_key,
+)
 
-# PostgreSQL-backend sample data. Active when SAMPLE_BACKEND=postgresql.
-# These IDs come from the PostgreSQL flight_products.json fixtures (UUID-style),
-# not the DynamoDB load_sample_data.py numeric keys.
-SAMPLE_POSTGRESQL: Dict[str, Any] = {
-    # Sample dataset (2026大陸機位B2B動態.xlsx) — Chinese (Traditional), TWD
-    # UUIDs from freshly prepared sample dataset (2026-06-27 run)
-    "item_uuid": "ac8ec8c5-e8d2-4bd0-ad9a-2c9ba675e4c4",       # 航班 TPE->HKG 經濟艙（桃園→香港）
-    "item_uuid_2": "9aad94d1-39aa-4f3e-9a44-3b2a537b70fe",      # 航班 TPE->CAN 經濟艙（桃園→廣州）
-    "item_uuid_in_request": "ac8ec8c5-e8d2-4bd0-ad9a-2c9ba675e4c4",
-    "item_name": "航班 TPE->HKG 經濟艙（桃園→香港）",
-    "item_type": "flight",
-    "provider_item_uuid": "26c94a98-a915-46e2-b419-aac7acae18b0",  # CX-TPE-HKG-ECO (國泰航空)
-    "provider_item_uuid_2": "557a25fd-ac83-4ebd-b92b-4e4d9ce5fa01",  # GJ-TPE-HKG-ECO (大彎區航空)
-    "provider_item_uuid_in_request": "26c94a98-a915-46e2-b419-aac7acae18b0",
-    "provider_corp_external_id": "AIRLINE-CX",
-    "provider_corp_external_id_2": "AIRLINE-GJ",
-    "batch_no": "CX443-20260905-成都",                           # CX batch (20 seats) — matches provider AIRLINE-CX
-    "service_start_at": "2026-09-05T16:10:00",
-    "service_end_at": "2026-09-12T11:10:00",
-    # Availability test uses a different item/provider_item (TPE->TFU 桃園→成都, 中國國際航空 CA)
-    "avail_item_uuid": "e8fcd210-68d3-463f-a9ae-7a4dddf0276f",
-    "avail_provider_item_uuid": "3b957449-244d-4573-bbf3-357006b98799",
-    "avail_provider_corp_external_id": "AIRLINE-CA",
-    "avail_batch_no": "CA418-20260714-成都",                     # CA batch (20 seats) — matches avail_provider_item
-    "avail_service_start_at": "2026-07-14T18:10:00",
-    "avail_service_end_at": "2026-07-21T16:55:00",
-    "request_uuid": "d0ead0ab-6516-477b-9688-8a16cdd3cf8b",     # seeded request
-    "email": "michaela03@example.net",
-    "quote_uuid": "9e8378fa-f6b3-4353-bf9a-af2ff6036ff8",        # seeded quote
-    "quote_uuid_with_items": "9e8378fa-f6b3-4353-bf9a-af2ff6036ff8",
-    "request_uuid_for_quote_with_items": "d0ead0ab-6516-477b-9688-8a16cdd3cf8b",
-    "quote_item_uuid": "fa63d2f0-8c7b-4602-a4fc-5a0c4405bf40",
-    "segment_uuid": "323dec2b-1f03-4d42-a5ef-73ef9e17c4e6",     # segment used by prepare_flight_products.py (price tiers linked here)
-    "bundle_uuid": "53283de6-215f-4f04-bd28-43e852439b5d",     # CN-ITIN-003 (桃園→香港+香港→成都+成都→香港+香港→桃園)
-    "bundle_uuid_2": "c4480ddf-ae71-4a26-9c81-15acc9a10ef8",   # CN-ITIN-001
-    "policy_uuid": "7cdae692-f084-445f-a5c1-36e4f9030f8e",     # 經濟艙 團體旅遊退票政策
-    "catalog_query": "航班 桃園 香港 經濟艙",
-    "catalog_namespace": "FLIGHTS",
-}
+# Active dataset key (resolved from env var DATASET or DEFAULT_DATASET).
+_DATASET_KEY = dataset_key()
 
-# Active backend selector for sample data. "postgresql" switches to the
-# PostgreSQL-seeded fixtures; anything else (default) uses the DynamoDB
-# numeric-key fixtures. Driven by the SAMPLE_BACKEND env var.
-_SAMPLE_BACKEND = (os.getenv("SAMPLE_BACKEND") or "").strip().lower()
-if _SAMPLE_BACKEND == "postgresql":
-    SAMPLE = dict(SAMPLE_POSTGRESQL)
+# Active SAMPLE dict — all tool-group runners read from this.
+SAMPLE: Dict[str, Any] = select_dataset()
+
+# Convenience flags derived from the dataset metadata.
+_SKIP_CATALOG_REF_OVERRIDE = SAMPLE.get("skip_catalog_ref_override", False)
+_HAS_BUNDLES = SAMPLE.get("has_bundles", True)
 
 RUN_STATE: Dict[str, Any] = {}
 
@@ -953,16 +886,21 @@ async def run_availability(client: MCPHttpClient) -> None:
 
 
 async def run_bundles(client: MCPHttpClient) -> None:
-    """Bundle tools (3)."""
+    """Bundle tools (3). Skips get_bundle/search_bundle_components when no
+    bundles exist in the active dataset (e.g. DDS dataset has 0 bundles)."""
     await call_tool(client, "search_bundles", {
         "partition_key": PARTITION_KEY,
         "bundle_type": "itinerary",
     }, "bundles", "search_bundles (itinerary type)")
 
+    if not _HAS_BUNDLES or not SAMPLE.get("bundle_uuid"):
+        print("  SKIP: no bundles in this dataset (bundle_uuid is empty)")
+        return
+
     await call_tool(client, "get_bundle", {
         "partition_key": PARTITION_KEY,
         "bundle_uuid": SAMPLE["bundle_uuid"],
-    }, "bundles", "get_bundle (CN-ITIN-003 桃園→香港+香港→成都+成都→香港+香港→桃園)")
+    }, "bundles", f"get_bundle ({SAMPLE['bundle_uuid'][:12]}...)")
 
     await call_tool(client, "search_bundle_components", {
         "partition_key": PARTITION_KEY,
@@ -1033,6 +971,10 @@ def parse_args() -> argparse.Namespace:
         "--list-tools", action="store_true",
         help="Call tools/list via MCPHttpClient and print available tools, then exit.",
     )
+    parser.add_argument(
+        "--dataset", type=str, default=None,
+        help="Dataset key (overrides DATASET env var). Available: " + ", ".join(sorted(DATASETS.keys())) + ". Default: " + DEFAULT_DATASET,
+    )
     return parser.parse_args()
 
 
@@ -1062,6 +1004,15 @@ async def _run_groups(client: MCPHttpClient, run_groups: List[str]) -> Optional[
 
 async def _async_main() -> None:
     args = parse_args()
+
+    # CLI override for DATASET (takes precedence over .env)
+    global _DATASET_KEY, SAMPLE, _SKIP_CATALOG_REF_OVERRIDE, _HAS_BUNDLES
+    if args.dataset:
+        _DATASET_KEY = dataset_key(args.dataset)
+        SAMPLE = select_dataset(args.dataset)
+        _SKIP_CATALOG_REF_OVERRIDE = SAMPLE.get("skip_catalog_ref_override", False)
+        _HAS_BUNDLES = SAMPLE.get("has_bundles", True)
+        print(f"DATASET overridden via CLI to: {_DATASET_KEY}")
 
     if args.list:
         print("Available tool groups:")
