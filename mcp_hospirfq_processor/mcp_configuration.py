@@ -436,10 +436,10 @@ MCP_CONFIGURATION = {
                     },
                     "request_uuid": {
                         "type": "string",
-                        "description": "UUID of the request (optional, may be required by some GraphQL schemas)",
+                        "description": "UUID of the parent request. Required — rfq_engine's quote lookup is keyed by (request_uuid, quote_uuid) together, not quote_uuid alone.",
                     },
                 },
-                "required": ["quote_uuid"],
+                "required": ["quote_uuid", "request_uuid"],
             },
         },
         {
