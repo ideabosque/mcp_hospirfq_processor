@@ -324,10 +324,10 @@ class TestFlightCatalogInquiry:
     @pytest.mark.unit
     def test_inquire_flight_catalog(self, processor):
         """Search catalog for flights using namespace filter."""
-        processor._execute_graphql_query.return_value = [
+        processor._execute_graphql_query.return_value = {"payload": {"results": [
             {"itemUuid": "i-af1234", "itemName": "Air France AF1234 CDG→JFK", "score": 0.98},
             {"itemUuid": "i-ba178", "itemName": "British Airways BA178 LHR→JFK", "score": 0.91},
-        ]
+        ]}}
         result = processor.inquire_catalog(
             partition_key="AIRLINE-AF",
             query_text="paris to new york",
@@ -335,5 +335,5 @@ class TestFlightCatalogInquiry:
             limit=5,
         )
         assert "error" not in result
-        assert len(result) == 2
-        assert result[0]["score"] == 0.98
+        assert len(result["payload"]["results"]) == 2
+        assert result["payload"]["results"][0]["score"] == 0.98

@@ -471,17 +471,17 @@ class TestInquireCatalog:
 
     @pytest.mark.unit
     def test_returns_catalog_results(self, processor):
-        processor._execute_graphql_query.return_value = [
+        processor._execute_graphql_query.return_value = {"payload": {"results": [
             {"itemUuid": "i-1", "itemName": "Deluxe Ocean View", "score": 0.95},
             {"itemUuid": "i-2", "itemName": "Standard Room", "score": 0.72},
-        ]
+        ]}}
         result = processor.inquire_catalog(
             partition_key="HOTEL-001",
             query_text="ocean view room",
         )
         assert "error" not in result
-        assert len(result) == 2
-        assert result[0]["item_name"] == "Deluxe Ocean View"
+        assert len(result["payload"]["results"]) == 2
+        assert result["payload"]["results"][0]["item_name"] == "Deluxe Ocean View"
 
     @pytest.mark.unit
     def test_optional_namespace_and_limit(self, processor):
