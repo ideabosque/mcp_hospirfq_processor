@@ -13,7 +13,7 @@ class CancellationMixin(GraphQLBackedProcessor):
 
     @handle_errors(operation_name="get_cancellation_policy")
     def get_cancellation_policy(self, **arguments: Dict[str, Any]) -> Dict[str, Any]:
-        partition_key = arguments.get("partition_key")
+        partition_key = self._partition_key(arguments)
         validate_not_empty(partition_key, "partition_key")
         policy_uuid = arguments.get("policy_uuid")
         validate_not_empty(policy_uuid, "policy_uuid")
@@ -33,7 +33,7 @@ class CancellationMixin(GraphQLBackedProcessor):
 
     @handle_errors(operation_name="search_cancellation_policies")
     def search_cancellation_policies(self, **arguments: Dict[str, Any]) -> Dict[str, Any]:
-        partition_key = arguments.get("partition_key")
+        partition_key = self._partition_key(arguments)
         validate_not_empty(partition_key, "partition_key")
 
         variables = {

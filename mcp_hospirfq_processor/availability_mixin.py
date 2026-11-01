@@ -52,7 +52,7 @@ class AvailabilityMixin(GraphQLBackedProcessor):
         self.logger.info(f"Checking availability: {arguments}")
 
         variables = {
-            "partitionKey": arguments["partition_key"],
+            "partitionKey": self._partition_key(arguments),
             "providerItemUuid": arguments["provider_item_uuid"],
             "serviceStartAt": arguments["service_start_at"],
             "serviceEndAt": arguments["service_end_at"],
@@ -101,7 +101,7 @@ class AvailabilityMixin(GraphQLBackedProcessor):
         self.logger.info(f"Acquiring availability hold: {arguments}")
 
         variables = {
-            "partitionKey": arguments["partition_key"],
+            "partitionKey": self._partition_key(arguments),
             "providerItemUuid": arguments["provider_item_uuid"],
             "serviceStartAt": arguments["service_start_at"],
             "serviceEndAt": arguments["service_end_at"],
@@ -148,7 +148,7 @@ class AvailabilityMixin(GraphQLBackedProcessor):
         self.logger.info(f"Releasing availability hold: {arguments}")
 
         variables = {
-            "partitionKey": arguments["partition_key"],
+            "partitionKey": self._partition_key(arguments),
             "holdToken": arguments["hold_token"],
             "providerItemUuid": arguments.get("provider_item_uuid"),
             "batchNo": arguments.get("batch_no"),
@@ -190,7 +190,7 @@ class AvailabilityMixin(GraphQLBackedProcessor):
         self.logger.info(f"Confirming availability hold: {arguments}")
 
         variables = {
-            "partitionKey": arguments["partition_key"],
+            "partitionKey": self._partition_key(arguments),
             "holdToken": arguments["hold_token"],
             "providerItemUuid": arguments.get("provider_item_uuid"),
             "batchNo": arguments.get("batch_no"),
@@ -232,7 +232,7 @@ class AvailabilityMixin(GraphQLBackedProcessor):
         self.logger.info(f"Expiring availability hold: {arguments}")
 
         variables = {
-            "partitionKey": arguments["partition_key"],
+            "partitionKey": self._partition_key(arguments),
             "holdToken": arguments["hold_token"],
             "providerItemUuid": arguments.get("provider_item_uuid"),
             "batchNo": arguments.get("batch_no"),

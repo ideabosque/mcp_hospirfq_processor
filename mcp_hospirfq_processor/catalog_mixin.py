@@ -13,7 +13,7 @@ class CatalogMixin(GraphQLBackedProcessor):
 
     @handle_errors(operation_name="inquire_catalog")
     def inquire_catalog(self, **arguments: Dict[str, Any]) -> Dict[str, Any]:
-        partition_key = arguments.get("partition_key")
+        partition_key = self._partition_key(arguments)
         validate_not_empty(partition_key, "partition_key")
         query_text = arguments.get("query_text")
         validate_not_empty(query_text, "query_text")

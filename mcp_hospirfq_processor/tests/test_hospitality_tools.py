@@ -129,7 +129,9 @@ class TestCheckAvailability:
         assert "serviceEndAt" in variables
         assert "batchNo" in variables
         # values
-        assert variables["partitionKey"] == "HOTEL-001"
+        # Hosted call: the request partition (endpoint_id#part_id) wins over
+        # the supplied partition_key argument.
+        assert variables["partitionKey"] == "test-endpoint-id#test-part-id"
         assert variables["providerItemUuid"] == "pi-789"
 
     @pytest.mark.unit
@@ -241,7 +243,9 @@ class TestReleaseAvailabilityHold:
         variables = processor._execute_graphql_query.call_args[0][3]
         assert variables["updatedBy"] == "MCP"
         assert variables["holdToken"] == "ht-1"
-        assert variables["partitionKey"] == "PK"
+        # Hosted call: the request partition (endpoint_id#part_id) wins over
+        # the supplied partition_key argument.
+        assert variables["partitionKey"] == "test-endpoint-id#test-part-id"
         assert variables["providerItemUuid"] == "pi-1"
 
 

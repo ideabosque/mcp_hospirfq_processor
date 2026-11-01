@@ -13,7 +13,7 @@ class BundleMixin(GraphQLBackedProcessor):
 
     @handle_errors(operation_name="search_bundles")
     def search_bundles(self, **arguments: Dict[str, Any]) -> Dict[str, Any]:
-        partition_key = arguments.get("partition_key")
+        partition_key = self._partition_key(arguments)
         validate_not_empty(partition_key, "partition_key")
 
         variables = {
@@ -33,7 +33,7 @@ class BundleMixin(GraphQLBackedProcessor):
 
     @handle_errors(operation_name="get_bundle")
     def get_bundle(self, **arguments: Dict[str, Any]) -> Dict[str, Any]:
-        partition_key = arguments.get("partition_key")
+        partition_key = self._partition_key(arguments)
         validate_not_empty(partition_key, "partition_key")
         bundle_uuid = arguments.get("bundle_uuid")
         validate_not_empty(bundle_uuid, "bundle_uuid")
@@ -53,7 +53,7 @@ class BundleMixin(GraphQLBackedProcessor):
 
     @handle_errors(operation_name="search_bundle_components")
     def search_bundle_components(self, **arguments: Dict[str, Any]) -> Dict[str, Any]:
-        partition_key = arguments.get("partition_key")
+        partition_key = self._partition_key(arguments)
         validate_not_empty(partition_key, "partition_key")
         bundle_uuid = arguments.get("bundle_uuid")
         validate_not_empty(bundle_uuid, "bundle_uuid")

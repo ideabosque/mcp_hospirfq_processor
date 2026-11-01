@@ -867,7 +867,7 @@ MCP_CONFIGURATION = {
                 "properties": {
                     "partition_key": {
                         "type": "string",
-                        "description": "Partition key for the availability record (typically provider or tenant identifier)",
+                        "description": "Partition key for the availability record (typically provider or tenant identifier) (set by the MCP host from the request partition; a supplied value is ignored)",
                     },
                     "provider_item_uuid": {
                         "type": "string",
@@ -891,7 +891,6 @@ MCP_CONFIGURATION = {
                     },
                 },
                 "required": [
-                    "partition_key",
                     "provider_item_uuid",
                     "service_start_at",
                     "service_end_at",
@@ -906,7 +905,7 @@ MCP_CONFIGURATION = {
                 "properties": {
                     "partition_key": {
                         "type": "string",
-                        "description": "Partition key for the availability record",
+                        "description": "Partition key for the availability record (set by the MCP host from the request partition; a supplied value is ignored)",
                     },
                     "provider_item_uuid": {
                         "type": "string",
@@ -956,7 +955,6 @@ MCP_CONFIGURATION = {
                     },
                 },
                 "required": [
-                    "partition_key",
                     "provider_item_uuid",
                     "service_start_at",
                     "service_end_at",
@@ -972,7 +970,7 @@ MCP_CONFIGURATION = {
                 "properties": {
                     "partition_key": {
                         "type": "string",
-                        "description": "Partition key for the availability record",
+                        "description": "Partition key for the availability record (set by the MCP host from the request partition; a supplied value is ignored)",
                     },
                     "hold_token": {
                         "type": "string",
@@ -987,7 +985,7 @@ MCP_CONFIGURATION = {
                         "description": "Optional batch number to scope the release",
                     },
                 },
-                "required": ["partition_key", "hold_token", "provider_item_uuid"],
+                "required": ["hold_token", "provider_item_uuid"],
             },
         },
         {
@@ -998,7 +996,7 @@ MCP_CONFIGURATION = {
                 "properties": {
                     "partition_key": {
                         "type": "string",
-                        "description": "Partition key for the availability record",
+                        "description": "Partition key for the availability record (set by the MCP host from the request partition; a supplied value is ignored)",
                     },
                     "hold_token": {
                         "type": "string",
@@ -1013,7 +1011,7 @@ MCP_CONFIGURATION = {
                         "description": "Optional batch number to scope the confirmation",
                     },
                 },
-                "required": ["partition_key", "hold_token", "provider_item_uuid"],
+                "required": ["hold_token", "provider_item_uuid"],
             },
         },
         {
@@ -1024,7 +1022,7 @@ MCP_CONFIGURATION = {
                 "properties": {
                     "partition_key": {
                         "type": "string",
-                        "description": "Partition key for the availability record",
+                        "description": "Partition key for the availability record (set by the MCP host from the request partition; a supplied value is ignored)",
                     },
                     "hold_token": {
                         "type": "string",
@@ -1039,7 +1037,7 @@ MCP_CONFIGURATION = {
                         "description": "Optional batch number to scope the expiry",
                     },
                 },
-                "required": ["partition_key", "hold_token", "provider_item_uuid"],
+                "required": ["hold_token", "provider_item_uuid"],
             },
         },
         # Bundle Tools (3)
@@ -1051,7 +1049,7 @@ MCP_CONFIGURATION = {
                 "properties": {
                     "partition_key": {
                         "type": "string",
-                        "description": "Partition key for bundle records",
+                        "description": "Partition key for bundle records (set by the MCP host from the request partition; a supplied value is ignored)",
                     },
                     "bundle_code": {
                         "type": "string",
@@ -1067,7 +1065,7 @@ MCP_CONFIGURATION = {
                         "description": "Filter by bundle status",
                     },
                 },
-                "required": ["partition_key"],
+                "required": [],
             },
         },
         {
@@ -1078,14 +1076,14 @@ MCP_CONFIGURATION = {
                 "properties": {
                     "partition_key": {
                         "type": "string",
-                        "description": "Partition key for bundle records",
+                        "description": "Partition key for bundle records (set by the MCP host from the request partition; a supplied value is ignored)",
                     },
                     "bundle_uuid": {
                         "type": "string",
                         "description": "UUID of the bundle to retrieve",
                     },
                 },
-                "required": ["partition_key", "bundle_uuid"],
+                "required": ["bundle_uuid"],
             },
         },
         {
@@ -1096,14 +1094,14 @@ MCP_CONFIGURATION = {
                 "properties": {
                     "partition_key": {
                         "type": "string",
-                        "description": "Partition key for bundle records",
+                        "description": "Partition key for bundle records (set by the MCP host from the request partition; a supplied value is ignored)",
                     },
                     "bundle_uuid": {
                         "type": "string",
                         "description": "UUID of the bundle to list components for",
                     },
                 },
-                "required": ["partition_key", "bundle_uuid"],
+                "required": ["bundle_uuid"],
             },
         },
         # Cancellation Policy Tools (2)
@@ -1115,14 +1113,14 @@ MCP_CONFIGURATION = {
                 "properties": {
                     "partition_key": {
                         "type": "string",
-                        "description": "Partition key for cancellation policy records",
+                        "description": "Partition key for cancellation policy records (set by the MCP host from the request partition; a supplied value is ignored)",
                     },
                     "policy_uuid": {
                         "type": "string",
                         "description": "UUID of the cancellation policy to retrieve",
                     },
                 },
-                "required": ["partition_key", "policy_uuid"],
+                "required": ["policy_uuid"],
             },
         },
         {
@@ -1133,7 +1131,7 @@ MCP_CONFIGURATION = {
                 "properties": {
                     "partition_key": {
                         "type": "string",
-                        "description": "Partition key for cancellation policy records",
+                        "description": "Partition key for cancellation policy records (set by the MCP host from the request partition; a supplied value is ignored)",
                     },
                     "provider_item_uuid": {
                         "type": "string",
@@ -1144,7 +1142,7 @@ MCP_CONFIGURATION = {
                         "description": "Filter by policy status",
                     },
                 },
-                "required": ["partition_key"],
+                "required": [],
             },
         },
         # Catalog Tools (1)
@@ -1156,7 +1154,7 @@ MCP_CONFIGURATION = {
                 "properties": {
                     "partition_key": {
                         "type": "string",
-                        "description": "Partition key for catalog records",
+                        "description": "Partition key for catalog records (set by the MCP host from the request partition; a supplied value is ignored)",
                     },
                     "query_text": {
                         "type": "string",
@@ -1171,7 +1169,7 @@ MCP_CONFIGURATION = {
                         "description": "Maximum number of results to return (default: 20)",
                     },
                 },
-                "required": ["partition_key", "query_text"],
+                "required": ["query_text"],
             },
         },
     ],
