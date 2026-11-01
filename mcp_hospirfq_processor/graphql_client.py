@@ -59,7 +59,9 @@ class GraphQLModule:
     not on the client: a module authenticates with an AWS API Gateway
     ``x_api_key``, or with a silvaengine_gateway JWT Bearer token
     (``gateway_base_url`` + ``token_username``/``token_password``, or a
-    pre-issued ``gateway_token``).
+    pre-issued ``gateway_token``), or — with ``auth: "forward"`` — by
+    forwarding the calling user's own short-lived bearer token, which the MCP
+    host supplies per call (no stored credentials).
     """
 
     def __init__(
@@ -73,8 +75,11 @@ class GraphQLModule:
         token_username: str | None = None,
         token_password: str | None = None,
         gateway_token: str | None = None,
+        auth: str | None = None,
     ):
         self.endpoint_id = endpoint_id
+        # ``"forward"``: authenticate with the caller's per-call bearer token.
+        self._auth = (auth or "").strip().lower() or None
         self._module_name = module_name
         self._class_name = class_name
         # The endpoint template references only ``{endpoint_id}``. part_id is
@@ -114,7 +119,9 @@ class GraphQLModule:
 
     @property
     def auth_mode(self) -> str:
-        """``"jwt"``, ``"api_key"``, or ``"none"`` for this module."""
+        """``"forward"``, ``"jwt"``, ``"api_key"``, or ``"none"`` for this module."""
+        if self._auth == "forward":
+            return "forward"
         if self._gateway_token or (self._token_username and self._token_password):
             return "jwt"
         if self._x_api_key:
@@ -191,6 +198,9 @@ class GraphQLClient:
         self._endpoint_id = None
         self._part_id = None
         self._graphql_modules = {}
+        # Caller's bearer token for this call (``auth: "forward"`` modules);
+        # set per call by the MCP host, never persisted.
+        self.caller_authorization: str | None = None
         # Auth is configured per module under ``graphql_modules.<name>`` (each
         # module owns its gateway_base_url / token_username / token_password /
         # gateway_token or x_api_key), not on the client — see GraphQLModule.
@@ -235,6 +245,7 @@ class GraphQLClient:
                 token_username=module_setting.get("token_username"),
                 token_password=module_setting.get("token_password"),
                 gateway_token=module_setting.get("gateway_token"),
+                auth=module_setting.get("auth"),
             )
         return self._graphql_modules.get(module_name)
 
@@ -285,7 +296,15 @@ class GraphQLClient:
                 # auth is configured for the module.
                 return {k: v for k, v in hdrs.items() if v is not None}
 
-            token = graphql_module.get_gateway_token()
+            if graphql_module is not None and graphql_module.auth_mode == "forward":
+                # Fail closed: never fall back to stored credentials or x-api-key.
+                token = self.caller_authorization
+                if not token:
+                    raise PermissionError(
+                        f"{module_name}: forward auth requires the caller's bearer token"
+                    )
+            else:
+                token = graphql_module.get_gateway_token()
 
             timeout = httpx.Timeout(60.0, connect=15.0)
             with httpx.Client(http2=True, timeout=timeout) as client:

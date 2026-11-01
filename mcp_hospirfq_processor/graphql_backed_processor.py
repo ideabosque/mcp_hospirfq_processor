@@ -41,6 +41,16 @@ class GraphQLBackedProcessor:
     def part_id(self, value: str):
         self.graphql_client.part_id = value
 
+    @property
+    def caller_authorization(self) -> str | None:
+        """Caller's bearer token for ``auth: "forward"`` modules (set per call
+        by the MCP host; never persisted)."""
+        return self.graphql_client.caller_authorization
+
+    @caller_authorization.setter
+    def caller_authorization(self, value: str | None):
+        self.graphql_client.caller_authorization = value
+
     def _execute_graphql_query(
         self,
         function_name: str,
